@@ -1,15 +1,18 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using System.Collections.Generic;
+using UnityEngine.Tilemaps;//Grid sistemiyle uyumlu çalışabilmek için
+using System.Collections.Generic; //Dictionary kullanabilmek için
 
 public class GridManager : MonoBehaviour
 {
     public Grid grid;
-    public GridCell cellPrefab;
+    public GridCell cellPrefab;//Hücre için instantiate edliecek prefab için
     public int width = 4;
     public int height = 4;
 
     private Dictionary<Vector3Int, GridCell> cells = new();
+    //Vector3Int = Grid koordinatları için(x,y,z)
+    //GridCell = O pozisyondaki hücre için
+    //Dictionary key ve ona karşılık gelen value değrini hızlıca saklamak ve bulmak için kullanılır.
 
     void Start()
     {
@@ -18,17 +21,17 @@ public class GridManager : MonoBehaviour
 
     void CreateGrid()
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < width; x++)//Gridin genişliğini kontrol eder.
         {
-            for (int z = 0; z < height; z++)
+            for (int z = 0; z < height; z++)//Gridin yüksekliğini kontrol eder.
             {
-                Vector3Int cellPos = new Vector3Int(x, 0, z);
-                Vector3 worldPos = grid.GetCellCenterWorld(cellPos);
+                Vector3Int cellPos = new Vector3Int(x, 0, z); //Hücrenin grid kordinatları
+                Vector3 worldPos = grid.GetCellCenterWorld(cellPos); //Grid koordinatlarını gerçek sahne pozisyonuna çevirir bu sayede hücreler tam ortalı ve hizalı olur.
 
                 GridCell cell = Instantiate(cellPrefab, worldPos, Quaternion.identity, transform);
-                cell.cellPosition = cellPos;
+                cell.cellPosition = cellPos;//Hücrenin kendi pozisyonunu tanıması
 
-                cells.Add(cellPos, cell);
+                cells.Add(cellPos, cell);//Hücre Dictonary'ye kaydedilir.
             }
         }
     }

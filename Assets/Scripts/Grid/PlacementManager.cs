@@ -7,7 +7,7 @@ public class PlacementManager : MonoBehaviour
     public GameObject placeablePrefab;
 
     private GameObject previewObject;
-    private GridCell currentHoverCell;
+    private GridCell selectedCell;
 
     void Start()
     {
@@ -16,62 +16,70 @@ public class PlacementManager : MonoBehaviour
         foreach (var col in previewObject.GetComponentsInChildren<Collider>())
             col.enabled = false;
 
-        previewObject.GetComponent<PlaceableObject>()
-            .SetPreviewMode(true);
-
+        previewObject.GetComponent<PlaceableObject>().SetPreviewMode(true);
         previewObject.SetActive(false);
     }
 
-
     void Update()
     {
-        UpdatePreview();
-
         if (Input.GetMouseButtonDown(0))
         {
-            Place();
+            HandleTouch();
         }
     }
 
-    void UpdatePreview()
+    void HandleTouch()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
         if (!Physics.Raycast(ray, out RaycastHit hit))
-        {
-            previewObject.SetActive(false);
-            currentHoverCell = null;
             return;
-        }
 
         Vector3Int cellPos = grid.WorldToCell(hit.point);
         GridCell cell = gridManager.GetCell(cellPos);
 
-        if (cell == null)
+        if (cell == null || !cell.IsEmpty())
+            return;
+
+        //Eğer henüz hücre seçilmediyse hücre seçilir
+        if (selectedCell == null)
         {
-            previewObject.SetActive(false);
-            currentHoverCell = null;
+            SelectCell(cell);
             return;
         }
 
-        currentHoverCell = cell;
+        //Aynı hücreye ikinci kez tıklandıysa yerleştir
+        if (cell == selectedCell)
+        {
+            Place();
+        }
+        else
+        {
+            //Farklı boş hücreye tıklandıysa preview oraya taşınır
+            SelectCell(cell);
+        }
+    }
+
+    void SelectCell(GridCell cell)
+    {
+        selectedCell = cell;
         previewObject.SetActive(true);
 
         float offset = previewObject.GetComponent<PlaceableObject>().heightOffset;
 
         previewObject.transform.position =
-            grid.GetCellCenterWorld(cellPos) + Vector3.up * offset;
+            grid.GetCellCenterWorld(cell.cellPosition) + Vector3.up * offset;
     }
-
 
     void Place()
     {
-        if (currentHoverCell == null || !currentHoverCell.IsEmpty())
+        if (selectedCell == null || !selectedCell.IsEmpty())
             return;
 
         PlaceableObject prefabPO = placeablePrefab.GetComponent<PlaceableObject>();
 
         Vector3 spawnPos =
-            grid.GetCellCenterWorld(currentHoverCell.cellPosition)
+            grid.GetCellCenterWorld(selectedCell.cellPosition)
             + Vector3.up * prefabPO.heightOffset;
 
         GameObject obj = Instantiate(placeablePrefab, spawnPos, Quaternion.identity);
@@ -79,10 +87,11 @@ public class PlacementManager : MonoBehaviour
         PlaceableObject po = obj.GetComponent<PlaceableObject>();
         po.SetPreviewMode(false);
 
-        po.currentCell = currentHoverCell;
-        currentHoverCell.currentObject = po;
+        po.currentCell = selectedCell;
+        selectedCell.currentObject = po;
+
+        //Yerleştirdikten sonra preview sıfırlanır
+        selectedCell = null;
+        previewObject.SetActive(false);
     }
-
-
-
 }
