@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCell: {fileID: 0}
+  heightOffset: 0.35
 --- !u!95 &2001666828194296394
 Animator:
   serializedVersion: 5

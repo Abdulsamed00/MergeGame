@@ -55,25 +55,34 @@ public class PlacementManager : MonoBehaviour
 
         currentHoverCell = cell;
         previewObject.SetActive(true);
-        previewObject.transform.position = grid.GetCellCenterWorld(cellPos);
+
+        float offset = previewObject.GetComponent<PlaceableObject>().heightOffset;
+
+        previewObject.transform.position =
+            grid.GetCellCenterWorld(cellPos) + Vector3.up * offset;
     }
+
 
     void Place()
     {
         if (currentHoverCell == null || !currentHoverCell.IsEmpty())
             return;
 
-        Vector3 spawnPos = grid.GetCellCenterWorld(currentHoverCell.cellPosition);
+        PlaceableObject prefabPO = placeablePrefab.GetComponent<PlaceableObject>();
+
+        Vector3 spawnPos =
+            grid.GetCellCenterWorld(currentHoverCell.cellPosition)
+            + Vector3.up * prefabPO.heightOffset;
 
         GameObject obj = Instantiate(placeablePrefab, spawnPos, Quaternion.identity);
 
         PlaceableObject po = obj.GetComponent<PlaceableObject>();
-
         po.SetPreviewMode(false);
 
         po.currentCell = currentHoverCell;
         currentHoverCell.currentObject = po;
     }
+
 
 
 }

@@ -3,6 +3,10 @@ using UnityEngine;
 public class PlaceableObject : MonoBehaviour
 {
     public GridCell currentCell;
+
+    [Header("Placement")]
+    public float heightOffset = 0.5f;
+
     private Animator animator;
 
     void Awake()
@@ -12,8 +16,7 @@ public class PlaceableObject : MonoBehaviour
 
     public void SetPreviewMode(bool isPreview)
     {
-        if (animator == null) return;
-
-        animator.enabled = isPreview;
+        if (animator != null)
+            animator.enabled = isPreview;
     }
 }
