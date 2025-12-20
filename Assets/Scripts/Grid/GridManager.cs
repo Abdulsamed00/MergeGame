@@ -36,9 +36,22 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public GridCell GetCell(Vector3Int pos)
+    public GridCell GetCell(Vector3Int pos)//Verilen grid koordinatlarındaki hücreyi döndürür
     {
-        cells.TryGetValue(pos, out GridCell cell);
+        cells.TryGetValue(pos, out GridCell cell);//Dictionary içinde o pozisyon var mı kontrol eder. Varsa eğer cell değişkinine atar. Yoksa eğer null değer döner.
         return cell;
+    }
+    
+    public GridCell GetFirstEmptyCell()
+    {
+        foreach (var cell in cells.Values)//Dictionary içindeki hücreleri toplar, tek tek gezer.
+        {
+            if (cell.IsEmpty())
+            {
+                return cell;
+            }
+            //Hücre boşsa o hücreyi döndürür.
+        }
+        return null;
     }
 }
