@@ -8,7 +8,14 @@ public class PlacementManager : MonoBehaviour
 
     private GameObject previewObject;
     private GridCell selectedCell;
-
+//---------------------------------------------------------------------------
+//Drag & Drop için tanımlanan değişkenler
+    private bool isDragging = false;
+    private Vector3Int lastHoveredCellPos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
+    private bool dragMoved = false;
+    private Vector2 startScreenPos;
+    private const float DRAG_THRESHOLD_PX = 10f;
+//---------------------------------------------------------------------------
     void Start()
     {
         previewObject = Instantiate(placeablePrefab);//Yerleştirilecek objenin previewını spawn eder.
@@ -32,48 +39,129 @@ public class PlacementManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+
+        //-----------------------------------------------------------
+        //Drag & Drop için eklenen kodlar
+        if (Input.touchCount > 0)
         {
-            HandleTouch();
+            Touch t = Input.GetTouch(0);
+            HandleTouch(t.position, t.phase);
+            return;
         }
+        //-----------------------------------------------------------
+        //Mouse ile mobil touch taklidi. (Sadece editör ve PC üzerinde çalışacak.)
+        #if UNITY_EDITOR || UNITY_STANDALONE
+        if (Input.GetMouseButtonDown(0))
+            HandleTouch(Input.mousePosition, TouchPhase.Began);
+
+        if (Input.GetMouseButton(0))
+            HandleTouch(Input.mousePosition, TouchPhase.Moved);
+
+        if (Input.GetMouseButtonUp(0))
+            HandleTouch(Input.mousePosition, TouchPhase.Ended);
+        #endif
+        //-----------------------------------------------------------
     }
 
-    void HandleTouch()
+    void HandleTouch(Vector3 position, TouchPhase phase)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(position);
 
         if (!Physics.Raycast(ray, out RaycastHit hit))
         {
-            return;
+            //-----------------------------------------------------------
+            //Drag & Drop için eklenen kodlar (Dokunma bitse bile preview kaybolmayacak.)
+            if (phase == TouchPhase.Ended || phase == TouchPhase.Canceled)
+                isDragging = false;
+            //-----------------------------------------------------------
+            return;            
         }
-        //Raycast collidera çarpmazsa method durur.
 
         Vector3Int cellPos = grid.WorldToCell(hit.point);//Raycastin çarptığı dünya pozisyonunu grid koordinatlarına çevirir.
         GridCell cell = gridManager.GetCell(cellPos);//Grid pozisyondaki hücre alınır
 
-        if (cell == null || !cell.IsEmpty())
+        if (cell == null)
         {
+            //-----------------------------------------------------------
+            //Drag & Drop için eklenen kodlar
+            if (phase == TouchPhase.Ended || phase == TouchPhase.Canceled)
+                isDragging = false;
+            //-----------------------------------------------------------
             return;
         }
-        //Hücre yoksa ve doluysa hiçbir şey yapmaz.
-
-        if (selectedCell == null)
+        //-----------------------------------------------------------
+        //Drag & Drop için eklenen kodlar
+        //1)Seçim ve ikinci dokunuşta place
+        if (phase == TouchPhase.Began)
         {
-            SelectCell(cell);
+            isDragging = true;
+            dragMoved = false;
+            startScreenPos = position;
+            lastHoveredCellPos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
+
+            //Dolu hücreye dokunursan hiçbir şey yapma
+            if (!cell.IsEmpty())
+                return;
+
+            //İlk seçim preview aç + yerleştir
+            if (selectedCell == null)
+            {
+                SelectCell(cell);
+                return;
+            }
+
+            if (cell != selectedCell)
+                SelectCell(cell);
+
             return;
         }
         //Henüz bir hücre seçili değilse tıklanan hücre seçilir ve preview oraya taşınır
 
-        if (cell == selectedCell)
+        //2)Preview sürükleme ve sadece boş hücrelere yerleştirme
+        if (phase == TouchPhase.Moved || phase == TouchPhase.Stationary)
         {
-            Place();
+            //Preview aktif değilse sürükleme yok
+            if (!isDragging || selectedCell == null)
+                return;
+
+            //Parmak/mouse basmak yerine sürüklendi mi?
+            if (!dragMoved && Vector2.Distance(position, startScreenPos) >= DRAG_THRESHOLD_PX)
+                dragMoved = true;
+
+
+            //Aynı hücredeysek boş yere SelectCell çağırma
+            if (cellPos == lastHoveredCellPos)
+                return;
+
+            lastHoveredCellPos = cellPos;
+
+            //Yalnızca boş hücrelere yerleştir
+            if (!cell.IsEmpty())
+                return;
+
+            //Hücre değiştiyse seçimi güncelle
+            if (cell != selectedCell)
+                SelectCell(cell);
+
+            return;
         }
-        //Aynı hücreye tıklandığında obje o hcürede spawn olur
-        else
+
+        //3)Sadece drag biter, yerleştirme yok, seçim korunur
+        if (phase == TouchPhase.Ended || phase == TouchPhase.Canceled)
         {
-            SelectCell(cell);
+            //Sadece basıldığında yerleştir
+            if (phase == TouchPhase.Ended && !dragMoved && selectedCell != null)
+            {
+                //Parmağı kaldırdığında hala seçili hücredeysen yerleştir
+                if (cell == selectedCell)
+                    Place();
+            }
+
+            isDragging = false;
+            //selectedCell ve previewObject korunur.
+            return;
         }
-        //Farklı boş hücreye tıklandıysa preview oraya taşınır
+        //-----------------------------------------------------------
     }
 
     void SelectCell(GridCell cell)
