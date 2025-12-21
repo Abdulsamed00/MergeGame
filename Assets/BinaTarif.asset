@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 891fec78c366d0d4698896cce8189590, type: 3}
+  m_Name: BinaTarif
+  m_EditorClassIdentifier: 
+  tarifAdi: Bina
+  gerekenMalzemeler:
+  - {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
+  - {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
+  - {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
+  sonucObjesi: {fileID: 11400000, guid: b9dce7825bb173a44a2dafbec13fb912, type: 2}
