@@ -14,7 +14,7 @@ public class PlacementManager : MonoBehaviour
     private Vector3Int lastHoveredCellPos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
     private bool dragMoved = false;
     private Vector2 startScreenPos;
-    private const float DRAG_THRESHOLD_PX = 10f;
+    private const float dragThresholdPx = 10f;
 //---------------------------------------------------------------------------
     void Start()
     {
@@ -125,7 +125,7 @@ public class PlacementManager : MonoBehaviour
                 return;
 
             //Parmak/mouse basmak yerine sürüklendi mi?
-            if (!dragMoved && Vector2.Distance(position, startScreenPos) >= DRAG_THRESHOLD_PX)
+            if (!dragMoved && Vector2.Distance(position, startScreenPos) >= dragThresholdPx)
                 dragMoved = true;
 
 
