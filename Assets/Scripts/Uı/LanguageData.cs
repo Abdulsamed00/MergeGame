@@ -10,10 +10,7 @@ public static class LanguageData
     {
         get
         {
-            return (Language)UnityEngine.PlayerPrefs.GetInt(
-                "Language",
-                (int)Language.Turkish   // varsayılan Türkçe
-            );
+            return (Language)UnityEngine.PlayerPrefs.GetInt("Language", 1);
         }
         set
         {

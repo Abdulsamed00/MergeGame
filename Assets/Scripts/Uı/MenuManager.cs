@@ -7,7 +7,7 @@ public class MenuManager : MonoBehaviour
 {
     public GameObject mainMenuPanel;
     public GameObject settingsPanel;
-    public GameObject levelsPanel;
+    public GameObject levelsPanel;   // EKLENDİ
 
     [Header("Fade")]
     public Image fadeImage;
@@ -28,6 +28,7 @@ public class MenuManager : MonoBehaviour
     // MAIN MENU
     // ======================
 
+    // MAIN MENU -> LEVELS
     public void OpenLevels()
     {
         StartCoroutine(SwitchPanel(mainMenuPanel, levelsPanel));
@@ -57,6 +58,7 @@ public class MenuManager : MonoBehaviour
     // LEVELS
     // ======================
 
+    // LEVELS -> MAIN MENU
     public void CloseLevels()
     {
         StartCoroutine(SwitchPanel(levelsPanel, mainMenuPanel));
@@ -82,8 +84,6 @@ public class MenuManager : MonoBehaviour
 
     IEnumerator FadeIn()
     {
-        if (fadeImage == null) yield break;
-
         float t = fadeDuration;
         while (t > 0)
         {
@@ -95,8 +95,6 @@ public class MenuManager : MonoBehaviour
 
     IEnumerator FadeOut()
     {
-        if (fadeImage == null) yield break;
-
         float t = 0;
         while (t < fadeDuration)
         {
@@ -124,9 +122,7 @@ public class MenuManager : MonoBehaviour
 
     void RefreshAllTexts()
     {
-        SimpleLanguageText[] texts =
-            FindObjectsOfType<SimpleLanguageText>(true);
-
+        SimpleLanguageText[] texts = FindObjectsOfType<SimpleLanguageText>(true);
         foreach (var t in texts)
         {
             t.Refresh();
