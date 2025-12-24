@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour
     public int width = 4;
     public int height = 4;
 
-    private Dictionary<Vector3Int, GridCell> cells = new();
+    private Dictionary<Vector3Int, GridCell> cells = new(); 
     //Vector3Int = Grid koordinatları için(x,y,z)
     //GridCell = O pozisyondaki hücre için
     //Dictionary key ve ona karşılık gelen value değrini hızlıca saklamak ve bulmak için kullanılır.
@@ -36,9 +36,22 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public GridCell GetCell(Vector3Int pos)
+    public GridCell GetCell(Vector3Int pos)//Verilen grid koordinatlarındaki hücreyi döndürür
     {
-        cells.TryGetValue(pos, out GridCell cell);
+        cells.TryGetValue(pos, out GridCell cell);//Dictionary içinde o pozisyon var mı kontrol eder. Varsa eğer cell değişkinine atar. Yoksa eğer null değer döner.
         return cell;
+    }
+    
+    public GridCell GetFirstEmptyCell()
+    {
+        foreach (var cell in cells.Values)//Dictionary içindeki hücreleri toplar, tek tek gezer.
+        {
+            if (cell.IsEmpty())
+            {
+                return cell;
+            }
+            //Hücre boşsa o hücreyi döndürür.
+        }
+        return null;
     }
 }
