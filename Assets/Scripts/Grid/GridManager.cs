@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour
     public int width = 4;
     public int height = 4;
 
-    private Dictionary<Vector3Int, GridCell> cells = new();
+    private Dictionary<Vector3Int, GridCell> cells = new(); 
     //Vector3Int = Grid koordinatları için(x,y,z)
     //GridCell = O pozisyondaki hücre için
     //Dictionary key ve ona karşılık gelen value değrini hızlıca saklamak ve bulmak için kullanılır.

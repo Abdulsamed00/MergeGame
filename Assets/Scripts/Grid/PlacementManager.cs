@@ -101,7 +101,9 @@ public class PlacementManager : MonoBehaviour
 
             //Dolu hücreye dokunursan hiçbir şey yapma
             if (!cell.IsEmpty())
+            {
                 return;
+            }
 
             //İlk seçim preview aç + yerleştir
             if (selectedCell == null)
@@ -111,7 +113,9 @@ public class PlacementManager : MonoBehaviour
             }
 
             if (cell != selectedCell)
+            {
                 SelectCell(cell);
+            }
 
             return;
         }
@@ -122,26 +126,36 @@ public class PlacementManager : MonoBehaviour
         {
             //Preview aktif değilse sürükleme yok
             if (!isDragging || selectedCell == null)
+            {
                 return;
+            }
 
             //Parmak/mouse basmak yerine sürüklendi mi?
             if (!dragMoved && Vector2.Distance(position, startScreenPos) >= DRAG_THRESHOLD_PX)
+            {
                 dragMoved = true;
+            }
 
 
             //Aynı hücredeysek boş yere SelectCell çağırma
             if (cellPos == lastHoveredCellPos)
+            {
                 return;
+            }
 
             lastHoveredCellPos = cellPos;
 
             //Yalnızca boş hücrelere yerleştir
             if (!cell.IsEmpty())
+            {
                 return;
+            }
 
             //Hücre değiştiyse seçimi güncelle
             if (cell != selectedCell)
+            {
                 SelectCell(cell);
+            }
 
             return;
         }
