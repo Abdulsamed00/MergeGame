@@ -7,14 +7,4 @@ public class ObjeVerisi : ScriptableObject
 {
     public string objeAdi;
     public GameObject objePrefab;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
