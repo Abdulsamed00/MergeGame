@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 891fec78c366d0d4698896cce8189590, type: 3}
-  m_Name: BinaTarif
+  m_Name: InsaAlaniTarif
   m_EditorClassIdentifier: 
-  tarifAdi: Bina
+  tarifAdi: "\u0130n\u015Fa Alan\u0131"
   gerekenMalzemeler:
   - {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
   - {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
