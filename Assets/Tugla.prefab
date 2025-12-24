@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1185946574012613359}
   - component: {fileID: 1185946574012613358}
   - component: {fileID: 1185946574012613357}
+  - component: {fileID: 3338424104549023547}
   m_Layer: 0
   m_Name: Tugla
   m_TagString: Untagged
@@ -97,3 +98,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3338424104549023547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1185946574012613356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ea25875c3f5e046945ea2ea5cc62fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turkish: 
+  english: 
