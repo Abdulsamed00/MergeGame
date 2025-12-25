@@ -3,17 +3,21 @@ using System.Collections.Generic;
 
 public class PlacementManager : MonoBehaviour
 {
-public Grid grid;
+    public Grid grid;
     public GridManager gridManager;
     public BirlestirmeYoneticisi birlestirmeYoneticisi;
 
     [Header("Spawnlanacak Başlangıç Objeleri")]
-    public List<ObjeVerisi> spawnlanabilirObjeler; 
+    public List<ObjeVerisi> spawnlanabilirObjeler;
 
     private GameObject currentPrefab;
     private GameObject previewObject;
     private GridCell selectedCell;
     private bool isDragging = false;
+    private bool hasDragged = false;
+    private bool pressedOnPreview = false;
+    private Vector2 touchStartPos;
+    private const float dragThreshold = 5f;
 
     void Start()
     {
@@ -53,10 +57,10 @@ public Grid grid;
         if (previewObject != null) Destroy(previewObject);
 
         previewObject = Instantiate(currentPrefab);
-        
+
         // Raycast çarpmasın diye colliderları kapat
         foreach (var col in previewObject.GetComponentsInChildren<Collider>()) col.enabled = false;
-        
+
         // Varsa animasyon modunu aç
         var po = previewObject.GetComponent<PlaceableObject>();
         if (po != null) po.SetPreviewMode(true);
@@ -85,15 +89,17 @@ public Grid grid;
         // DÖNGÜ KARARI
         if (birlestirmeYoneticisi.sonUretilenObje != null)
         {
+            selectedCell.currentObject = null; //Eski objeyi hücreden kaldırıyor. Bu sayede objeler birleştikten sonra hücre dolu gözükmüyor ve yerleştirme bugu oluşmuyor.
+
             // --- BİRLEŞME OLDU ---
             // İnşaat alanı oluştu şimdi onu kontrol edip bir yere koymamız gerekiyo
-            
+
             // Eski previewı imleci sil
             Destroy(previewObject);
 
             // Yeni oluşan objeyi İnşaat Alanı elimize alıyoruz
             previewObject = birlestirmeYoneticisi.sonUretilenObje.gameObject;
-            
+
             // Bir sonraki tıkta bu objeyi koyması için prefabı güncelle
             currentPrefab = birlestirmeYoneticisi.sonUretilenObje.verisi.objePrefab;
 
@@ -102,29 +108,60 @@ public Grid grid;
         }
         else
         {
-           // birleşme olmadı - Normal Hamle
+            // birleşme olmadı - Normal Hamle
             selectedCell = null;
             previewObject.SetActive(false);
-            
+
             SpawnYeniObje();
         }
     }
-    
+
     void HandleInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
             isDragging = true;
+            hasDragged = false;
+            pressedOnPreview = false;
+            touchStartPos = Input.mousePosition;
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Vector3Int cellPos = grid.WorldToCell(hit.point);
+                GridCell cell = gridManager.GetCell(cellPos);
+
+                // Tıklama preview'ın BULUNDUĞU hücrede mi?
+                if (cell != null && cell == selectedCell)
+                {
+                    pressedOnPreview = true;
+                }
+            }
+
             UpdatePreviewPosition();
         }
+
+
         if (Input.GetMouseButton(0) && isDragging)
         {
+            if (!hasDragged && Vector2.Distance(Input.mousePosition, touchStartPos) >= dragThreshold)
+            {
+                hasDragged = true;
+            }
+
             UpdatePreviewPosition();
         }
+
         if (Input.GetMouseButtonUp(0) && isDragging)
         {
             isDragging = false;
-            Place();
+
+            //SADECE tıklama ise yerleştir
+            if (!hasDragged && pressedOnPreview && selectedCell != null)
+            {
+                Place();
+            }
+
         }
     }
 
