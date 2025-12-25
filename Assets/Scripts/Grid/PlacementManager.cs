@@ -21,8 +21,6 @@ public class PlacementManager : MonoBehaviour
 
     void Start()
     {
-        // Oyuna başlarken rastgele bir obje ile başla
-        SpawnYeniObje();
     }
 
     void Update()
@@ -31,7 +29,7 @@ public class PlacementManager : MonoBehaviour
     }
 
     // --- RANDOM OBJE SEÇME SİSTEMİ ---
-    void SpawnYeniObje()
+    public void SpawnYeniObje()
     {
         if (spawnlanabilirObjeler.Count == 0)
         {
@@ -178,17 +176,30 @@ public class PlacementManager : MonoBehaviour
 
     void SelectCell(GridCell cell)
     {
+        if (previewObject == null)
+            return;
+
         selectedCell = cell;
         previewObject.SetActive(true);
+
         float offset = 0.5f;
         var po = previewObject.GetComponent<PlaceableObject>();
         if (po != null) offset = po.heightOffset;
-        previewObject.transform.position = grid.GetCellCenterWorld(cell.cellPosition) + Vector3.up * offset;
+
+        previewObject.transform.position =
+            grid.GetCellCenterWorld(cell.cellPosition) + Vector3.up * offset;
     }
+
 
     void SelectFirstEmptyCell()
     {
         GridCell firstEmpty = gridManager.GetFirstEmptyCell();
         if (firstEmpty != null) SelectCell(firstEmpty);
     }
+
+    public void BeginPlacementAfterInitialSpawn()
+    {
+        SpawnYeniObje();
+    }
+
 }
