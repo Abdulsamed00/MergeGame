@@ -9,11 +9,12 @@ public class PlaceableObject : MonoBehaviour
     
     [Header("Durum")]
     public bool kilitliMi = false; 
-    public bool yeniSpawnOldu = false; // Kodda false ama Awake'de zorlayacağız
+    public int hareketHakki = 0; // 0=Durur, 1=Gider
 
-    // 0 = Kıpırdayamaz (Tekliler ve Binalar)
-    // 1 = 1 kere hareket edebilir (2'li Yığınlar)
-    public int hareketHakki = 0; 
+    [Header("Scale Ayarları")]
+    // Normal boyutu 0.6, Birleşince 1.0 olsun istedin
+    public Vector3 normalScale = new Vector3(0.6f, 0.6f, 0.6f);
+    public Vector3 buyukScale = new Vector3(0.85f, 0.85f, 0.85f);
 
     public List<ObjeVerisi> icindekiMalzemeler = new List<ObjeVerisi>();
 
@@ -22,12 +23,6 @@ public class PlaceableObject : MonoBehaviour
     void Awake()
     {
         animator = GetComponent<Animator>();
-        
-        // --- İŞTE ÇÖZÜM BURASI KOMUTANIM ---
-        // Prefab ayarı ne olursa olsun, oyun açıldığında herkes "Eski" ve "Hareketsiz" başlar.
-        // Sadece PlacementManager tarafından yaratılanlar sonradan True yapılacak.
-        yeniSpawnOldu = false;
-        hareketHakki = 0;
     }
 
     void Start()
@@ -37,9 +32,24 @@ public class PlaceableObject : MonoBehaviour
             icindekiMalzemeler.Add(verisi);
         }
         
-        // Başlangıçta animasyon durumunu kontrol et (InitialSpawnManager burayı tetikler)
-        // Awake'de false yaptığımız için başlangıç objeleri DURACAK.
-        SetPreviewMode(false);
+        // Başlangıçta boyutunu ayarla
+        BoyutuGuncelle();
+    }
+
+    // --- YENİ FONKSİYON: BOYUT AYARLAMA ---
+    public void BoyutuGuncelle()
+    {
+        // Eğer içinde 1'den fazla malzeme varsa (Yığınsa) BÜYÜT
+        if (icindekiMalzemeler.Count > 1 && !kilitliMi)
+        {
+            transform.localScale = buyukScale;
+        }
+        else
+        {
+            // Tekliyse veya Binaysa (Bina prefabının kendi boyutu vardır ama yine de kontrol edelim)
+            // Binayı scale ile bozmayalım, sadece tuğlalar için geçerli olsun.
+            if (!kilitliMi) transform.localScale = normalScale;
+        }
     }
 
     public void SetPreviewMode(bool isPreview)
@@ -52,14 +62,9 @@ public class PlaceableObject : MonoBehaviour
 
         if (animator != null)
         {
-            // Animasyon SADECE şu durumlarda çalışır:
-            // 1. Mouse ile tutuyorsan (isPreview)
-            // 2. Yeni doğduysa (PlacementManager true yaptıysa)
-            // 3. Hareket hakkı varsa (Birleşmiş objeyse)
-            bool oynamaliMi = isPreview || yeniSpawnOldu || hareketHakki > 0;
-            animator.enabled = oynamaliMi;
+            // ARTIK SADECE MOUSE İLE TUTARKEN OYNASIN
+            // Yığın olunca oynamasın, sadece büyüsün istedin.
+            animator.enabled = isPreview;
         }
     }
-   
-    
 }

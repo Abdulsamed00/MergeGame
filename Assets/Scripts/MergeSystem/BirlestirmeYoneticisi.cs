@@ -34,10 +34,11 @@ public class BirlestirmeYoneticisi : MonoBehaviour
             // --- YIĞINLAMA (1+1=2) ---
             yerdeki.icindekiMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
             
-            // Hareket hakkı kazandı! (Sadece burada kazanıyor)
+            // Hareket hakkı kazandı
             yerdeki.hareketHakki = 1; 
-            yerdeki.yeniSpawnOldu = true; // Oyuncu anlasın diye animasyon başlasın
-
+            
+            // --- ANİMASYON YOK, BOYUT BÜYÜTME VAR ---
+            yerdeki.BoyutuGuncelle(); // Scale 1.0 olacak
             yerdeki.SetPreviewMode(false); 
 
             return 1; 
@@ -54,7 +55,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
             po.verisi = gecerliTarif.sonucObjesi;
             po.currentCell = hedefHucre;
             po.kilitliMi = true; 
-            po.hareketHakki = 0; // Bina hareket edemez
+            po.hareketHakki = 0; 
             
             po.transform.position = pos + Vector3.up * po.heightOffset;
             po.SetPreviewMode(false); 
