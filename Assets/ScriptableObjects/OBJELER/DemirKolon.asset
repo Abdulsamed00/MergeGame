@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objeAdi: Demir Kolon
   objePrefab: {fileID: 4862341061578095771, guid: f0328c64a5c1aa541be96a79126db094, type: 3}
+  uiIkonu: {fileID: 21300000, guid: 9084bc3753b8bb3408948eda5b07aa6b, type: 3}
+  spawnYuzdesi: 10

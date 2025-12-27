@@ -13,5 +13,5 @@ public class LevelData : ScriptableObject
 
    public int hedeflenenBinaSayisi = 1;
 
-   public List<ObjeVerisi> spawnlanablirObjeler;
+   public List<ObjeVerisi> spawnlanabilirObjeler;
 }
