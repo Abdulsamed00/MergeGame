@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,153 +5,198 @@ public class BirlestirmeYoneticisi : MonoBehaviour
 {
     public List<BirlestirmeVerisi> tumTarifler;
     public GridManager gridManager;
-
-    // Sonsuz döngü engeli için liste (Arama sırasında kullanılır)
-    private List<PlaceableObject> ziyaretEdilenler;
     
     public PlaceableObject sonUretilenObje; 
 
-    public void BirlestirmeKontrol(int x, int y, PlaceableObject koyulanObjeNesnesi)
+    // --- MANUEL YIĞINLAMA (Senin onayladığın kısım - DOKUNMADIM) ---
+    public int YiginlamaKontrol(PlaceableObject elimizdeki, PlaceableObject yerdeki)
     {
-        sonUretilenObje = null; // Her yeni hamlede eski üretim verisini temizle
+        sonUretilenObje = null;
 
-        // Önce koyulan objenin kendi türündeki kümesini bul (Örn: 2 İnşaat Alanı)
-        List<PlaceableObject> anaKume = BaglantiliObjeleriBul(x, y, koyulanObjeNesnesi.verisi);
-        
-        // Bu listeyi Tüm Adaylar olarak başlatalım
-        List<PlaceableObject> tumAdaylar = new List<PlaceableObject>(anaKume);
+        if (elimizdeki.verisi != yerdeki.verisi) return 0;
 
-        // Ana kümedeki her bir parçanın komşularına bakıcaz
-        // Eğer komşuda farklı bir tür varsa, onun da kümesini bulup tüm adaylara eklicez
-        // 2 İnşaat Alanı 1 Demir Kolonu tek bir listede toplanmış olucak
-        
-        foreach (var parca in anaKume)
-        {
-            KomsularinKumesiniEkle(parca, tumAdaylar);
-        }
-
-        // Tarifleri kontrol et
+        BirlestirmeVerisi gecerliTarif = null;
         foreach (var tarif in tumTarifler)
         {
-            if (TarifeUyuyorMu(tumAdaylar, tarif))
+            if (tarif.gerekenMalzemeler.Count > 0 && tarif.gerekenMalzemeler[0] == elimizdeki.verisi)
             {
-                Debug.Log("Birleşme oldu: " + tarif.sonucObjesi.objeAdi);
-                BirlestirmeyiUygula(tumAdaylar, tarif, x, y);
+                gecerliTarif = tarif;
+                break;
+            }
+        }
+
+        if (gecerliTarif == null) return 0;
+
+        int gereken = gecerliTarif.gerekenMalzemeler.Count;
+        int toplam = elimizdeki.icindekiMalzemeler.Count + yerdeki.icindekiMalzemeler.Count;
+
+        if (toplam < gereken)
+        {
+            // Yığınlama
+            yerdeki.icindekiMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
+            yerdeki.hareketHakki = 1; 
+            yerdeki.BoyutuGuncelle();
+            yerdeki.SetPreviewMode(false); 
+            return 1; 
+        }
+        else if (toplam >= gereken)
+        {
+            // Dönüşüm (Tuğla -> İnşaat Alanı gibi)
+            GridCell hedefHucre = yerdeki.currentCell;
+            Vector3 pos = gridManager.grid.GetCellCenterWorld(hedefHucre.cellPosition);
+
+            GameObject bina = Instantiate(gecerliTarif.sonucObjesi.objePrefab, pos, Quaternion.identity);
+            PlaceableObject po = bina.GetComponent<PlaceableObject>();
+            
+            po.verisi = gecerliTarif.sonucObjesi;
+            po.currentCell = hedefHucre;
+            po.kilitliMi = true; 
+            po.hareketHakki = 0; 
+            
+            po.transform.position = pos + Vector3.up * po.heightOffset;
+            po.SetPreviewMode(false); 
+            
+            // Not: Boyut güncellemesi prefab'a göre, gerekirse buraya po.BoyutuGuncelle() ekleriz.
+
+            sonUretilenObje = po;
+            return 2;
+        }
+
+        return 0;
+    }
+
+    // --- YENİ EKLENEN KISIM: ZİNCİRLEME KONTROL (Bina İçin) ---
+    // Bu fonksiyon sadece PlacementManager tarafından, yeni bir sabit obje oluştuğunda çağrılacak.
+    public void OtomatikKomsulukKontrolu(PlaceableObject merkezObje)
+    {
+        if (merkezObje == null) return;
+
+        // Sadece kilitli (sabit) objeler etrafını kontrol edip birleşsin.
+        // Hareketli objeler zaten manuel birleşiyor.
+        if (!merkezObje.kilitliMi) return;
+
+        foreach (var tarif in tumTarifler)
+        {
+            // Bu tarif bizim objeyi içeriyor mu?
+            if (!tarif.gerekenMalzemeler.Contains(merkezObje.verisi)) continue;
+
+            // 1. Zincirleme (Flood Fill) ile bağlı olan uygun komşuları bul
+            List<PlaceableObject> baglantiliObjeler = BaglantiliKumeBul(merkezObje, tarif);
+
+            // 2. Havuz Sistemi ile tarif kontrolü
+            if (HavuzTarifiKarsiliyorMu(baglantiliObjeler, tarif))
+            {
+                Debug.Log("OTOMATİK BİNA OLUŞUYOR: " + tarif.sonucObjesi.objeAdi);
+
+                // Malzemeleri Seç ve Yok Et
+                List<PlaceableObject> silinecekler = MalzemeleriSec(baglantiliObjeler, tarif);
+                
+                // Merkez objeyi (tetikleyeni) garanti silmek için listeye ekleyelim (eğer yoksa)
+                if (!silinecekler.Contains(merkezObje)) silinecekler.Add(merkezObje);
+
+                foreach (var sil in silinecekler)
+                {
+                    sil.currentCell.currentObject = null;
+                    Destroy(sil.gameObject);
+                }
+
+                // Binayı Kur (Merkez objenin yerine)
+                GridCell merkezHucre = merkezObje.currentCell;
+                Vector3 pos = gridManager.grid.GetCellCenterWorld(merkezHucre.cellPosition);
+
+                GameObject bina = Instantiate(tarif.sonucObjesi.objePrefab, pos, Quaternion.identity);
+                PlaceableObject po = bina.GetComponent<PlaceableObject>();
+
+                po.verisi = tarif.sonucObjesi;
+                po.currentCell = merkezHucre;
+                po.kilitliMi = true; // Bina sabittir
+                po.hareketHakki = 0;
+                
+                merkezHucre.currentObject = po;
+                po.transform.position = pos + Vector3.up * po.heightOffset;
+                po.BoyutuGuncelle();
+                po.SetPreviewMode(false);
+
+                // İşlem bitti
                 return;
             }
         }
     }
-    
-    private void KomsularinKumesiniEkle(PlaceableObject merkezObje, List<PlaceableObject> tumAdaylar)
+
+    // --- YARDIMCI: ZİNCİRLEME ARAMA ---
+    private List<PlaceableObject> BaglantiliKumeBul(PlaceableObject baslangic, BirlestirmeVerisi tarif)
     {
-        // Grid koordinatını alıyoruz
-        Vector3Int merkezPos = merkezObje.currentCell.cellPosition;
+        List<PlaceableObject> kume = new List<PlaceableObject>();
+        Queue<PlaceableObject> gezilecekler = new Queue<PlaceableObject>();
+        HashSet<PlaceableObject> ziyaretEdilenler = new HashSet<PlaceableObject>();
+
+        gezilecekler.Enqueue(baslangic);
+        ziyaretEdilenler.Add(baslangic);
+
         Vector3Int[] yonler = { Vector3Int.right, Vector3Int.left, Vector3Int.forward, Vector3Int.back };
 
-        foreach (var yon in yonler)
+        while (gezilecekler.Count > 0)
         {
-            Vector3Int bakilanPos = merkezPos + yon;
-            GridCell hucre = gridManager.GetCell(bakilanPos);
-
-            // Hücre geçerli mi ve dolu mu
-            if (hucre != null && !hucre.IsEmpty())
+            PlaceableObject suanki = gezilecekler.Dequeue();
+            
+            // Eğer bu obje tarifin bir parçasıysa kümeye al
+            if (tarif.gerekenMalzemeler.Contains(suanki.verisi))
             {
-                PlaceableObject komsu = hucre.currentObject;
-
-                // Eğer bu komşu zaten listemizde yoksa demek ki farklı bir tür veya yeni bir küme
-                if (!tumAdaylar.Contains(komsu))
+                kume.Add(suanki);
+            }
+            
+            // Komşulara bak
+            foreach (var yon in yonler)
+            {
+                GridCell k = gridManager.GetCell(suanki.currentCell.cellPosition + yon);
+                if (k != null && !k.IsEmpty()) // Kilitli olup olmaması önemli değil, malzeme olması yeterli
                 {
-                    // O komşunun dahil olduğu kümeyi bul - Yanımızdaki Demir Kolonu gibi
-                    List<PlaceableObject> komsuKume = BaglantiliObjeleriBul(bakilanPos.x, bakilanPos.z, komsu.verisi);
-                    
-                    // Bulunan kümeyi ana listeye dahil et
-                    foreach (var k in komsuKume)
+                    PlaceableObject komsu = k.currentObject;
+                    if (!ziyaretEdilenler.Contains(komsu) && tarif.gerekenMalzemeler.Contains(komsu.verisi))
                     {
-                        if (!tumAdaylar.Contains(k)) tumAdaylar.Add(k);
+                        ziyaretEdilenler.Add(komsu);
+                        gezilecekler.Enqueue(komsu);
                     }
                 }
             }
         }
+        return kume;
     }
 
-    private void BirlestirmeyiUygula(List<PlaceableObject> harcanacaklar, BirlestirmeVerisi tarif, int x, int y)
+    // --- YARDIMCI: TARİF KONTROL ---
+    private bool HavuzTarifiKarsiliyorMu(List<PlaceableObject> objeler, BirlestirmeVerisi tarif)
     {
-        List<ObjeVerisi> gerekenler = new List<ObjeVerisi>(tarif.gerekenMalzemeler);
-        List<PlaceableObject> silinecekler = new List<PlaceableObject>();
-
-        // Reçete kadarını seç
-        foreach (var gereken in gerekenler)
-        {
-             PlaceableObject silinecek = harcanacaklar.Find(obj => obj.verisi == gereken && !silinecekler.Contains(obj));
-             if(silinecek != null) silinecekler.Add(silinecek);
-        }
-
-        // Seçilenleri yok et
-        foreach (var nesne in silinecekler)
-        {
-            nesne.currentCell.currentObject = null; 
-            Destroy(nesne.gameObject);
-        }
-
-        // YENİYİ OLUŞTUR 
-        Vector3Int merkezPos = new Vector3Int(x, 0, y);
-        Vector3 dunyaPozisyonu = gridManager.grid.GetCellCenterWorld(merkezPos);
-        
-        GameObject yeniObje = Instantiate(tarif.sonucObjesi.objePrefab, dunyaPozisyonu, Quaternion.identity);
-        PlaceableObject po = yeniObje.GetComponent<PlaceableObject>();
-        po.verisi = tarif.sonucObjesi;
-        
-        // objeyi Gride kilitlemiyoruz değişkene atıyoruz
-        sonUretilenObje = po;
-        
-        // hareket ettirilebilir modda bırakıyoruz
-        po.SetPreviewMode(true); 
-    }
-
-    private List<PlaceableObject> BaglantiliObjeleriBul(int baslangicX, int baslangicY, ObjeVerisi arananTur)
-    {
-        ziyaretEdilenler = new List<PlaceableObject>(); 
-        List<PlaceableObject> sonucListesi = new List<PlaceableObject>();
-        ZincirlemeAra(baslangicX, baslangicY, arananTur, sonucListesi);
-        return sonucListesi;
-    }
-
-    // Sadece aynı türleri bulur
-    private void ZincirlemeAra(int x, int y, ObjeVerisi arananTur, List<PlaceableObject> liste)
-    {
-        Vector3Int merkezPos = new Vector3Int(x, 0, y);
-        GridCell hucre = gridManager.GetCell(merkezPos);
-
-        if (hucre == null || hucre.IsEmpty()) return;
-
-        PlaceableObject suankiObje = hucre.currentObject;
-
-        if (ziyaretEdilenler.Contains(suankiObje)) return;
-        
-        // TÜR KONTROLÜ - Sadece aranan türle aynıysa devam et
-        if (suankiObje.verisi != arananTur) return;
-
-        ziyaretEdilenler.Add(suankiObje); 
-        liste.Add(suankiObje);            
-
-        // 4 Yöne yayıl
-        ZincirlemeAra(x + 1, y, arananTur, liste);
-        ZincirlemeAra(x - 1, y, arananTur, liste);
-        ZincirlemeAra(x, y + 1, arananTur, liste);
-        ZincirlemeAra(x, y - 1, arananTur, liste);
-    }
-
-    private bool TarifeUyuyorMu(List<PlaceableObject> eldekiNesneler, BirlestirmeVerisi tarif)
-    {
-        List<ObjeVerisi> kontrolListesi = new List<ObjeVerisi>();
-        foreach(var nesne in eldekiNesneler) kontrolListesi.Add(nesne.verisi);
+        List<ObjeVerisi> havuz = new List<ObjeVerisi>();
+        // Sadece objelerin kendi verisini havuza atıyoruz (Çünkü İnşaat Alanı tek parça sayılır)
+        foreach(var obj in objeler) havuz.Add(obj.verisi);
 
         List<ObjeVerisi> gerekenler = new List<ObjeVerisi>(tarif.gerekenMalzemeler);
-        
-        foreach (var eldeki in kontrolListesi)
+
+        foreach (var malzeme in havuz)
         {
-            if (gerekenler.Contains(eldeki)) gerekenler.Remove(eldeki);
+            if (gerekenler.Contains(malzeme))
+            {
+                gerekenler.Remove(malzeme);
+            }
         }
+        
         return gerekenler.Count == 0;
+    }
+
+    private List<PlaceableObject> MalzemeleriSec(List<PlaceableObject> adaylar, BirlestirmeVerisi tarif)
+    {
+        List<PlaceableObject> silinecekler = new List<PlaceableObject>();
+        List<ObjeVerisi> gerekenler = new List<ObjeVerisi>(tarif.gerekenMalzemeler);
+
+        foreach (var aday in adaylar)
+        {
+            if (gerekenler.Contains(aday.verisi))
+            {
+                gerekenler.Remove(aday.verisi);
+                silinecekler.Add(aday);
+            }
+            if (gerekenler.Count == 0) break;
+        }
+        return silinecekler;
     }
 }
