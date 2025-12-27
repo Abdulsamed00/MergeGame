@@ -182,8 +182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 19238769}
   cellPrefab: {fileID: 582348012461025155, guid: 9828a1b4f48258047a1c1f71262e0bd7, type: 3}
-  width: 4
-  height: 4
+  width: 6
+  height: 6
   cameraController: {fileID: 963194229}
 --- !u!1 &660687002
 GameObject:
@@ -517,7 +517,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  rotateSpeed: 5
+  rotateSpeed: 7
 --- !u!1 &1131656921
 GameObject:
   m_ObjectHideFlags: 0

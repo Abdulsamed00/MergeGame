@@ -19,9 +19,7 @@ public class GridManager : MonoBehaviour
     }
 
     private Dictionary<Vector3Int, GridCell> cells = new();
-    //Vector3Int = Grid koordinatları için(x,y,z)
-    //GridCell = O pozisyondaki hücre için
-    //Dictionary key ve ona karşılık gelen value değrini hızlıca saklamak ve bulmak için kullanılır.
+
 
     void Start()
     {
@@ -109,5 +107,4 @@ public class GridManager : MonoBehaviour
         }
         return bounds.center;
     }
-
 }
