@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class PlacementManager : MonoBehaviour
 {
@@ -7,24 +8,31 @@ public class PlacementManager : MonoBehaviour
     public GridManager gridManager;
     public BirlestirmeYoneticisi birlestirmeYoneticisi;
 
-    [Header("Spawnlanacak Başlangıç Objeleri")]
+    [Header("Spawn Sistemi")]
     public List<ObjeVerisi> spawnlanabilirObjeler;
+
+    // Kuyruk
+    private ObjeVerisi siradakiObjeVerisi;
+    private ObjeVerisi sonrakiObjeVerisi;
+
+    // --- ÖNEMLİ DEĞİŞİKLİK: Generic event yerine özel sınıf kullanıyoruz ---
+    [Header("UI Event")]
+    public SpriteEvent OnNextObjectChanged;
+    // ----------------------------------------------------------------------
 
     private GameObject currentPrefab;
     private GameObject previewObject;
     private GridCell selectedCell;
+    private bool pressedOnPreview = false;
     private bool isDragging = false;
     private bool hasDragged = false;
-    private bool pressedOnPreview = false;
     private Vector2 touchStartPos;
     private const float dragThreshold = 5f;
 
     private GridCell kaynakHucre;
     private PlaceableObject yerdekiGercekObje;
     private bool yerdenMiAldik = false;
-    private ObjeVerisi siradakiSpawnVerisi;
-
-    void Start() { } 
+    private GridCell spawnOriginCell;
 
     void Update()
     {
@@ -36,19 +44,56 @@ public class PlacementManager : MonoBehaviour
         HazirlaYeniSpawn();
     }
 
+    // --- EKSİK OLAN SETUP FONKSİYONU ---
+    public void SetupSpawnList(List<ObjeVerisi> gelenListe)
+    {
+        spawnlanabilirObjeler = gelenListe;
+        siradakiObjeVerisi = GetWeightedRandomObject();
+        sonrakiObjeVerisi = GetWeightedRandomObject();
+        UpdateNextUI();
+    }
+    // -----------------------------------
+
     void HazirlaYeniSpawn()
     {
-        if (spawnlanabilirObjeler.Count == 0) return;
+        if (spawnlanabilirObjeler == null || spawnlanabilirObjeler.Count == 0) return;
 
-        yerdenMiAldik = false;
-        kaynakHucre = null;
+        siradakiObjeVerisi = sonrakiObjeVerisi;
+        sonrakiObjeVerisi = GetWeightedRandomObject();
 
-        int rastgeleSayi = Random.Range(0, spawnlanabilirObjeler.Count);
-        siradakiSpawnVerisi = spawnlanabilirObjeler[rastgeleSayi];
-        currentPrefab = siradakiSpawnVerisi.objePrefab;
+        // UI Güncelleme çağrısı
+        UpdateNextUI();
+
+        currentPrefab = siradakiObjeVerisi.objePrefab;
 
         CreatePreview();
         SelectFirstEmptyCell();
+    }
+
+    // --- EKSİK OLAN UPDATE FONKSİYONU ---
+    private void UpdateNextUI()
+    {
+        if (OnNextObjectChanged != null && sonrakiObjeVerisi != null)
+        {
+            OnNextObjectChanged.Invoke(sonrakiObjeVerisi.uiIkonu);
+        }
+    }
+    // ------------------------------------
+
+    private ObjeVerisi GetWeightedRandomObject()
+    {
+        float toplamSans = 0;
+        foreach (var obj in spawnlanabilirObjeler) toplamSans += obj.spawnYuzdesi;
+
+        float rastgeleDeger = Random.Range(0, toplamSans);
+        float suankiToplam = 0;
+
+        foreach (var obj in spawnlanabilirObjeler)
+        {
+            suankiToplam += obj.spawnYuzdesi;
+            if (rastgeleDeger <= suankiToplam) return obj;
+        }
+        return spawnlanabilirObjeler[0];
     }
 
     void CreatePreview()
@@ -56,16 +101,14 @@ public class PlacementManager : MonoBehaviour
         if (previewObject != null) Destroy(previewObject);
 
         previewObject = Instantiate(currentPrefab);
-
         foreach (var col in previewObject.GetComponentsInChildren<Collider>()) col.enabled = false;
 
         var po = previewObject.GetComponent<PlaceableObject>();
-        if (po != null) 
+        if (po != null)
         {
-            // Eğer bu yeni spawn ise (yerden almadıysak), animasyonunu açıyoruz.
-            // Awake'de false yapmıştık, burada true yaparak onu "canlandırıyoruz".
-            if (!yerdenMiAldik) po.yeniSpawnOldu = true; 
-            
+            // Preview'a veri atamayı unutmuyoruz
+            po.verisi = siradakiObjeVerisi;
+            po.BoyutuGuncelle();
             po.SetPreviewMode(true);
         }
     }
@@ -74,56 +117,51 @@ public class PlacementManager : MonoBehaviour
     {
         if (selectedCell == null) return;
 
-        // A. İPTAL
         if (yerdenMiAldik && selectedCell == kaynakHucre)
         {
             IptalEt();
             return;
         }
 
-        // B. BOŞ YERE KOYMA
+        PlaceableObject yeniSabitObje = null;
+
         if (selectedCell.IsEmpty())
         {
             if (yerdenMiAldik)
             {
-                // --- YERDEKİ 2'Lİ OBJEYİ TAŞIDIK ---
                 kaynakHucre.currentObject = null;
-                
                 yerdekiGercekObje.gameObject.SetActive(true);
                 yerdekiGercekObje.transform.position = previewObject.transform.position;
                 yerdekiGercekObje.currentCell = selectedCell;
                 selectedCell.currentObject = yerdekiGercekObje;
-                
-                // Kombinasyon koruma
+
                 var previewPO = previewObject.GetComponent<PlaceableObject>();
                 if (previewPO != null) yerdekiGercekObje.icindekiMalzemeler = new List<ObjeVerisi>(previewPO.icindekiMalzemeler);
-                
-                // HAKKINI TÜKET: Bir kere oynattık, artık kıpırdayamaz.
+
                 yerdekiGercekObje.hareketHakki = 0;
-                yerdekiGercekObje.yeniSpawnOldu = false; 
-                yerdekiGercekObje.SetPreviewMode(false); // Animasyon durur
+                yerdekiGercekObje.BoyutuGuncelle();
+                yerdekiGercekObje.SetPreviewMode(false);
 
                 Destroy(previewObject);
                 YerdenOynamaBitti();
             }
             else
             {
-                // --- YENİ (TEKLİ) SPAWN YERLEŞTİRDİK ---
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, Quaternion.identity);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
+                // Veriyi aktar
+                po.verisi = siradakiObjeVerisi;
+
                 var previewPO = previewObject.GetComponent<PlaceableObject>();
-                if (previewPO != null) 
+                if (previewPO != null)
                 {
-                    po.verisi = previewPO.verisi;
                     po.icindekiMalzemeler = new List<ObjeVerisi>(previewPO.icindekiMalzemeler);
                 }
 
-                // YERLEŞTİĞİ AN SUSACAK VE HAREKET EDEMEYECEK
-                po.yeniSpawnOldu = false; 
-                po.hareketHakki = 0; 
+                po.hareketHakki = 0;
+                po.BoyutuGuncelle();
                 po.SetPreviewMode(false);
-                
                 po.currentCell = selectedCell;
                 selectedCell.currentObject = po;
 
@@ -133,13 +171,18 @@ public class PlacementManager : MonoBehaviour
                 HazirlaYeniSpawn();
             }
         }
-        // C. DOLU YERE KOYMA (BİRLEŞTİRME)
         else
         {
             PlaceableObject yerdekiObje = selectedCell.currentObject;
             PlaceableObject elimizdekiObje = previewObject.GetComponent<PlaceableObject>();
+            if (elimizdekiObje.verisi == null) elimizdekiObje.verisi = siradakiObjeVerisi;
 
             if (yerdekiObje.kilitliMi) { IptalEt(); return; }
+
+            if (!yerdenMiAldik && yerdekiObje.icindekiMalzemeler.Count >= 2)
+            {
+                IptalEt(); return;
+            }
 
             int sonuc = birlestirmeYoneticisi.YiginlamaKontrol(elimizdekiObje, yerdekiObje);
 
@@ -152,21 +195,23 @@ public class PlacementManager : MonoBehaviour
                     Destroy(yerdekiGercekObje.gameObject);
                 }
 
-                if (sonuc == 2) // Bina oldu
+                if (sonuc == 2)
                 {
-                     if (selectedCell.currentObject != null && selectedCell.currentObject != birlestirmeYoneticisi.sonUretilenObje)
+                    if (selectedCell.currentObject != null && selectedCell.currentObject != birlestirmeYoneticisi.sonUretilenObje)
                         Destroy(selectedCell.currentObject.gameObject);
+
                     selectedCell.currentObject = birlestirmeYoneticisi.sonUretilenObje;
+                    yeniSabitObje = birlestirmeYoneticisi.sonUretilenObje;
                 }
 
                 if (yerdenMiAldik) YerdenOynamaBitti();
                 else { selectedCell = null; previewObject = null; HazirlaYeniSpawn(); }
             }
-            else
-            {
-                IptalEt();
-            }
+            else IptalEt();
         }
+
+        if (yeniSabitObje != null) birlestirmeYoneticisi.OtomatikKomsulukKontrolu(yeniSabitObje);
+        GameManager.Instance.HamleBittiKontrolu();
     }
 
     void IptalEt()
@@ -177,6 +222,10 @@ public class PlacementManager : MonoBehaviour
             Destroy(previewObject);
             YerdenOynamaBitti();
         }
+        else
+        {
+            if (spawnOriginCell != null) SelectCell(spawnOriginCell);
+        }
     }
 
     void YerdenOynamaBitti()
@@ -184,9 +233,9 @@ public class PlacementManager : MonoBehaviour
         yerdenMiAldik = false;
         yerdekiGercekObje = null;
         kaynakHucre = null;
-        if(previewObject!=null) Destroy(previewObject);
+        if (previewObject != null) Destroy(previewObject);
 
-        currentPrefab = siradakiSpawnVerisi.objePrefab;
+        currentPrefab = siradakiObjeVerisi.objePrefab; // Düzeltildi
         CreatePreview();
         SelectFirstEmptyCell();
     }
@@ -200,21 +249,24 @@ public class PlacementManager : MonoBehaviour
             pressedOnPreview = false;
             touchStartPos = Input.mousePosition;
 
+            if (IsMouseOverPreview())
+            {
+                pressedOnPreview = true; 
+            }
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Vector3Int cellPos = grid.WorldToCell(hit.point);
                 GridCell cell = gridManager.GetCell(cellPos);
 
-                // 1. Yeni Spawn'a Tıkladı
-                if (cell != null && cell == selectedCell && !yerdenMiAldik)
+                if (!pressedOnPreview && cell != null && cell == selectedCell && !yerdenMiAldik)
                 {
                     pressedOnPreview = true;
                 }
-                // 2. Yerdeki Objeye Tıkladı (Yerden Alma)
-                else if (cell != null && !cell.IsEmpty() && !cell.currentObject.kilitliMi)
+                //Yerden obje alma mantığı
+                else if (!pressedOnPreview && cell != null && !cell.IsEmpty() && !cell.currentObject.kilitliMi)
                 {
-                    // SADECE HAREKET HAKKI OLAN (Yığın) OBJELERİ TUTABİLİRİZ
                     if (cell.currentObject.hareketHakki > 0)
                     {
                         if (previewObject != null) Destroy(previewObject);
@@ -225,14 +277,15 @@ public class PlacementManager : MonoBehaviour
                         currentPrefab = yerdekiGercekObje.verisi.objePrefab;
 
                         yerdekiGercekObje.gameObject.SetActive(false);
-                        CreatePreview(); 
-                        
+                        CreatePreview();
+
                         var po = previewObject.GetComponent<PlaceableObject>();
-                        po.yeniSpawnOldu = false; 
+                        po.verisi = yerdekiGercekObje.verisi;
                         po.icindekiMalzemeler = new List<ObjeVerisi>(yerdekiGercekObje.icindekiMalzemeler);
-                        
+                        po.BoyutuGuncelle();
+
                         SelectCell(cell);
-                        pressedOnPreview = true;
+                        pressedOnPreview = true; 
                     }
                 }
             }
@@ -241,18 +294,24 @@ public class PlacementManager : MonoBehaviour
 
         if (Input.GetMouseButton(0) && isDragging)
         {
-            if (!hasDragged && Vector2.Distance(Input.mousePosition, touchStartPos) >= dragThreshold)
-            {
-                hasDragged = true;
-            }
+            if (!hasDragged && Vector2.Distance(Input.mousePosition, touchStartPos) >= dragThreshold) hasDragged = true;
             UpdatePreviewPosition();
         }
 
         if (Input.GetMouseButtonUp(0) && isDragging)
         {
             isDragging = false;
-            if (selectedCell != null) Place();
-            else IptalEt();
+            if (selectedCell != null)
+            {                
+                if (!hasDragged && pressedOnPreview)
+                {
+                    Place();
+                }
+            }
+            else 
+            {
+                IptalEt();
+            }
         }
     }
 
@@ -267,32 +326,37 @@ public class PlacementManager : MonoBehaviour
             Vector3 hitPoint = ray.GetPoint(enter);
             Vector3Int cellPos = grid.WorldToCell(hitPoint);
             GridCell cell = gridManager.GetCell(cellPos);
-            
+
             if (cell != null)
             {
                 bool secilebilir = false;
-
-                if (yerdenMiAldik && kaynakHucre != null)
+                GridCell referansHucre = yerdenMiAldik ? kaynakHucre : spawnOriginCell;
+                if (referansHucre != null)
                 {
-                    int mesafeX = Mathf.Abs(cell.cellPosition.x - kaynakHucre.cellPosition.x);
-                    int mesafeY = Mathf.Abs(cell.cellPosition.z - kaynakHucre.cellPosition.z);
-                    if (mesafeX + mesafeY > 1) return; 
+                    int mesafeX = Mathf.Abs(cell.cellPosition.x - referansHucre.cellPosition.x);
+                    int mesafeY = Mathf.Abs(cell.cellPosition.z - referansHucre.cellPosition.z);
+                    if (mesafeX + mesafeY > 1) return;
                 }
 
                 if (cell.IsEmpty()) secilebilir = true;
                 else if (previewObject != null)
                 {
                     var yerdeki = cell.currentObject;
-                    var elimizdeki = previewObject.GetComponent<PlaceableObject>();
-                    
-                    if (yerdeki != null && elimizdeki != null && 
-                        yerdeki.verisi == elimizdeki.verisi && !yerdeki.kilitliMi)
+                    // Hata kaynağı düzeltildi: previewPO null olabilir
+                    var poComp = previewObject.GetComponent<PlaceableObject>();
+                    ObjeVerisi elimizdekiVeri = null;
+                    if (yerdenMiAldik && poComp != null) elimizdekiVeri = poComp.verisi;
+                    else elimizdekiVeri = siradakiObjeVerisi;
+
+                    if (yerdeki != null && elimizdekiVeri != null &&
+                        yerdeki.verisi == elimizdekiVeri && !yerdeki.kilitliMi)
                     {
-                        secilebilir = true;
+                        if (!yerdenMiAldik && yerdeki.icindekiMalzemeler.Count >= 2) secilebilir = false;
+                        else secilebilir = true;
                     }
                     if (yerdenMiAldik && cell == kaynakHucre) secilebilir = true;
+                    if (!yerdenMiAldik && cell == spawnOriginCell) secilebilir = true;
                 }
-
                 if (secilebilir) SelectCell(cell);
             }
         }
@@ -301,26 +365,47 @@ public class PlacementManager : MonoBehaviour
     void SelectCell(GridCell cell)
     {
         if (previewObject == null) return;
-
         selectedCell = cell;
         previewObject.SetActive(true);
-
         float offset = 0.5f;
         var po = previewObject.GetComponent<PlaceableObject>();
         if (po != null) offset = po.heightOffset;
-
-        previewObject.transform.position =
-            grid.GetCellCenterWorld(cell.cellPosition) + Vector3.up * offset;
+        previewObject.transform.position = grid.GetCellCenterWorld(cell.cellPosition) + Vector3.up * offset;
     }
 
     void SelectFirstEmptyCell()
     {
         GridCell firstEmpty = gridManager.GetFirstEmptyCell();
-        if (firstEmpty != null) SelectCell(firstEmpty);
+        if (firstEmpty != null)
+        {
+            spawnOriginCell = firstEmpty;
+            SelectCell(firstEmpty);
+        }
     }
 
     public void BeginPlacementAfterInitialSpawn()
     {
         SpawnYeniObje();
     }
+
+    private bool IsMouseOverPreview()
+    {
+        if (previewObject == null) return false;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        //Preview objesinin tüm görsel parçalarını (Renderer) bul
+        foreach (Renderer r in previewObject.GetComponentsInChildren<Renderer>())
+        {
+            //Işın bu görselin kutusuna (Bounds) değiyor mu?
+            if (r.bounds.IntersectRay(ray))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
+[System.Serializable]
+public class SpriteEvent : UnityEvent<Sprite> { }
