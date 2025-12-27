@@ -4,10 +4,14 @@ using System.Collections.Generic; //Dictionary kullanabilmek için
 
 public class GridManager : MonoBehaviour
 {
+    [Header("Grid")]
     public Grid grid;
     public GridCell cellPrefab;//Hücre için instantiate edliecek prefab için
     public int width = 4;
     public int height = 4;
+    
+    [Header("Camera")]
+    public CameraControlTool cameraController;
 
     public List<GridCell> GetAllCells()
     {
@@ -22,7 +26,12 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         CreateGrid();
+
+        Vector3 center = GetGridExactCenterWorld();
+        cameraController.InitFromGridCenter(center);
     }
+
+
 
     void CreateGrid()
     {
@@ -44,8 +53,11 @@ public class GridManager : MonoBehaviour
     public GridCell GetCell(Vector3Int pos)//Verilen grid koordinatlarındaki hücreyi döndürür
     {
         cells.TryGetValue(pos, out GridCell cell);//Dictionary içinde o pozisyon var mı kontrol eder. Varsa eğer cell değişkinine atar. Yoksa eğer null değer döner.
+        //TryGetValue bir Dictionary fonksiyonudur. Anlamı: Key var mı varsa bana değerini ver
+        //"pos" aranan anahtar, out GridCell cell ise anahtar varsa out sayesinde cell içini doldur. Yani true veya false döner
         return cell;
     }
+    //Grid koordinatlarında hücreyi bulur hücre var mı yok mu kontrol eder.
 
     public GridCell GetFirstEmptyCell()
     {
@@ -67,4 +79,35 @@ public class GridManager : MonoBehaviour
             cell.currentObject = null;
         }
     }
+    
+    public Vector3 GetGridCenterWorld()
+    {
+        Vector3Int centerCell = new Vector3Int(
+            (width - 1) / 2,
+            0,
+            (height - 1) / 2
+        );
+
+        return grid.GetCellCenterWorld(centerCell);
+    }
+    public Vector3 GetGridExactCenterWorld()
+    {
+        Bounds bounds = new Bounds();
+        bool first = true;
+
+        foreach (var cell in cells.Values)
+        {
+            if (first)
+            {
+                bounds = new Bounds(cell.transform.position, Vector3.zero);
+                first = false;
+            }
+            else
+            {
+                bounds.Encapsulate(cell.transform.position);
+            }
+        }
+        return bounds.center;
+    }
+
 }
