@@ -59,6 +59,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
             // Not: Boyut güncellemesi prefab'a göre, gerekirse buraya po.BoyutuGuncelle() ekleriz.
 
             sonUretilenObje = po;
+            GameManager.Instance.BinaYapildi();
             return 2;
         }
 
@@ -116,7 +117,8 @@ public class BirlestirmeYoneticisi : MonoBehaviour
                 po.transform.position = pos + Vector3.up * po.heightOffset;
                 po.BoyutuGuncelle();
                 po.SetPreviewMode(false);
-
+ 
+                GameManager.Instance.BinaYapildi();
                 // İşlem bitti
                 return;
             }
@@ -199,4 +201,5 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         }
         return silinecekler;
     }
+    
 }
