@@ -17,6 +17,13 @@ public class GridManager : MonoBehaviour
 
     // Hücreleri tuttuğumuz sözlük
     private Dictionary<Vector3Int, GridCell> cells = new Dictionary<Vector3Int, GridCell>();
+    public List<GridCell> GetAllCells()
+    {
+        return new List<GridCell>(cells.Values);
+    }
+
+    private Dictionary<Vector3Int, GridCell> cells = new();
+
 
     void Start()
     {

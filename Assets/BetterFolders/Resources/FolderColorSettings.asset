@@ -182,3 +182,11 @@ MonoBehaviour:
     applyColorToSubfolders: 1
     applyIconToSubfolders: 0
     materialColor: 0
+  - folderName: Tarifler
+    folderColor: {r: 0.7318928, g: 0.5226415, b: 1, a: 1}
+    fullPath: 
+    icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
+    applyToAllFolders: 1
+    applyColorToSubfolders: 1
+    applyIconToSubfolders: 0
+    materialColor: 0
