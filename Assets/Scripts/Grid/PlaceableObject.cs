@@ -14,7 +14,7 @@ public class PlaceableObject : MonoBehaviour
     [Header("Scale Ayarları")]
     // Normal boyutu 0.6, Birleşince 1.0 olsun istedin
     public Vector3 normalScale = new Vector3(0.6f, 0.6f, 0.6f);
-    public Vector3 buyukScale = new Vector3(0.85f, 0.85f, 0.85f);
+    public Vector3 buyukScale = new Vector3(0.7f, 0.7f, 0.7f);
 
     public List<ObjeVerisi> icindekiMalzemeler = new List<ObjeVerisi>();
 
@@ -23,6 +23,14 @@ public class PlaceableObject : MonoBehaviour
     void Awake()
     {
         animator = GetComponent<Animator>();
+        
+        // --- BU SATIRLARI EKLE Kİ INSPECTOR'I EZSIN ---
+        normalScale = new Vector3(0.6f, 0.6f, 0.6f);
+        buyukScale = new Vector3(0.7f, 0.7f, 0.7f);
+        // ----------------------------------------------
+
+        // Diğer ayarlar
+        hareketHakki = 0;
     }
 
     void Start()

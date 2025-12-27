@@ -64,7 +64,7 @@ public class PlacementManager : MonoBehaviour
         var po = previewObject.GetComponent<PlaceableObject>();
         if (po != null) 
         {
-            po.BoyutuGuncelle(); // 0.6 olarak başlasın
+            po.BoyutuGuncelle(); 
             po.SetPreviewMode(true);
         }
     }
@@ -79,6 +79,9 @@ public class PlacementManager : MonoBehaviour
             IptalEt();
             return;
         }
+        
+        // Bu hamlede üretilen yeni bir sabit obje var mı? (İnşaat alanı vb.)
+        PlaceableObject yeniSabitObje = null;
 
         // B. BOŞ YERE KOYMA
         if (selectedCell.IsEmpty())
@@ -96,9 +99,8 @@ public class PlacementManager : MonoBehaviour
                 var previewPO = previewObject.GetComponent<PlaceableObject>();
                 if (previewPO != null) yerdekiGercekObje.icindekiMalzemeler = new List<ObjeVerisi>(previewPO.icindekiMalzemeler);
                 
-                // HAKKINI TÜKET VE BOYUTU KORU
                 yerdekiGercekObje.hareketHakki = 0;
-                yerdekiGercekObje.BoyutuGuncelle(); // İçi doluysa büyük kalır
+                yerdekiGercekObje.BoyutuGuncelle();
                 yerdekiGercekObje.SetPreviewMode(false); 
 
                 Destroy(previewObject);
@@ -118,7 +120,7 @@ public class PlacementManager : MonoBehaviour
                 }
 
                 po.hareketHakki = 0; 
-                po.BoyutuGuncelle(); // Tekli olduğu için 0.6 olacak
+                po.BoyutuGuncelle(); 
                 po.SetPreviewMode(false);
                 
                 po.currentCell = selectedCell;
@@ -138,7 +140,7 @@ public class PlacementManager : MonoBehaviour
 
             if (yerdekiObje.kilitliMi) { IptalEt(); return; }
 
-            // Yeni spawn, yığınla birleşemez kuralı
+            // Kural: Yeni spawn, yığınla birleşemez
             if (!yerdenMiAldik && yerdekiObje.icindekiMalzemeler.Count >= 2)
             {
                 IptalEt();
@@ -158,9 +160,14 @@ public class PlacementManager : MonoBehaviour
 
                 if (sonuc == 2) 
                 {
-                     if (selectedCell.currentObject != null && selectedCell.currentObject != birlestirmeYoneticisi.sonUretilenObje)
+                    // --- BURADA İNŞAAT ALANI OLUŞTU ---
+                    if (selectedCell.currentObject != null && selectedCell.currentObject != birlestirmeYoneticisi.sonUretilenObje)
                         Destroy(selectedCell.currentObject.gameObject);
+                        
                     selectedCell.currentObject = birlestirmeYoneticisi.sonUretilenObje;
+                    
+                    // Otomatik kontrol için işaretle
+                    yeniSabitObje = birlestirmeYoneticisi.sonUretilenObje;
                 }
 
                 if (yerdenMiAldik) YerdenOynamaBitti();
@@ -170,6 +177,14 @@ public class PlacementManager : MonoBehaviour
             {
                 IptalEt();
             }
+        }
+        
+        // --- İŞTE O EKLEME BURADA ---
+        // Eğer bu hamle sonucunda bir İnşaat Alanı (veya benzeri sabit obje) oluştuysa,
+        // etrafına bakıp "Ben bina olabilir miyim?" diye kontrol etsin.
+        if (yeniSabitObje != null)
+        {
+            birlestirmeYoneticisi.OtomatikKomsulukKontrolu(yeniSabitObje);
         }
     }
 
@@ -234,7 +249,7 @@ public class PlacementManager : MonoBehaviour
                         
                         var po = previewObject.GetComponent<PlaceableObject>();
                         po.icindekiMalzemeler = new List<ObjeVerisi>(yerdekiGercekObje.icindekiMalzemeler);
-                        po.BoyutuGuncelle(); // Elimizdeki kopyanın boyutu da doğru gözüksün
+                        po.BoyutuGuncelle(); 
 
                         SelectCell(cell);
                         pressedOnPreview = true;
