@@ -186,6 +186,8 @@ public class PlacementManager : MonoBehaviour
         {
             birlestirmeYoneticisi.OtomatikKomsulukKontrolu(yeniSabitObje);
         }
+        
+        GameManager.Instance.HamleBittiKontrolu();
     }
 
     void IptalEt()
