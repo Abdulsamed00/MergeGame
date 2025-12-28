@@ -8,7 +8,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
     
     public PlaceableObject sonUretilenObje; 
 
-    // --- MANUEL YIĞINLAMA (Senin onayladığın kısım - DOKUNMADIM) ---
+    // --- MANUEL YIĞINLAMA ---
     public int YiginlamaKontrol(PlaceableObject elimizdeki, PlaceableObject yerdeki)
     {
         sonUretilenObje = null;
@@ -32,7 +32,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
 
         if (toplam < gereken)
         {
-            // Yığınlama
+            // Yığınlama (Henüz bina olmadı, malzeme birleşti)
             yerdeki.icindekiMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
             yerdeki.hareketHakki = 1; 
             yerdeki.BoyutuGuncelle();
@@ -41,7 +41,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         }
         else if (toplam >= gereken)
         {
-            // Dönüşüm (Tuğla -> İnşaat Alanı gibi)
+            // Dönüşüm (Bina oluştu!)
             GridCell hedefHucre = yerdeki.currentCell;
             Vector3 pos = gridManager.grid.GetCellCenterWorld(hedefHucre.cellPosition);
 
@@ -56,43 +56,37 @@ public class BirlestirmeYoneticisi : MonoBehaviour
             po.transform.position = pos + Vector3.up * po.heightOffset;
             po.SetPreviewMode(false); 
             
-            // Not: Boyut güncellemesi prefab'a göre, gerekirse buraya po.BoyutuGuncelle() ekleriz.
-
             sonUretilenObje = po;
-            GameManager.Instance.BinaYapildi();
+            
+            // --- DÜZELTME 1 BURADA ---
+            // 'yeniOlusanObje' yerine 'po' kullandık.
+            GameManager.Instance.UretimYapildi(po.verisi);
+            
             return 2;
         }
 
         return 0;
     }
 
-    // --- YENİ EKLENEN KISIM: ZİNCİRLEME KONTROL (Bina İçin) ---
-    // Bu fonksiyon sadece PlacementManager tarafından, yeni bir sabit obje oluştuğunda çağrılacak.
+    // --- OTOMATİK ZİNCİRLEME KONTROL ---
     public void OtomatikKomsulukKontrolu(PlaceableObject merkezObje)
     {
         if (merkezObje == null) return;
 
-        // Sadece kilitli (sabit) objeler etrafını kontrol edip birleşsin.
-        // Hareketli objeler zaten manuel birleşiyor.
         if (!merkezObje.kilitliMi) return;
 
         foreach (var tarif in tumTarifler)
         {
-            // Bu tarif bizim objeyi içeriyor mu?
             if (!tarif.gerekenMalzemeler.Contains(merkezObje.verisi)) continue;
 
-            // 1. Zincirleme (Flood Fill) ile bağlı olan uygun komşuları bul
             List<PlaceableObject> baglantiliObjeler = BaglantiliKumeBul(merkezObje, tarif);
 
-            // 2. Havuz Sistemi ile tarif kontrolü
             if (HavuzTarifiKarsiliyorMu(baglantiliObjeler, tarif))
             {
                 Debug.Log("OTOMATİK BİNA OLUŞUYOR: " + tarif.sonucObjesi.objeAdi);
 
-                // Malzemeleri Seç ve Yok Et
                 List<PlaceableObject> silinecekler = MalzemeleriSec(baglantiliObjeler, tarif);
                 
-                // Merkez objeyi (tetikleyeni) garanti silmek için listeye ekleyelim (eğer yoksa)
                 if (!silinecekler.Contains(merkezObje)) silinecekler.Add(merkezObje);
 
                 foreach (var sil in silinecekler)
@@ -101,7 +95,6 @@ public class BirlestirmeYoneticisi : MonoBehaviour
                     Destroy(sil.gameObject);
                 }
 
-                // Binayı Kur (Merkez objenin yerine)
                 GridCell merkezHucre = merkezObje.currentCell;
                 Vector3 pos = gridManager.grid.GetCellCenterWorld(merkezHucre.cellPosition);
 
@@ -110,7 +103,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
 
                 po.verisi = tarif.sonucObjesi;
                 po.currentCell = merkezHucre;
-                po.kilitliMi = true; // Bina sabittir
+                po.kilitliMi = true; 
                 po.hareketHakki = 0;
                 
                 merkezHucre.currentObject = po;
@@ -118,14 +111,16 @@ public class BirlestirmeYoneticisi : MonoBehaviour
                 po.BoyutuGuncelle();
                 po.SetPreviewMode(false);
  
-                GameManager.Instance.BinaYapildi();
-                // İşlem bitti
+                // --- DÜZELTME 2 BURADA ---
+                // Burada da 'yeniOlusanObje' yerine 'po' kullandık.
+                GameManager.Instance.UretimYapildi(po.verisi);
+                
                 return;
             }
         }
     }
 
-    // --- YARDIMCI: ZİNCİRLEME ARAMA ---
+    // --- YARDIMCI FONKSİYONLAR ---
     private List<PlaceableObject> BaglantiliKumeBul(PlaceableObject baslangic, BirlestirmeVerisi tarif)
     {
         List<PlaceableObject> kume = new List<PlaceableObject>();
@@ -141,17 +136,15 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         {
             PlaceableObject suanki = gezilecekler.Dequeue();
             
-            // Eğer bu obje tarifin bir parçasıysa kümeye al
             if (tarif.gerekenMalzemeler.Contains(suanki.verisi))
             {
                 kume.Add(suanki);
             }
             
-            // Komşulara bak
             foreach (var yon in yonler)
             {
                 GridCell k = gridManager.GetCell(suanki.currentCell.cellPosition + yon);
-                if (k != null && !k.IsEmpty()) // Kilitli olup olmaması önemli değil, malzeme olması yeterli
+                if (k != null && !k.IsEmpty()) 
                 {
                     PlaceableObject komsu = k.currentObject;
                     if (!ziyaretEdilenler.Contains(komsu) && tarif.gerekenMalzemeler.Contains(komsu.verisi))
@@ -165,11 +158,9 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         return kume;
     }
 
-    // --- YARDIMCI: TARİF KONTROL ---
     private bool HavuzTarifiKarsiliyorMu(List<PlaceableObject> objeler, BirlestirmeVerisi tarif)
     {
         List<ObjeVerisi> havuz = new List<ObjeVerisi>();
-        // Sadece objelerin kendi verisini havuza atıyoruz (Çünkü İnşaat Alanı tek parça sayılır)
         foreach(var obj in objeler) havuz.Add(obj.verisi);
 
         List<ObjeVerisi> gerekenler = new List<ObjeVerisi>(tarif.gerekenMalzemeler);
@@ -181,7 +172,6 @@ public class BirlestirmeYoneticisi : MonoBehaviour
                 gerekenler.Remove(malzeme);
             }
         }
-        
         return gerekenler.Count == 0;
     }
 
@@ -201,5 +191,4 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         }
         return silinecekler;
     }
-    
 }
