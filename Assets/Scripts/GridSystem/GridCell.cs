@@ -10,5 +10,6 @@ public class GridCell : MonoBehaviour
         return currentObject == null;
     }
     //Hücre boş olup olmadığını kontrol eder.
+    //Tek bir hücreyi temsil eder.
 
 }
