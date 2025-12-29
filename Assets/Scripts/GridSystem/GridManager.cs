@@ -15,28 +15,20 @@ public class GridManager : MonoBehaviour
     [Header("Camera")]
     public CameraControlTool cameraController;
 
-    // Hücreleri tuttuğumuz sözlük
+    //Hücreleri tuttuğumuz sözlük
     private Dictionary<Vector3Int, GridCell> cells = new();
 
-
-    void Start()
-    {
-        // BURASI ARTIK BOŞ.
-        // Çünkü Grid'i oyun başlar başlamaz değil, 
-        // GameManager "Bölüm Yükle" emri verince oluşturacağız.
-    }
-
-    // --- YENİ: GameManager tarafından çağrılacak ana fonksiyon ---
+    //GameManager tarafından çağrılacak ana fonksiyon
     public void GridiOlustur(int w, int h)
     {
-        // 1. Önce eski grid varsa temizle (Yeniden Oyna yapınca sahne karışmasın)
+        //Eski grid varsa temizle
         TemizleVeYokEt();
 
-        // 2. Yeni boyutları ayarla
+        //Boyutları ayarla
         width = w;
         height = h;
 
-        // 3. Grid'i fiziksel olarak oluştur
+        //Grid'i fiziksel olarak oluştur
         for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < height; z++)
@@ -51,7 +43,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        // 4. Grid oluştuğu için kamerayı ortala (Senin eski kodun)
+        //Grid oluştuğu için kamerayı ortala
         if (cameraController != null)
         {
             Vector3 center = GetGridExactCenterWorld();
@@ -59,19 +51,17 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    // --- YENİ: Kaybetme Kontrolü İçin ---
+    //Kaybetme kontrolü için
     public bool GridTamamenDoluMu()
     {
         foreach (var cell in cells.Values)
         {
-            // Eğer tek bir tane bile boş hücre varsa grid dolmamıştır
+            //Eğer tek bir tane bile boş hücre varsa grid dolmamıştır
             if (cell.IsEmpty()) return false;
         }
-        // Hiç boş yer bulunamadı, demek ki dolu
+        //Hiç boş yer bulunamadı, demek ki dolu
         return true;
     }
-
-    // --- YARDIMCI FONKSİYONLAR ---
 
     public GridCell GetCell(Vector3Int pos)
     {
@@ -96,7 +86,7 @@ public class GridManager : MonoBehaviour
         return new List<GridCell>(cells.Values);
     }
 
-    // Eski ClearGrid sadece içini boşaltıyordu, bu ise her şeyi yok eder (Level reset için)
+    //Level reset için
     private void TemizleVeYokEt()
     {
         foreach (var cell in cells.Values)
@@ -107,7 +97,7 @@ public class GridManager : MonoBehaviour
         cells.Clear();
     }
 
-    // Senin yazdığın kamera merkezleme kodu (Aynen korundu)
+    //Kamera merkezleme kodu
     public Vector3 GetGridExactCenterWorld()
     {
         Bounds bounds = new Bounds();
