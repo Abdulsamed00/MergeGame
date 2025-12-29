@@ -10,7 +10,7 @@ public class InitialSpawnManager : MonoBehaviour
     public PlacementManager placementManager;
 
     [Header("Spawn Listesi")]
-    public List<ObjeVerisi> baslangicObjeleri;
+    public List<ObjeVerisi> baslangicObjeleri; //Başlangıçta oluşacak objelerin listesi
 
     void Start()
     {
@@ -20,11 +20,12 @@ public class InitialSpawnManager : MonoBehaviour
 
     IEnumerator SpawnRoutine()
     {
-        // Grid oluşana kadar bekle
-        yield return null; // 1 frame bekle
-        yield return null; // garanti olsun diye 1 frame daha
+        //Grid oluşana kadar frame bekliyor
+        yield return null; //1 frame bekle
+        yield return null; //Garanti olsun diye 1 frame daha
 
         SpawnInitialObjects();
+        //Başlangıç objeleri konduktan sonra oyuncunun sırasını başlat
         placementManager.BeginPlacementAfterInitialSpawn();
     }
 
@@ -38,8 +39,10 @@ public class InitialSpawnManager : MonoBehaviour
             return;
         }
 
+        //Hücreleri karıştırıyoruz ki her level başında objeler farklı yerlerde olsun
         Shuffle(emptyCells);
 
+        //Sırayla objeleri boş hücrelere yerleştir
         for (int i = 0; i < baslangicObjeleri.Count; i++)
         {
             SpawnObjectToCell(baslangicObjeleri[i], emptyCells[i]);
@@ -54,6 +57,7 @@ public class InitialSpawnManager : MonoBehaviour
 
         GameObject obj = Instantiate(veri.objePrefab, spawnPos, Quaternion.identity);
 
+        //Objenin üzerindeki bileşene veriyi işleme işlemi
         PlaceableObject po = obj.GetComponent<PlaceableObject>();
         po.verisi = veri;
         po.currentCell = cell;
@@ -62,12 +66,13 @@ public class InitialSpawnManager : MonoBehaviour
         cell.currentObject = po;
     }
 
+    //Liste karıştırma kodu
     void Shuffle<T>(List<T> list)
     {
         for (int i = 0; i < list.Count; i++)
         {
             int rnd = Random.Range(i, list.Count);
-            (list[i], list[rnd]) = (list[rnd], list[i]);
+            (list[i], list[rnd]) = (list[rnd], list[i]); //Yer değiştirme
         }
     }
 }

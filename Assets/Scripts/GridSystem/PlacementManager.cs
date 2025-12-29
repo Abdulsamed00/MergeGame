@@ -11,14 +11,13 @@ public class PlacementManager : MonoBehaviour
     [Header("Spawn Sistemi")]
     public List<ObjeVerisi> spawnlanabilirObjeler;
 
-    // Kuyruk
+    //Kuyruk sistemi için
     private ObjeVerisi siradakiObjeVerisi;
     private ObjeVerisi sonrakiObjeVerisi;
 
-    // --- ÖNEMLİ DEĞİŞİKLİK: Generic event yerine özel sınıf kullanıyoruz ---
     [Header("UI Event")]
+    //UI güncellemek için event tanımı
     public SpriteEvent OnNextObjectChanged;
-    // ----------------------------------------------------------------------
 
     private GameObject currentPrefab;
     private GameObject previewObject;
@@ -36,6 +35,7 @@ public class PlacementManager : MonoBehaviour
 
     void Update()
     {
+        //Her karaede oyuncunun parmağı kontrol edilir
         HandleInput();
     }
 
@@ -44,7 +44,7 @@ public class PlacementManager : MonoBehaviour
         HazirlaYeniSpawn();
     }
 
-    // --- EKSİK OLAN SETUP FONKSİYONU ---
+    //Spawn listesi ayarlama
     public void SetupSpawnList(List<ObjeVerisi> gelenListe)
     {
         spawnlanabilirObjeler = gelenListe;
@@ -52,8 +52,8 @@ public class PlacementManager : MonoBehaviour
         sonrakiObjeVerisi = GetWeightedRandomObject();
         UpdateNextUI();
     }
-    // -----------------------------------
 
+    //Yeni spawn için hazırlık
     void HazirlaYeniSpawn()
     {
         if (spawnlanabilirObjeler == null || spawnlanabilirObjeler.Count == 0) return;
@@ -61,7 +61,7 @@ public class PlacementManager : MonoBehaviour
         siradakiObjeVerisi = sonrakiObjeVerisi;
         sonrakiObjeVerisi = GetWeightedRandomObject();
 
-        // UI Güncelleme çağrısı
+        //UI güncelleme
         UpdateNextUI();
 
         currentPrefab = siradakiObjeVerisi.objePrefab;
@@ -70,7 +70,7 @@ public class PlacementManager : MonoBehaviour
         SelectFirstEmptyCell();
     }
 
-    // --- EKSİK OLAN UPDATE FONKSİYONU ---
+    //UI güncelleme fonksiyonu
     private void UpdateNextUI()
     {
         if (OnNextObjectChanged != null && sonrakiObjeVerisi != null)
@@ -78,8 +78,8 @@ public class PlacementManager : MonoBehaviour
             OnNextObjectChanged.Invoke(sonrakiObjeVerisi.uiIkonu);
         }
     }
-    // ------------------------------------
 
+    //Objelerin verilen float değerlerine göre (spawn yüzdesi) rastgele seçilmesi
     private ObjeVerisi GetWeightedRandomObject()
     {
         float toplamSans = 0;
@@ -101,6 +101,8 @@ public class PlacementManager : MonoBehaviour
         if (previewObject != null) Destroy(previewObject);
 
         previewObject = Instantiate(currentPrefab);
+
+        //Collider kapatılıyor ki Raycast zemine değebilsin.
         foreach (var col in previewObject.GetComponentsInChildren<Collider>()) col.enabled = false;
 
         var po = previewObject.GetComponent<PlaceableObject>();
@@ -150,7 +152,7 @@ public class PlacementManager : MonoBehaviour
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, Quaternion.identity);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
-                // Veriyi aktar
+                //Veriyi aktar
                 po.verisi = siradakiObjeVerisi;
 
                 var previewPO = previewObject.GetComponent<PlaceableObject>();
@@ -171,6 +173,8 @@ public class PlacementManager : MonoBehaviour
                 HazirlaYeniSpawn();
             }
         }
+
+        //Birleştirme işlemi
         else
         {
             PlaceableObject yerdekiObje = selectedCell.currentObject;
@@ -186,7 +190,7 @@ public class PlacementManager : MonoBehaviour
 
             int sonuc = birlestirmeYoneticisi.YiginlamaKontrol(elimizdekiObje, yerdekiObje);
 
-            if (sonuc > 0)
+            if (sonuc > 0)//Birleştirme başarılı
             {
                 Destroy(previewObject);
                 if (yerdenMiAldik)
@@ -249,11 +253,13 @@ public class PlacementManager : MonoBehaviour
             pressedOnPreview = false;
             touchStartPos = Input.mousePosition;
 
+            //Parmak önizlemenin üzerindeyse
             if (IsMouseOverPreview())
             {
-                pressedOnPreview = true; 
+                pressedOnPreview = true;
             }
 
+            //Zemine ışın atılıyor
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
@@ -264,7 +270,8 @@ public class PlacementManager : MonoBehaviour
                 {
                     pressedOnPreview = true;
                 }
-                //Yerden obje alma mantığı
+
+                //Yerden obje alma
                 else if (!pressedOnPreview && cell != null && !cell.IsEmpty() && !cell.currentObject.kilitliMi)
                 {
                     if (cell.currentObject.hareketHakki > 0)
@@ -285,7 +292,7 @@ public class PlacementManager : MonoBehaviour
                         po.BoyutuGuncelle();
 
                         SelectCell(cell);
-                        pressedOnPreview = true; 
+                        pressedOnPreview = true;
                     }
                 }
             }
@@ -294,27 +301,30 @@ public class PlacementManager : MonoBehaviour
 
         if (Input.GetMouseButton(0) && isDragging)
         {
+            //Belli bir mesafe sürüklendiyse kaydırma olarak kabul edilir
             if (!hasDragged && Vector2.Distance(Input.mousePosition, touchStartPos) >= dragThreshold) hasDragged = true;
             UpdatePreviewPosition();
         }
 
+        //Parmak kalkar
         if (Input.GetMouseButtonUp(0) && isDragging)
         {
             isDragging = false;
             if (selectedCell != null)
-            {                
+            {
                 if (!hasDragged && pressedOnPreview)
                 {
                     Place();
                 }
             }
-            else 
+            else
             {
                 IptalEt();
             }
         }
     }
 
+    //Preview pozisyonunu mouse/parmağa göre güncelleme
     void UpdatePreviewPosition()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -342,7 +352,6 @@ public class PlacementManager : MonoBehaviour
                 else if (previewObject != null)
                 {
                     var yerdeki = cell.currentObject;
-                    // Hata kaynağı düzeltildi: previewPO null olabilir
                     var poComp = previewObject.GetComponent<PlaceableObject>();
                     ObjeVerisi elimizdekiVeri = null;
                     if (yerdenMiAldik && poComp != null) elimizdekiVeri = poComp.verisi;
@@ -394,10 +403,9 @@ public class PlacementManager : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        //Preview objesinin tüm görsel parçalarını (Renderer) bul
+        //Preview objesinin Renderer bölümünü bul
         foreach (Renderer r in previewObject.GetComponentsInChildren<Renderer>())
         {
-            //Işın bu görselin kutusuna (Bounds) değiyor mu?
             if (r.bounds.IntersectRay(ray))
             {
                 return true;
