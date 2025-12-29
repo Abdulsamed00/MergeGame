@@ -11,17 +11,11 @@ public class GridManager : MonoBehaviour
     // Bu değerleri artık GameManager yönetecek, o yüzden HideInInspector kalabilir
     [HideInInspector] public int width = 4;
     [HideInInspector] public int height = 4;
-    
+
     [Header("Camera")]
     public CameraControlTool cameraController;
 
     // Hücreleri tuttuğumuz sözlük
-    private Dictionary<Vector3Int, GridCell> cells = new Dictionary<Vector3Int, GridCell>();
-    public List<GridCell> GetAllCells()
-    {
-        return new List<GridCell>(cells.Values);
-    }
-
     private Dictionary<Vector3Int, GridCell> cells = new();
 
 
@@ -47,8 +41,8 @@ public class GridManager : MonoBehaviour
         {
             for (int z = 0; z < height; z++)
             {
-                Vector3Int cellPos = new Vector3Int(x, 0, z); 
-                Vector3 worldPos = grid.GetCellCenterWorld(cellPos); 
+                Vector3Int cellPos = new Vector3Int(x, 0, z);
+                Vector3 worldPos = grid.GetCellCenterWorld(cellPos);
 
                 GridCell cell = Instantiate(cellPrefab, worldPos, Quaternion.identity, transform);
                 cell.cellPosition = cellPos;
@@ -112,7 +106,7 @@ public class GridManager : MonoBehaviour
         }
         cells.Clear();
     }
-    
+
     // Senin yazdığın kamera merkezleme kodu (Aynen korundu)
     public Vector3 GetGridExactCenterWorld()
     {
