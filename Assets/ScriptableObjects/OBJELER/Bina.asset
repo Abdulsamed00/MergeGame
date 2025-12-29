@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objeAdi: Bina
   objePrefab: {fileID: 8430541925567354895, guid: d91919df694dc30428ef04e9f7b05a34, type: 3}
+  uiIkonu: {fileID: 0}
+  spawnYuzdesi: 0
+  tur: 1

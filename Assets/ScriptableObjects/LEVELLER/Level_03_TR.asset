@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelID: 2
   ulkeAdi: "T\xFCrkiye"
-  levelAdi: 
+  levelAdi: Level 3
   gridGenislik: 4
   gridYukseklik: 4
   hedeflenenBinaSayisi: 3
