@@ -12,8 +12,8 @@ public class PlacementManager : MonoBehaviour
     public List<ObjeVerisi> spawnlanabilirObjeler;
 
     // Kuyruk
-    private ObjeVerisi siradakiObjeVerisi;
-    private ObjeVerisi sonrakiObjeVerisi;
+    public ObjeVerisi siradakiObjeVerisi;
+    public ObjeVerisi sonrakiObjeVerisi;
 
     // --- ÖNEMLİ DEĞİŞİKLİK: Generic event yerine özel sınıf kullanıyoruz ---
     [Header("UI Event")]
@@ -115,6 +115,45 @@ public class PlacementManager : MonoBehaviour
 
     void Place()
     {
+        if (selectedCell == null) return;
+
+        // --- UNDO SİSTEMİ İÇİN EKLEME ---
+        // Eğer geçerli bir hamle yapıyorsak durumu kaydedelim.
+        // (Basit kontrol: ya boş yere koyuyoruzdur ya da dolu yerle etkileşime giriyoruzdur)
+        bool hamleGecerliMi = false;
+    
+        if (selectedCell.IsEmpty()) hamleGecerliMi = true;
+        else 
+        {
+            // Dolu hücre kontrolü (senin kodundaki mantığın aynısı)
+            var yerdeki = selectedCell.currentObject;
+            var eldeki = siradakiObjeVerisi; // Basit referans
+            if (yerdenMiAldik) eldeki = yerdekiGercekObje.verisi; // Yerden aldıysak farklı
+
+            // Burada detaylı "merge olabilir mi" kontrolü yapmak yerine
+            // En basit yöntem: Şimdilik kaydet, hamle başarısız olursa geri sileriz
+            // Ama snapshot ucuz olduğu için direkt kaydedelim:
+            hamleGecerliMi = true; 
+        }
+
+        if (hamleGecerliMi)
+        {
+            // Eğer sahnede UndoManager varsa kaydet
+            if (UndoManager.Instance != null) UndoManager.Instance.SaveState();
+        }
+        // -------------------------------
+
+        // ... Senin mevcut kodların buradan devam ediyor ...
+        if (yerdenMiAldik && selectedCell == kaynakHucre)
+        {
+            // İPTAL DURUMU: Eğer oyuncu taşı kaldırıp aynı yere geri koyduysa
+            // bu bir hamle sayılmaz. Stack'ten son kaydı silelim.
+            if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState(); // (Bu fonksiyonu aşağıda veriyorum)
+        
+            IptalEt();
+            return;
+        }
+        
         if (selectedCell == null) return;
 
         if (yerdenMiAldik && selectedCell == kaynakHucre)
@@ -404,6 +443,25 @@ public class PlacementManager : MonoBehaviour
             }
         }
         return false;
+    }
+    
+    // UndoManager tarafından çağrılır
+    public void ForceUpdatePreview()
+    {
+        if (previewObject != null) Destroy(previewObject);
+    
+        // UI Güncelle
+        if (OnNextObjectChanged != null && sonrakiObjeVerisi != null)
+        {
+            OnNextObjectChanged.Invoke(sonrakiObjeVerisi.uiIkonu);
+        }
+
+        // Elimizdeki objeyi (Preview) tekrar yarat
+        currentPrefab = siradakiObjeVerisi.objePrefab; 
+        CreatePreview();
+    
+        // Rastgele boş bir yere odakla
+        SelectFirstEmptyCell(); 
     }
 }
 

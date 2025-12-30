@@ -16,14 +16,7 @@ public class GridManager : MonoBehaviour
     public CameraControlTool cameraController;
 
     // Hücreleri tuttuğumuz sözlük
-    private Dictionary<Vector3Int, GridCell> cells = new Dictionary<Vector3Int, GridCell>();
-    public List<GridCell> GetAllCells()
-    {
-        return new List<GridCell>(cells.Values);
-    }
-
     private Dictionary<Vector3Int, GridCell> cells = new();
-
 
     void Start()
     {
@@ -111,6 +104,24 @@ public class GridManager : MonoBehaviour
             Destroy(cell.gameObject);
         }
         cells.Clear();
+    }
+    
+    // UndoManager erişebilsin diye
+    public void TemizleVeYokEtPublic()
+    {
+        // Mevcut hücreleri temizle ama hücrenin kendisini (GridCell) yok etme,
+        // sadece içindeki objeleri (PlaceableObject) yok et.
+        // DİKKAT: Senin kodunda TemizleVeYokEt "GridCell"leri de yok ediyor.
+        // Undo yaparken GridCell'lerin kalması lazım, sadece içindeki binalar gitmeli.
+    
+        foreach (var cell in cells.Values)
+        {
+            if (cell.currentObject != null)
+            {
+                Destroy(cell.currentObject.gameObject);
+                cell.currentObject = null;
+            }
+        }
     }
     
     // Senin yazdığın kamera merkezleme kodu (Aynen korundu)
