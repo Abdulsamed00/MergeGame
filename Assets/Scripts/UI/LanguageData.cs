@@ -10,7 +10,7 @@ public static class LanguageData
     {
         get
         {
-            // 🔹 İlk açılışta Türkçe
+         
             return (Language)UnityEngine.PlayerPrefs.GetInt("Language", 0);
         }
         set

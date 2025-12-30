@@ -5,39 +5,18 @@ public class CountryLevelsUI : MonoBehaviour
 {
     public GameObject levelsPanel;
 
-    [Header("Country Level Panels")]
     public GameObject turkeyLevelsPanel;
     public GameObject japanLevelsPanel;
     public GameObject brazilLevelsPanel;
     public GameObject egyptLevelsPanel;
 
     public MenuManager menuManager;
-
     GameObject currentCountryPanel;
 
-    // ======================
-    // COUNTRY BUTTONS
-    // ======================
-
-    public void OpenTurkey()
-    {
-        OpenCountry(turkeyLevelsPanel);
-    }
-
-    public void OpenJapan()
-    {
-        OpenCountry(japanLevelsPanel);
-    }
-
-    public void OpenBrazil()
-    {
-        OpenCountry(brazilLevelsPanel);
-    }
-
-    public void OpenEgypt()
-    {
-        OpenCountry(egyptLevelsPanel);
-    }
+    public void OpenTurkey() => OpenCountry(turkeyLevelsPanel);
+    public void OpenJapan() => OpenCountry(japanLevelsPanel);
+    public void OpenBrazil() => OpenCountry(brazilLevelsPanel);
+    public void OpenEgypt() => OpenCountry(egyptLevelsPanel);
 
     void OpenCountry(GameObject countryPanel)
     {
@@ -60,10 +39,6 @@ public class CountryLevelsUI : MonoBehaviour
 
         yield return menuManager.StartCoroutine("FadeIn");
     }
-
-    // ======================
-    // BACK
-    // ======================
 
     public void BackToLevels()
     {
