@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class LevelSpawnVerisi
+{
+    public ObjeVerisi obje;
+    [Range(0, 100)] public float spawnYuzdesi;
+}
+
 [CreateAssetMenu(fileName = "YeniLevelData", menuName = "Oyun/Level Data")]
 public class LevelData : ScriptableObject
 {
@@ -13,5 +20,5 @@ public class LevelData : ScriptableObject
 
    public int hedeflenenBinaSayisi = 1;
 
-   public List<ObjeVerisi> spawnlanabilirObjeler;
+   public List<LevelSpawnVerisi> levelObjeleri;
 }

@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
 
         gridManager.GridiOlustur(suankiLevelData.gridGenislik, suankiLevelData.gridYukseklik);
 
-        placementManager.SetupSpawnList(suankiLevelData.spawnlanabilirObjeler);
+        placementManager.SetupSpawnList(suankiLevelData.levelObjeleri);
         placementManager.SpawnYeniObje();
     }
         

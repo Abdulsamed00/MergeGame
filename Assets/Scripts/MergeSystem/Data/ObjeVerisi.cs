@@ -10,5 +10,4 @@ public class ObjeVerisi : ScriptableObject
     public GameObject objePrefab;
 
     public Sprite uiIkonu; //Sonraki obje kutusunda çıkacak ikon.
-    [Range(0, 100)] public float spawnYuzdesi; //Bu objenin spawnlanma yüzdesi.
 }

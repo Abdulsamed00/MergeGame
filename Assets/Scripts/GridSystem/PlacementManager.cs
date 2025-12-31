@@ -9,7 +9,7 @@ public class PlacementManager : MonoBehaviour
     public BirlestirmeYoneticisi birlestirmeYoneticisi;
 
     [Header("Spawn Sistemi")]
-    public List<ObjeVerisi> spawnlanabilirObjeler;
+    public List<LevelSpawnVerisi> mevcutLevelObjeleri;
 
     //Kuyruk sistemi için
     private ObjeVerisi siradakiObjeVerisi;
@@ -45,9 +45,11 @@ public class PlacementManager : MonoBehaviour
     }
 
     //Spawn listesi ayarlama
-    public void SetupSpawnList(List<ObjeVerisi> gelenListe)
+    public void SetupSpawnList(List<LevelSpawnVerisi> gelenListe)
     {
-        spawnlanabilirObjeler = gelenListe;
+        mevcutLevelObjeleri = gelenListe;
+        
+        //Listeyi alır almaz ilk taşları belirle
         siradakiObjeVerisi = GetWeightedRandomObject();
         sonrakiObjeVerisi = GetWeightedRandomObject();
         UpdateNextUI();
@@ -56,7 +58,7 @@ public class PlacementManager : MonoBehaviour
     //Yeni spawn için hazırlık
     void HazirlaYeniSpawn()
     {
-        if (spawnlanabilirObjeler == null || spawnlanabilirObjeler.Count == 0) return;
+        if (mevcutLevelObjeleri == null || mevcutLevelObjeleri.Count == 0) return;
 
         siradakiObjeVerisi = sonrakiObjeVerisi;
         sonrakiObjeVerisi = GetWeightedRandomObject();
@@ -83,17 +85,24 @@ public class PlacementManager : MonoBehaviour
     private ObjeVerisi GetWeightedRandomObject()
     {
         float toplamSans = 0;
-        foreach (var obj in spawnlanabilirObjeler) toplamSans += obj.spawnYuzdesi;
+        //Artık "obj.spawnYuzdesi" yerine "item.spawnYuzdesi"ne bakıyoruz
+        foreach (var item in mevcutLevelObjeleri) toplamSans += item.spawnYuzdesi;
 
         float rastgeleDeger = Random.Range(0, toplamSans);
         float suankiToplam = 0;
 
-        foreach (var obj in spawnlanabilirObjeler)
+        foreach (var item in mevcutLevelObjeleri)
         {
-            suankiToplam += obj.spawnYuzdesi;
-            if (rastgeleDeger <= suankiToplam) return obj;
+            suankiToplam += item.spawnYuzdesi;
+            if (rastgeleDeger <= suankiToplam) 
+            {
+                //Seçilen "Kutu"nun içindeki "Obje"yi döndür
+                return item.obje; 
+            }
         }
-        return spawnlanabilirObjeler[0];
+        
+        //Matematiksel bir hata olursa listenin ilk elemanını döndür
+        return mevcutLevelObjeleri[0].obje;
     }
 
     void CreatePreview()
