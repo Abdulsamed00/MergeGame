@@ -8,14 +8,20 @@ public class SimpleLanguageText : MonoBehaviour
 
     Text text;
 
-    void OnEnable()
+    void Awake()
     {
         text = GetComponent<Text>();
+    }
+
+    void OnEnable()
+    {
         Refresh();
     }
 
     public void Refresh()
     {
+        if (text == null) return;
+
         if (LanguageData.CurrentLanguage == Language.Turkish)
             text.text = turkish;
         else

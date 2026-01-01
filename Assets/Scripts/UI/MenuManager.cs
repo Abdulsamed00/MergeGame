@@ -7,7 +7,7 @@ public class MenuManager : MonoBehaviour
 {
     public GameObject mainMenuPanel;
     public GameObject settingsPanel;
-    public GameObject levelsPanel;   // EKLENDİ
+    public GameObject levelsPanel;
 
     [Header("Fade")]
     public Image fadeImage;
@@ -21,14 +21,17 @@ public class MenuManager : MonoBehaviour
         settingsPanel.SetActive(false);
         levelsPanel.SetActive(false);
 
-        StartCoroutine(FadeIn());
+        if (fadeImage != null)
+        {
+            fadeImage.raycastTarget = false;
+            StartCoroutine(FadeIn());
+        }
     }
 
     // ======================
     // MAIN MENU
     // ======================
 
-    // MAIN MENU -> LEVELS
     public void OpenLevels()
     {
         StartCoroutine(SwitchPanel(mainMenuPanel, levelsPanel));
@@ -36,7 +39,7 @@ public class MenuManager : MonoBehaviour
 
     public void PlayGame()
     {
-        StartCoroutine(FadeToScene("SampleScene"));
+        StartCoroutine(FadeToScene(Scenes.SampleScene));
     }
 
     public void OpenSettings()
@@ -52,13 +55,13 @@ public class MenuManager : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+        Debug.Log("Oyun kapatıldı");
     }
 
     // ======================
     // LEVELS
     // ======================
 
-    // LEVELS -> MAIN MENU
     public void CloseLevels()
     {
         StartCoroutine(SwitchPanel(levelsPanel, mainMenuPanel));
@@ -76,14 +79,16 @@ public class MenuManager : MonoBehaviour
         yield return FadeIn();
     }
 
-    IEnumerator FadeToScene(string sceneName)
+    IEnumerator FadeToScene(Scenes scene)
     {
         yield return FadeOut();
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene(scene.ToString());
     }
 
     IEnumerator FadeIn()
     {
+        if (fadeImage == null) yield break;
+
         float t = fadeDuration;
         while (t > 0)
         {
@@ -95,6 +100,8 @@ public class MenuManager : MonoBehaviour
 
     IEnumerator FadeOut()
     {
+        if (fadeImage == null) yield break;
+
         float t = 0;
         while (t < fadeDuration)
         {
@@ -128,4 +135,10 @@ public class MenuManager : MonoBehaviour
             t.Refresh();
         }
     }
+}
+
+public enum Scenes
+{
+    UiScene,
+    SampleScene
 }
