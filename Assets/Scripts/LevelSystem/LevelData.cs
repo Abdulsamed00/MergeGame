@@ -7,6 +7,7 @@ public class LevelData : ScriptableObject
 {
    public int levelID;
    public string ulkeAdi;
+   public string levelAdi;
 
    public int gridGenislik;
    public int gridYukseklik;
