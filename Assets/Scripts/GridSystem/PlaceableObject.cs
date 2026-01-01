@@ -20,7 +20,7 @@ public class PlaceableObject : MonoBehaviour
 
     void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         normalScale = new Vector3(0.6f, 0.6f, 0.6f);
         buyukScale = new Vector3(0.7f, 0.7f, 0.7f);
     }
