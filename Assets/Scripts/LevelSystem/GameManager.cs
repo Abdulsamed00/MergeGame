@@ -58,8 +58,8 @@ public class GameManager : MonoBehaviour
         losePanel.SetActive(false);
 
         gridManager.GridiOlustur(suankiLevelData.gridGenislik, suankiLevelData.gridYukseklik);
-
-        placementManager.SetupSpawnList(suankiLevelData.spawnlanabilirObjeler);
+        placementManager.SetupSpawnList(suankiLevelData.levelObjeleri);
+        
         placementManager.SpawnYeniObje();
     }
         
