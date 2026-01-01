@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         placementManager.SpawnYeniObje();
     }
         
-        // Bu fonksiyonu BirlestirmeYoneticisi çağıracak (Bina oluşunca)
+        //Bu fonksiyonu BirlestirmeYoneticisi çağıracak (Bina oluşunca)
         public void BinaYapildi()
         {
             if (oyunBittiMi)
@@ -100,20 +100,20 @@ public class GameManager : MonoBehaviour
         }
         public void SonrakiLevelButonu()
         {
-            // Bir sonraki levele geç
-            // (Arkadaşın Save Sistemi yapınca buraya 'Save(suankiLevelIndex + 1)' kodunu ekleyecek)
+            //Bir sonraki levele geç
+            //Save Sistemi yapılınca buraya 'Save(suankiLevelIndex + 1)' kodunu eklenecek)
             LeveliBaslat(suankiLevelIndex + 1);
         }
 
         public void YenidenOynaButonu()
         {
-            // Aynı leveli baştan başlat
+            //Aynı leveli baştan başlat
             LeveliBaslat(suankiLevelIndex);
         }
     
         public void AnaMenuButonu()
         {
-            // Ana menü sahnesine dön (Şimdilik boş bırakabilirsin)
+            //Ana menü sahnesine dön
             Debug.Log("Ana Menüye Dönüldü");
         }
         

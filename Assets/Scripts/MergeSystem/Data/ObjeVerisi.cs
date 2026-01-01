@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Project ekranında tıkladığımızda ScriptableObject oluşturabilmek için menü eklentisi
 [CreateAssetMenu(fileName = "YeniObje", menuName = "Oyun/Yeni Obje")]
 public class ObjeVerisi : ScriptableObject
 {

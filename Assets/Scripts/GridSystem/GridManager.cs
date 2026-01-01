@@ -15,17 +15,10 @@ public class GridManager : MonoBehaviour
     [Header("Camera")]
     public CameraControlTool cameraController;
 
-    // Hücreleri tuttuğumuz sözlük
+    //Hücreleri tuttuğumuz sözlük
     private Dictionary<Vector3Int, GridCell> cells = new();
 
-    void Start()
-    {
-        // BURASI ARTIK BOŞ.
-        // Çünkü Grid'i oyun başlar başlamaz değil, 
-        // GameManager "Bölüm Yükle" emri verince oluşturacağız.
-    }
-
-    // --- YENİ: GameManager tarafından çağrılacak ana fonksiyon ---
+    //GameManager tarafından çağrılacak ana fonksiyon
     public void GridiOlustur(int w, int h)
     {
         // 1. Önce eski grid varsa temizle (Yeniden Oyna yapınca sahne karışmasın)
