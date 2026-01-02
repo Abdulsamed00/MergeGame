@@ -19,4 +19,8 @@ public class ObjeVerisi : ScriptableObject
     
     [Header("Obje Ayarları")]
     public ObjeTuru tur;
+    
+    [Header("Popülasyon Ayarları")]
+    public int minPopulasyon = 0; 
+    public int maxPopulasyon = 0;
 }

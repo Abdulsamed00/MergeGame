@@ -19,7 +19,12 @@ public class LevelData : ScriptableObject
    public int gridGenislik;
    public int gridYukseklik;
 
-   public int hedeflenenBinaSayisi = 1;
+   public int hedeflenenBinaSayisi;
 
    public List<LevelSpawnVerisi> levelObjeleri;
+   
+   [Header("Yıldız Sistemi")]
+   public int yildiz1Puani; 
+   public int yildiz2Puani; 
+   public int yildiz3Puani;
 }
