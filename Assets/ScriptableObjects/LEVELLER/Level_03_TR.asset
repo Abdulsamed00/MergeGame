@@ -18,6 +18,11 @@ MonoBehaviour:
   gridGenislik: 4
   gridYukseklik: 4
   hedeflenenBinaSayisi: 3
-  spawnlanabilirObjeler:
-  - {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
-  - {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
+  levelObjeleri:
+  - obje: {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
+    spawnYuzdesi: 50
+  - obje: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
+    spawnYuzdesi: 50
+  yildiz1Puani: 25
+  yildiz2Puani: 50
+  yildiz3Puani: 75

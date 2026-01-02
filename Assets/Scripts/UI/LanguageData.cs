@@ -1,7 +1,7 @@
 public enum Language
 {
-    Turkish,
-    English
+    Turkish = 0,
+    English = 1
 }
 
 public static class LanguageData
@@ -10,11 +10,13 @@ public static class LanguageData
     {
         get
         {
-            return (Language)UnityEngine.PlayerPrefs.GetInt("Language", 1);
+         
+            return (Language)UnityEngine.PlayerPrefs.GetInt("Language", 0);
         }
         set
         {
             UnityEngine.PlayerPrefs.SetInt("Language", (int)value);
+            UnityEngine.PlayerPrefs.Save();
         }
     }
 }

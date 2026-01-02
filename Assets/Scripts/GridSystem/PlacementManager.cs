@@ -9,7 +9,7 @@ public class PlacementManager : MonoBehaviour
     public BirlestirmeYoneticisi birlestirmeYoneticisi;
 
     [Header("Spawn Sistemi")]
-    public List<LevelSpawnVerisi> mevcutLevelObjeleri;
+    public List<LevelSpawnVerisi> mevcutLevelObjeleri; // Yeni sistemin (LevelSpawnVerisi)
 
     // Kuyruk
     public ObjeVerisi siradakiObjeVerisi;
@@ -107,7 +107,6 @@ public class PlacementManager : MonoBehaviour
         var po = previewObject.GetComponent<PlaceableObject>();
         if (po != null)
         {
-            // Preview'a veri atamayı unutmuyoruz
             po.verisi = siradakiObjeVerisi;
             po.BoyutuGuncelle();
             po.SetPreviewMode(true);
@@ -118,86 +117,66 @@ public class PlacementManager : MonoBehaviour
     {
         if (selectedCell == null) return;
 
-        // --- UNDO SİSTEMİ İÇİN EKLEME ---
-        // Eğer geçerli bir hamle yapıyorsak durumu kaydedelim.
-        // (Basit kontrol: ya boş yere koyuyoruzdur ya da dolu yerle etkileşime giriyoruzdur)
+        // --- UNDO SİSTEMİ ---
         bool hamleGecerliMi = false;
-    
         if (selectedCell.IsEmpty()) hamleGecerliMi = true;
-        else 
-        {
-            // Dolu hücre kontrolü (senin kodundaki mantığın aynısı)
-            var yerdeki = selectedCell.currentObject;
-            var eldeki = siradakiObjeVerisi; // Basit referans
-            if (yerdenMiAldik) eldeki = yerdekiGercekObje.verisi; // Yerden aldıysak farklı
-
-            // Burada detaylı "merge olabilir mi" kontrolü yapmak yerine
-            // En basit yöntem: Şimdilik kaydet, hamle başarısız olursa geri sileriz
-            // Ama snapshot ucuz olduğu için direkt kaydedelim:
-            hamleGecerliMi = true; 
-        }
+        else hamleGecerliMi = true; 
 
         if (hamleGecerliMi)
         {
-            // Eğer sahnede UndoManager varsa kaydet
             if (UndoManager.Instance != null) UndoManager.Instance.SaveState();
         }
-        // -------------------------------
+        // --------------------
 
-        // ... Senin mevcut kodların buradan devam ediyor ...
+        // İPTAL DURUMU: Yerden aldığımızı aynı yere koyduysak
         if (yerdenMiAldik && selectedCell == kaynakHucre)
         {
-            // İPTAL DURUMU: Eğer oyuncu taşı kaldırıp aynı yere geri koyduysa
-            // bu bir hamle sayılmaz. Stack'ten son kaydı silelim.
-            if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState(); // (Bu fonksiyonu aşağıda veriyorum)
-        
+            if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState();
             IptalEt();
             return;
         }
         
-        if (selectedCell == null) return;
-        PlaceableObject islemGorenObje = null; // Hangi objeyi koyduk/hareket ettirdik?
-
-        if (yerdenMiAldik && selectedCell == kaynakHucre)
-        {
-            IptalEt();
-            return;
-        }
-
         // Eski yeri temizle
         if (yerdenMiAldik && kaynakHucre != null)
         {
             kaynakHucre.currentObject = null;
         }
 
+        PlaceableObject islemGorenObje = null;
+
+        // A. BOŞ YERE KOYMA
         if (selectedCell.IsEmpty())
         {
             if (yerdenMiAldik)
             {
-                // TAŞIMA
+                // --- TAŞIMA ---
                 yerdekiGercekObje.gameObject.SetActive(true);
                 yerdekiGercekObje.transform.position = previewObject.transform.position;
                 
                 yerdekiGercekObje.currentCell = selectedCell;
                 selectedCell.currentObject = yerdekiGercekObje;
+                
+                // Hareket ettirdiğimiz için hakkı bitti (0)
                 yerdekiGercekObje.hareketHakki = 0; 
 
                 yerdekiGercekObje.BoyutuGuncelle();
                 yerdekiGercekObje.SetPreviewMode(false);
                 
-                islemGorenObje = yerdekiGercekObje; // Referansı tut
+                islemGorenObje = yerdekiGercekObje;
                 
                 Destroy(previewObject);
                 IslemTamamlandi(true); 
             }
             else
             {
-                // YENİ SPAWN
+                // --- YENİ SPAWN KOYMA ---
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, Quaternion.identity);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
-                // Veriyi aktar
                 po.verisi = siradakiObjeVerisi;
+
+                // --- DÜZELTME BURADA ---
+                // Yeni doğan objenin 1 hareket hakkı olsun istiyoruz.
                 po.hareketHakki = 1; 
 
                 var previewPO = previewObject.GetComponent<PlaceableObject>();
@@ -206,14 +185,16 @@ public class PlacementManager : MonoBehaviour
                     po.icindekiMalzemeler = new List<ObjeVerisi>(previewPO.icindekiMalzemeler);
                 }
 
-                po.hareketHakki = 0;
+                // HATA BURADAYDI: po.hareketHakki = 0; satırını SİLDİM.
+                // Artık hakkı 1 olarak kalacak.
+
                 po.BoyutuGuncelle();
                 po.SetPreviewMode(false);
                 
                 po.currentCell = selectedCell;
                 selectedCell.currentObject = po;
 
-                islemGorenObje = po; // Referansı tut
+                islemGorenObje = po;
 
                 Destroy(previewObject);
                 IslemTamamlandi(true); 
@@ -224,6 +205,10 @@ public class PlacementManager : MonoBehaviour
         {
             if (!yerdenMiAldik) 
             {
+                // Yeni spawn edilen obje (Preview) dolu yere konamaz (veya birleşemez) kuralı varsa burası çalışır.
+                // Eğer yeni spawn'ın da birleşmesini istiyorsan burayı açabiliriz ama
+                // şimdilik senin attığın koda sadık kalıyorum.
+                if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState();
                 IptalEt(); 
                 return;
             }
@@ -235,7 +220,6 @@ public class PlacementManager : MonoBehaviour
 
             if (birlestiMi)
             {
-                // Manuel birleşme olduysa, son oluşan obje "yerdekiObje"dir (çünkü elimizdekini onun içine ekledik)
                 islemGorenObje = yerdekiObje;
 
                 Destroy(yerdekiGercekObje.gameObject);
@@ -245,13 +229,12 @@ public class PlacementManager : MonoBehaviour
             }
             else
             {
+                if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState();
                 GeriAl();
-                return; // Geri alındıysa otomatik kontrol yapma
             }
         }
 
-        // --- İŞTE SİHİRLİ DOKUNUŞ BURADA ---
-        // Hamle bitti, şimdi etrafı kontrol et: "Yan yana gelenlerle bir şey oluşuyor mu?"
+        // --- OTOMATİK KONTROL ---
         if (islemGorenObje != null)
         {
             birlestirmeYoneticisi.OtomatikTarifKontrolu(islemGorenObje);
@@ -327,7 +310,6 @@ public class PlacementManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                // Önce objeyi kontrol et
                 PlaceableObject hitObject = hit.collider.GetComponentInParent<PlaceableObject>();
                 GridCell cell = null;
 
@@ -337,7 +319,6 @@ public class PlacementManager : MonoBehaviour
                 }
                 else
                 {
-                    // Obje yoksa zemini kontrol et
                     Vector3Int cellPos = grid.WorldToCell(hit.point);
                     cell = gridManager.GetCell(cellPos);
                 }
@@ -348,6 +329,7 @@ public class PlacementManager : MonoBehaviour
                 }
                 else if (!pressedOnPreview && cell != null && !cell.IsEmpty())
                 {
+                    // BURASI ÇOK ÖNEMLİ: Objenin hareket hakkı var mı?
                     if (cell.currentObject.hareketHakki > 0)
                     {
                         if (previewObject != null) Destroy(previewObject);
@@ -400,7 +382,6 @@ public class PlacementManager : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         GridCell targetCell = null;
 
-        // 1. Raycast
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             PlaceableObject hitObj = hit.collider.GetComponentInParent<PlaceableObject>();
@@ -422,21 +403,19 @@ public class PlacementManager : MonoBehaviour
             }
         }
 
-        // 2. Kontroller ve Hareket Kısıtlaması
         if (targetCell != null)
         {
             bool secilebilir = false;
             
-            // --- BURASI DEĞİŞTİ: 1 BİRİM HAREKET KISITLAMASI ---
+            // 1 Birim Hareket Kısıtlaması
             if (yerdenMiAldik && kaynakHucre != null)
             {
                 int mesafeX = Mathf.Abs(targetCell.cellPosition.x - kaynakHucre.cellPosition.x);
                 int mesafeZ = Mathf.Abs(targetCell.cellPosition.z - kaynakHucre.cellPosition.z);
                 
-                // Manhattan Mesafesi: Sadece sağ-sol-ön-arka (Toplam 1 birim)
                 if (mesafeX + mesafeZ > 1) 
                 {
-                    return; // 1 birimden uzağa gidemez
+                    return; 
                 }
             }
 
@@ -446,13 +425,11 @@ public class PlacementManager : MonoBehaviour
             }
             else if (previewObject != null)
             {
-                // Eğer doluysa, üzerine gelip birleştirebiliyor muyuz?
                 if (yerdenMiAldik)
                 {
                     var yerdeki = targetCell.currentObject;
                     if (yerdeki != null)
                     {
-                        // Sadece aynı türler üst üste gelebilir (Birleşme ihtimali için)
                         if (yerdeki.verisi == yerdekiGercekObje.verisi)
                         {
                             secilebilir = true;
@@ -460,7 +437,6 @@ public class PlacementManager : MonoBehaviour
                     }
                 }
                 
-                // Kendi yerimiz ise seçilebilir
                 if (yerdenMiAldik && targetCell == kaynakHucre) secilebilir = true;
             }
 

@@ -193,8 +193,8 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         po.transform.position = pos + Vector3.up * po.heightOffset;
         po.BoyutuGuncelle();
         po.SetPreviewMode(false);
-
-        GameManager.Instance.UretimYapildi(po.verisi);
+        
+        GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
         
         OtomatikTarifKontrolu(po);
     }
