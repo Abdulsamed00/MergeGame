@@ -1,181 +1,109 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq; // Bunu unutma
+using System.Linq; 
+using System.Collections; // Coroutine için gerekli
 
 public class BirlestirmeYoneticisi : MonoBehaviour
 {
     public List<BirlestirmeVerisi> tumTarifler;
     public GridManager gridManager;
-    
-    // ----------------------------------------------------------------
-    // 1. BÖLÜM: MANUEL BİRLEŞTİRME (Sadece Aynı Türler / Yığınlama)
-    // ----------------------------------------------------------------
-    public bool ManuelBirlestirme(PlaceableObject elimizdeki, PlaceableObject yerdeki)
-    {
-        // Tür kontrolü
-        if (elimizdeki.verisi != yerdeki.verisi) return false;
 
-        // Tarif kontrolü
-        BirlestirmeVerisi gecerliTarif = null;
+    // --- 1. UYUMLULUK KONTROLÜ ---
+    public bool UygunMu(PlaceableObject eldeTutulan, PlaceableObject yerdeki)
+    {
+        if (eldeTutulan == null || yerdeki == null) return false;
+
+        if (eldeTutulan.verisi == yerdeki.verisi) return true;
+
         foreach (var tarif in tumTarifler)
         {
-            if (tarif.gerekenMalzemeler.Contains(elimizdeki.verisi))
-            {
-                gecerliTarif = tarif;
-                break;
-            }
-        }
-        if (gecerliTarif == null) return false;
-
-        int toplamMalzemeSayisi = elimizdeki.icindekiMalzemeler.Count + yerdeki.icindekiMalzemeler.Count;
-        int gerekenSayi = gecerliTarif.gerekenMalzemeler.Count;
-
-        // A) Yığınla
-        if (toplamMalzemeSayisi < gerekenSayi)
-        {
-            yerdeki.icindekiMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
-            yerdeki.BoyutuGuncelle();
-            yerdeki.hareketHakki = 1; 
-            return true; 
-        }
-        // B) Bina Yap
-        else if (toplamMalzemeSayisi >= gerekenSayi)
-        {
-            GridCell hedefHucre = yerdeki.currentCell;
-            hedefHucre.currentObject = null; 
-            Destroy(yerdeki.gameObject);
-            BinaOlustur(hedefHucre, gecerliTarif.sonucObjesi);
-            return true;
+            bool eldekiLazim = tarif.gerekenMalzemeler.Contains(eldeTutulan.verisi);
+            bool yerdekiLazim = tarif.gerekenMalzemeler.Contains(yerdeki.verisi);
+            if (eldekiLazim && yerdekiLazim) return true;
         }
 
         return false;
     }
 
-    // ----------------------------------------------------------------
-    // 2. BÖLÜM: OTOMATİK TARİF KONTROLÜ (GADDAR VE KESİN ÇÖZÜM)
-    // ----------------------------------------------------------------
-    public void OtomatikTarifKontrolu(PlaceableObject merkezObje)
+    // --- 2. ÇOKLU BİRLEŞTİRME ---
+    public bool CokluBirlestirme(List<PlaceableObject> gelenObjeler, PlaceableObject hedefObje)
     {
-        if (merkezObje == null) return;
+        List<PlaceableObject> tumParcalar = new List<PlaceableObject>(gelenObjeler);
+        tumParcalar.Add(hedefObje);
 
-        foreach (var tarif in tumTarifler)
+        // 1. Bina Tarifi Kontrolü
+        BirlestirmeVerisi uygunTarif = TarifBulVeDogrula(tumParcalar);
+
+        if (uygunTarif != null)
         {
-            if (!tarif.gerekenMalzemeler.Contains(merkezObje.verisi)) continue;
+            // BİNA OLUŞTUR (Animasyonlu Süreç Başlat)
+            if (UndoManager.Instance != null) UndoManager.Instance.SaveState();
             
-            // Aynı türden oluşan tarifleri pas geç (Manuel yapılmalı)
-            if (TarifSadeceAyniTurdenMi(tarif)) continue;
+            // Coroutine başlatıyoruz (Zamanlı işlem)
+            StartCoroutine(MergeProcess(tumParcalar, hedefObje.currentCell, uygunTarif.sonucObjesi));
+            return true;
+        }
+        else
+        {
+            // 2. Yığınlama (Stack) Kontrolü
+            bool hepsiAyni = tumParcalar.All(x => x.verisi == tumParcalar[0].verisi);
 
-            // --- YENİ MANTIK ---
-            // Sadece ihtiyacımız olanı arıyoruz.
-            List<PlaceableObject> silinecekler = TarifeUygunParcalariTopla(merkezObje, tarif);
-
-            if (silinecekler != null)
+            if (hepsiAyni)
             {
-                Debug.Log("OTOMATİK BİRLEŞME: " + tarif.sonucObjesi.objeAdi);
+                ObjeVerisi buMalzeme = tumParcalar[0].verisi;
+                int toplamAdet = 0;
+                foreach(var p in tumParcalar) 
+                    toplamAdet += (p.icindekiMalzemeler.Count > 0 ? p.icindekiMalzemeler.Count : 1);
 
-                GridCell insaAlani = merkezObje.currentCell; 
+                int gerekenMaksimum = GetMaxRequiredCount(buMalzeme);
 
-                foreach (var parca in silinecekler)
+                if (toplamAdet < gerekenMaksimum)
                 {
-                    if (parca.currentCell != null) 
-                        parca.currentCell.currentObject = null;
-                    
-                    Destroy(parca.gameObject);
-                }
+                    if (UndoManager.Instance != null) UndoManager.Instance.SaveState();
 
-                BinaOlustur(insaAlani, tarif.sonucObjesi);
-                return; 
+                    // Stack animasyonu karmaşık olmasın, direkt birleşsin
+                    foreach (var gelen in gelenObjeler)
+                    {
+                        hedefObje.icindekiMalzemeler.AddRange(gelen.icindekiMalzemeler);
+                        if (gelen.currentCell != null) gelen.currentCell.currentObject = null;
+                        Destroy(gelen.gameObject);
+                    }
+                    
+                    hedefObje.BoyutuGuncelle();
+                    hedefObje.hareketHakki = 1; 
+                    return true;
+                }
             }
         }
+        
+        return false;
     }
 
-    // --- BU FONKSİYON HEM ARIYOR, HEM SEÇİYOR, HEM DE FAZLALIKLARI GÖRMEZDEN GELİYOR ---
-    private List<PlaceableObject> TarifeUygunParcalariTopla(PlaceableObject merkez, BirlestirmeVerisi tarif)
+    // --- YENİ: ANİMASYONLU BİRLEŞTİRME SÜRECİ ---
+    private IEnumerator MergeProcess(List<PlaceableObject> parcalar, GridCell hedefHucre, ObjeVerisi sonucVerisi)
     {
-        // 1. İhtiyaç listesini oluştur
-        List<ObjeVerisi> kalanIhtiyac = new List<ObjeVerisi>(tarif.gerekenMalzemeler);
-        List<PlaceableObject> toplananlar = new List<PlaceableObject>();
-        
-        Queue<PlaceableObject> gezilecekler = new Queue<PlaceableObject>();
-        HashSet<PlaceableObject> ziyaretEdilenler = new HashSet<PlaceableObject>();
-
-        // 2. ÖNCE MERKEZ OBJEYİ İŞLE
-        List<ObjeVerisi> merkezIcerik = new List<ObjeVerisi>(merkez.icindekiMalzemeler);
-        foreach(var item in merkezIcerik)
+        // 1. Tüm parçaların "Merge" (Küçülme) animasyonunu tetikle
+        foreach (var parca in parcalar)
         {
-            if(kalanIhtiyac.Contains(item))
+            if (parca != null)
             {
-                kalanIhtiyac.Remove(item);
-            }
-            else
-            {
-                return null; // Merkezde fazlalık var, iptal.
-            }
-        }
-        
-        toplananlar.Add(merkez);
-        ziyaretEdilenler.Add(merkez);
-        
-        if (kalanIhtiyac.Count == 0) return toplananlar;
-
-        gezilecekler.Enqueue(merkez);
-
-        Vector3Int[] yonler = { Vector3Int.right, Vector3Int.left, Vector3Int.forward, Vector3Int.back };
-
-        // 3. ARAMAYA BAŞLA
-        while (gezilecekler.Count > 0)
-        {
-            PlaceableObject suanki = gezilecekler.Dequeue();
-            if (kalanIhtiyac.Count == 0) break;
-
-            foreach (var yon in yonler)
-            {
-                GridCell k = gridManager.GetCell(suanki.currentCell.cellPosition + yon);
-
-                if (k != null && !k.IsEmpty())
-                {
-                    PlaceableObject komsu = k.currentObject;
-
-                    if (!ziyaretEdilenler.Contains(komsu))
-                    {
-                        // Komşuyu sadece İŞİMİZE YARIYORSA alıyoruz
-                        List<ObjeVerisi> komsuIcerik = new List<ObjeVerisi>(komsu.icindekiMalzemeler);
-                        
-                        List<ObjeVerisi> testIhtiyac = new List<ObjeVerisi>(kalanIhtiyac);
-                        bool komsuTamUygun = true;
-
-                        foreach(var mal in komsuIcerik)
-                        {
-                            if(testIhtiyac.Contains(mal))
-                            {
-                                testIhtiyac.Remove(mal);
-                            }
-                            else
-                            {
-                                komsuTamUygun = false;
-                                break;
-                            }
-                        }
-
-                        if (komsuTamUygun)
-                        {
-                            ziyaretEdilenler.Add(komsu);
-                            toplananlar.Add(komsu);
-                            gezilecekler.Enqueue(komsu); 
-                            
-                            kalanIhtiyac = testIhtiyac; 
-                        }
-                        
-                        if (kalanIhtiyac.Count == 0) goto AramaBitti;
-                    }
-                }
+                // Colliderları kapat ki oyuncu yanlışlıkla tekrar tıklamasın
+                foreach(var col in parca.GetComponentsInChildren<Collider>()) col.enabled = false;
+                
+                // Animator üzerinden küçülme animasyonunu oynat
+                parca.PlayMergeAnimation();
             }
         }
 
-        AramaBitti:
-        
-        if (kalanIhtiyac.Count == 0) return toplananlar;
-        else return null;
+        // 2. Animasyonun bitmesini bekle (Örneğin 0.4 saniye)
+        // Animasyon klibinizin süresine göre burayı ayarlayın!
+        yield return new WaitForSeconds(0.4f);
+
+        // 3. Eski parçaları yok et
+        TemizleVeYokEt(parcalar);
+
+        // 4. Yeni binayı oluştur
+        BinaOlustur(hedefHucre, sonucVerisi);
     }
 
     private void BinaOlustur(GridCell hedefHucre, ObjeVerisi binaVerisi)
@@ -187,26 +115,73 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         po.verisi = binaVerisi;
         po.currentCell = hedefHucre;
         hedefHucre.currentObject = po;
-
         po.hareketHakki = 1; 
         
         po.transform.position = pos + Vector3.up * po.heightOffset;
-        po.BoyutuGuncelle();
+        
+        // --- POP EFEKTİ ---
+        // Yeni doğan objenin "Spawn" (Büyüme) animasyonunu tetikle
+        po.PlaySpawnAnimation();
         po.SetPreviewMode(false);
         
         GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
-        
-        OtomatikTarifKontrolu(po);
     }
 
-    private bool TarifSadeceAyniTurdenMi(BirlestirmeVerisi tarif)
+    // --- YARDIMCI FONKSİYONLAR ---
+    private int GetMaxRequiredCount(ObjeVerisi malzeme)
     {
-        if (tarif.gerekenMalzemeler.Count == 0) return false;
-        ObjeVerisi ilkMalzeme = tarif.gerekenMalzemeler[0];
-        foreach (var malzeme in tarif.gerekenMalzemeler)
+        int maxCount = 0;
+        foreach (var tarif in tumTarifler)
         {
-            if (malzeme != ilkMalzeme) return false;
+            int countInRecipe = tarif.gerekenMalzemeler.Count(x => x == malzeme);
+            if (countInRecipe > maxCount) maxCount = countInRecipe;
         }
-        return true;
+        return maxCount;
     }
+
+    private BirlestirmeVerisi TarifBulVeDogrula(List<PlaceableObject> parcalar)
+    {
+        List<ObjeVerisi> elimizdekiMalzemeler = new List<ObjeVerisi>();
+        foreach (var p in parcalar)
+        {
+            if (p.icindekiMalzemeler != null && p.icindekiMalzemeler.Count > 0)
+                elimizdekiMalzemeler.AddRange(p.icindekiMalzemeler);
+            else
+                elimizdekiMalzemeler.Add(p.verisi);
+        }
+
+        foreach (var tarif in tumTarifler)
+        {
+            if (elimizdekiMalzemeler.Count != tarif.gerekenMalzemeler.Count) continue;
+            if (IcerikBirebirAyniMi(elimizdekiMalzemeler, tarif.gerekenMalzemeler)) return tarif;
+        }
+        return null;
+    }
+
+    private bool IcerikBirebirAyniMi(List<ObjeVerisi> eldeki, List<ObjeVerisi> gereken)
+    {
+        List<ObjeVerisi> eldekiKopya = new List<ObjeVerisi>(eldeki);
+        List<ObjeVerisi> gerekenKopya = new List<ObjeVerisi>(gereken);
+
+        foreach (var item in gerekenKopya)
+        {
+            if (eldekiKopya.Contains(item)) eldekiKopya.Remove(item);
+            else return false;
+        }
+        return eldekiKopya.Count == 0;
+    }
+
+    private void TemizleVeYokEt(List<PlaceableObject> objeler)
+    {
+        foreach(var obj in objeler)
+        {
+            if (obj != null)
+            {
+                if (obj.currentCell != null) obj.currentCell.currentObject = null;
+                Destroy(obj.gameObject);
+            }
+        }
+    }
+    
+    public void OtomatikTarifKontrolu(PlaceableObject merkezObje) { }
 }

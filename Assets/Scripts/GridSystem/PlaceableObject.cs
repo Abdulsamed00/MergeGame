@@ -8,12 +8,14 @@ public class PlaceableObject : MonoBehaviour
     public float heightOffset = 0.5f;
     
     [Header("Durum")]
-    public bool kilitliMi = false;  // Artık pek kullanmayacağız ama dursun
-    public int hareketHakki = 1;    // Varsayılan 1 olsun
+    public bool kilitliMi = false; 
+    public int hareketHakki = 1;
 
     [Header("Scale Ayarları")]
     public Vector3 normalScale = new Vector3(0.6f, 0.6f, 0.6f);
     public Vector3 buyukScale = new Vector3(0.7f, 0.7f, 0.7f);
+
+    private Vector3 savedScale; 
 
     public List<ObjeVerisi> icindekiMalzemeler = new List<ObjeVerisi>();
     private Animator animator;
@@ -36,22 +38,50 @@ public class PlaceableObject : MonoBehaviour
 
     public void BoyutuGuncelle()
     {
-        // Eğer içinde 1'den fazla malzeme varsa (Yığınsa) BÜYÜT
+        if (animator != null && animator.enabled) return;
+
         if (icindekiMalzemeler.Count > 1)
-        {
-            transform.localScale = buyukScale; // Örneğin (0.7, 0.7, 0.7)
-        }
+            transform.localScale = buyukScale; 
         else
-        {
-            transform.localScale = normalScale; // Örneğin (0.6, 0.6, 0.6)
-        }
+            transform.localScale = normalScale; 
     }
 
     public void SetPreviewMode(bool isPreview)
     {
         if (animator != null)
         {
-            animator.enabled = isPreview;
+            if (!animator.enabled) animator.enabled = true;
+            animator.SetBool("IsPreview", isPreview);
+        }
+    }
+
+    public void SkalayiKaydet()
+    {
+        savedScale = transform.localScale;
+    }
+
+    public void EskiSkalayaDon()
+    {
+        transform.localScale = savedScale;
+    }
+
+    // --- YENİ EKLENEN ANİMASYON TETİKLEYİCİLERİ ---
+    
+    public void PlayMergeAnimation()
+    {
+        if (animator != null)
+        {
+            animator.enabled = true;
+            animator.SetTrigger("Merge"); // Animator'daki Merge triggerını çalıştır
+        }
+    }
+
+    public void PlaySpawnAnimation()
+    {
+        if (animator != null)
+        {
+            animator.enabled = true;
+            animator.SetTrigger("Spawn"); // Animator'daki Spawn triggerını çalıştır
         }
     }
 }
