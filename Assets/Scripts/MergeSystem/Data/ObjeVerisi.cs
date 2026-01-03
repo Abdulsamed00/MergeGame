@@ -23,4 +23,6 @@ public class ObjeVerisi : ScriptableObject
     [Header("Popülasyon Ayarları")]
     public int minPopulasyon = 0; 
     public int maxPopulasyon = 0;
+    
+    public int objeSeviyesi = 0;
 }

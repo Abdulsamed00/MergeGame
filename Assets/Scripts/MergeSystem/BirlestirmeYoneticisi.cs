@@ -1,21 +1,36 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq; // Bunu unutma
+using System.Linq;
 
 public class BirlestirmeYoneticisi : MonoBehaviour
 {
     public List<BirlestirmeVerisi> tumTarifler;
     public GridManager gridManager;
     
-    // ----------------------------------------------------------------
-    // 1. BÖLÜM: MANUEL BİRLEŞTİRME (Sadece Aynı Türler / Yığınlama)
-    // ----------------------------------------------------------------
+    // --- YENİ EKLENEN YARDIMCI FONKSİYON ---
+    // Üretilecek obje, şu anki levelin sınırını aşıyor mu?
+    private bool SeviyeSiniriAsiliyorMu(ObjeVerisi sonucObjesi)
+    {
+        LevelData currentLevel = GameManager.Instance.SuankiLevelData;
+        
+        // Eğer levelde bir sınır belirlenmemişse (null) her şeye izin ver
+        if (currentLevel.izinVerilenEnUstObje == null) return false;
+
+        // Eğer sonuç objesinin seviyesi, izin verilenin seviyesinden büyükse -> SINIR AŞILDI (TRUE)
+        if (sonucObjesi.objeSeviyesi > currentLevel.izinVerilenEnUstObje.objeSeviyesi)
+        {
+            Debug.Log("Bu levelde bu binayı yapamazsınız! Sınır: " + currentLevel.izinVerilenEnUstObje.objeAdi);
+            // Burada istersen oyuncuya "Henüz bu teknoloji yok" gibi bir UI uyarısı gösterebilirsin.
+            return true;
+        }
+
+        return false;
+    }
+
     public bool ManuelBirlestirme(PlaceableObject elimizdeki, PlaceableObject yerdeki)
     {
-        // Tür kontrolü
         if (elimizdeki.verisi != yerdeki.verisi) return false;
 
-        // Tarif kontrolü
         BirlestirmeVerisi gecerliTarif = null;
         foreach (var tarif in tumTarifler)
         {
@@ -27,20 +42,36 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         }
         if (gecerliTarif == null) return false;
 
-        int toplamMalzemeSayisi = elimizdeki.icindekiMalzemeler.Count + yerdeki.icindekiMalzemeler.Count;
-        int gerekenSayi = gecerliTarif.gerekenMalzemeler.Count;
-
-        // A) Yığınla
-        if (toplamMalzemeSayisi < gerekenSayi)
+        // --- YENİ KONTROL ---
+        // Eğer birleşme sonucunda bir bina oluşacaksa ve bu bina sınıra takılıyorsa iptal et
+        if (gecerliTarif.sonucObjesi != null)
         {
+             // Eğer tarif aynı türden yığınlama değilse (yani yeni bir bina üretiyorsa) kontrole gir
+             // (Basit yığınlamada zaten sonuç objesi tariften gelmiyor, kendi büyüyor)
+        }
+        
+        // *Dikkat: Senin yığınlama mantığın tariften bağımsız boyutu büyütüyor.
+        // Ama "Bina Yap" kısmında tarif.sonucObjesi kullanıyorsun. Kontrolü oraya koyacağız.
+
+        int toplam = elimizdeki.icindekiMalzemeler.Count + yerdeki.icindekiMalzemeler.Count;
+        int gereken = gecerliTarif.gerekenMalzemeler.Count;
+
+        if (toplam < gereken)
+        {
+            // Yığınlama (Burada sınır kontrolüne gerek yok, henüz dönüşmüyor)
             yerdeki.icindekiMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
             yerdeki.BoyutuGuncelle();
             yerdeki.hareketHakki = 1; 
             return true; 
         }
-        // B) Bina Yap
-        else if (toplamMalzemeSayisi >= gerekenSayi)
+        else if (toplam >= gereken)
         {
+            // --- BİNA OLUŞUYOR! SINIR KONTROLÜ BURADA ---
+            if (SeviyeSiniriAsiliyorMu(gecerliTarif.sonucObjesi)) 
+            {
+                return false; // Sınırı aşıyor, birleştirme yapma!
+            }
+
             GridCell hedefHucre = yerdeki.currentCell;
             hedefHucre.currentObject = null; 
             Destroy(yerdeki.gameObject);
@@ -51,9 +82,6 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         return false;
     }
 
-    // ----------------------------------------------------------------
-    // 2. BÖLÜM: OTOMATİK TARİF KONTROLÜ (GADDAR VE KESİN ÇÖZÜM)
-    // ----------------------------------------------------------------
     public void OtomatikTarifKontrolu(PlaceableObject merkezObje)
     {
         if (merkezObje == null) return;
@@ -61,25 +89,21 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         foreach (var tarif in tumTarifler)
         {
             if (!tarif.gerekenMalzemeler.Contains(merkezObje.verisi)) continue;
-            
-            // Aynı türden oluşan tarifleri pas geç (Manuel yapılmalı)
             if (TarifSadeceAyniTurdenMi(tarif)) continue;
 
-            // --- YENİ MANTIK ---
-            // Sadece ihtiyacımız olanı arıyoruz.
+            // --- YENİ KONTROL ---
+            if (SeviyeSiniriAsiliyorMu(tarif.sonucObjesi)) continue; // Sınır aşılıyorsa bu tarifi pas geç
+
             List<PlaceableObject> silinecekler = TarifeUygunParcalariTopla(merkezObje, tarif);
 
             if (silinecekler != null)
             {
                 Debug.Log("OTOMATİK BİRLEŞME: " + tarif.sonucObjesi.objeAdi);
-
                 GridCell insaAlani = merkezObje.currentCell; 
 
                 foreach (var parca in silinecekler)
                 {
-                    if (parca.currentCell != null) 
-                        parca.currentCell.currentObject = null;
-                    
+                    if (parca.currentCell != null) parca.currentCell.currentObject = null;
                     Destroy(parca.gameObject);
                 }
 
@@ -183,7 +207,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         Vector3 pos = gridManager.grid.GetCellCenterWorld(hedefHucre.cellPosition);
         GameObject yeniBina = Instantiate(binaVerisi.objePrefab, pos, Quaternion.identity);
         PlaceableObject po = yeniBina.GetComponent<PlaceableObject>();
-
+    
         po.verisi = binaVerisi;
         po.currentCell = hedefHucre;
         hedefHucre.currentObject = po;

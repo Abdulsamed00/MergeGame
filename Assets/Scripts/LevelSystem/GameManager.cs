@@ -13,9 +13,12 @@ public class GameManager : MonoBehaviour
     
     [Header("Mevcut Durumlar")]
     public int suankiLevelIndex = 0;
-    public int suankiBinaSayisi = 0;
+    // public int suankiBinaSayisi = 0; // BUNU SİLDİK, ARTIK SAYMAYACAĞIZ, KONTROL EDECEĞİZ
     public int suankiPopulasyon = 0;
     public bool oyunBittiMi = false;
+
+    // Şu anki level verisine dışarıdan (BirlestirmeYoneticisi'nden) erişebilmek için public property yapabiliriz
+    public LevelData SuankiLevelData => suankiLevelData; 
 
     [Header("Referanslar")] 
     public GridManager gridManager;
@@ -31,10 +34,6 @@ public class GameManager : MonoBehaviour
     public Text winSonrakiLevelText;
     public Text loseBaslikText;
     public Text populasyonText; 
-    
-    // --- DİKKAT: YILDIZ OBJELERİNİ BURADAN SİLDİM ---
-    // Çünkü Win Panel'de yıldız olmayacak dedin.
-    // Hesaplama arka planda yapılacak.
 
     private LevelData suankiLevelData;
 
@@ -56,7 +55,7 @@ public class GameManager : MonoBehaviour
         suankiLevelIndex = index;
         suankiLevelData = tumLeveller[index];
         
-        suankiBinaSayisi = 0;
+        // suankiBinaSayisi = 0; // SİLDİK
         suankiPopulasyon = 0;
         oyunBittiMi = false;
         
@@ -75,7 +74,7 @@ public class GameManager : MonoBehaviour
 
         if (uretilenObjeVerisi.tur == ObjeTuru.Bina)
         {
-            suankiBinaSayisi++;
+            // suankiBinaSayisi++; // ARTIK GEREK YOK
 
             int kazanilanPop = Random.Range(uretilenObjeVerisi.minPopulasyon, uretilenObjeVerisi.maxPopulasyon + 1);
             suankiPopulasyon += kazanilanPop;
@@ -100,13 +99,54 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // --- YENİ KAZANMA KONTROLÜ ---
+    // Griddeki tüm binaları tarar ve hedeflerle karşılaştırır.
+    private bool HedeflerTamamlandiMi()
+    {
+        if (suankiLevelData.hedefler == null || suankiLevelData.hedefler.Count == 0) return true; // Hedef yoksa kazanmış say (veya false yapabilirsin)
+
+        // Hedef listesindeki her bir madde için kontrol yap
+        foreach (var hedef in suankiLevelData.hedefler)
+        {
+            int sahadakiAdet = 0;
+
+            // GridManager içindeki array'e erişip sayıyoruz
+            // (GridManager kodunda gridArray public olmalı veya erişim fonksiyonu olmalı)
+            // Senin GridManager kodun bende yok ama genelde şöyledir:
+            for (int x = 0; x < suankiLevelData.gridGenislik; x++)
+            {
+                for (int z = 0; z < suankiLevelData.gridYukseklik; z++)
+                {
+                    GridCell hucre = gridManager.GetCell(new Vector3Int(x, 0, z)); // Veya senin GridManager erişimin nasılsa
+                    if (hucre != null && !hucre.IsEmpty())
+                    {
+                        if (hucre.currentObject.verisi == hedef.istenenObje)
+                        {
+                            sahadakiAdet++;
+                        }
+                    }
+                }
+            }
+
+            // Eğer bu hedef için sayı yetersizse, henüz kazanmadık demektir.
+            if (sahadakiAdet < hedef.adet)
+            {
+                return false;
+            }
+        }
+
+        // Döngü bitti ve hiç 'return false' olmadıysa tüm hedefler tamamdır.
+        return true;
+    }
+
     public void HamleBittiKontrolu()
     {
         if (oyunBittiMi) return;
 
         if (gridManager.GridTamamenDoluMu())
         {
-            if (suankiBinaSayisi >= suankiLevelData.hedeflenenBinaSayisi)
+            // YENİ FONKSİYONU ÇAĞIRIYORUZ
+            if (HedeflerTamamlandiMi())
             {
                 OyunBittiKararVer(true);
             }
@@ -124,14 +164,10 @@ public class GameManager : MonoBehaviour
 
         if (kazandiMi)
         {
-            // --- KAZANMA ---
             Debug.Log("KAZANDIN!");
-            
-            // 1. Yıldızı Hesapla ve Sessizce Kaydet
             int kazanilanYildiz = YildizHesapla();
             KaydetYildiz(suankiLevelIndex, kazanilanYildiz);
 
-            // 2. Kilidi Aç
             int acilacakLevelIndex = suankiLevelIndex + 1;
             int enYuksekLevel = PlayerPrefs.GetInt("HighestUnlockedLevel", 0);
             
@@ -141,7 +177,6 @@ public class GameManager : MonoBehaviour
                 PlayerPrefs.Save();
             }
 
-            // 3. Paneli Aç (Yıldız göstermeden)
             winBaslikText.text = suankiLevelData.levelAdi + " Tamamlandı!";
             
             if (suankiLevelIndex + 1 < tumLeveller.Count)
@@ -153,7 +188,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // --- KAYBETME ---
             loseBaslikText.text = "Başarısız!";
             losePanel.SetActive(true);
         }
