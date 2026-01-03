@@ -104,6 +104,7 @@ public class UndoManager : MonoBehaviour
         placementManager.siradakiObjeVerisi = lastState.siradakiVeri;
         placementManager.sonrakiObjeVerisi = lastState.sonrakiVeri;
         placementManager.ForceUpdatePreview(); 
+        placementManager.RefreshNextObjectUI();
         //UI'daki sıradaki objeler güncellenir.
 
         //Hakkı azalt ve ekrana sadece sayıyı yaz

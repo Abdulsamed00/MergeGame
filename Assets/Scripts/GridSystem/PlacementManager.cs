@@ -284,6 +284,14 @@ public class PlacementManager : MonoBehaviour
         {
             SelectFirstEmptyCell(); 
             previewObject.SetActive(true);
+
+            PlaceableObject po = previewObject.GetComponent<PlaceableObject>();
+            if (po != null)
+            {
+                // Önceki boyutu ne olursa olsun sıfırlayıp animasyonla büyütelim
+                previewObject.transform.localScale = Vector3.zero; 
+                po.PlaySpawnAnimation();
+            }
         }
     }
 
@@ -410,6 +418,11 @@ public class PlacementManager : MonoBehaviour
         CreateQueuePreview();
         SelectFirstEmptyCell();
         isPendingConfirmation = false;
+    }
+
+    public void RefreshNextObjectUI()
+    {
+        UpdateNextUI();
     }
 }
 
