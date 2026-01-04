@@ -1,27 +1,37 @@
 using UnityEngine;
-using UnityEngine.UI; // Text kullanmak için şart
+using UnityEngine.UI;
 
 public class FloatingText : MonoBehaviour
 {
-    public float destroyTime = 1.5f; // Kaç saniye sonra yok olsun
-    public Text textComponent;       // Yazının kendisi
+    public float destroyTime = 1.5f;
+    public Text textComponent;
+    
+    private Camera mainCamera;
 
-    void Start()
-    {
-        // Doğar doğmaz yok olma sayacını başlat
-        Destroy(gameObject, destroyTime);
+    void Start() 
+    { 
+        mainCamera = Camera.main;
+        Destroy(gameObject, destroyTime); 
     }
 
-    void Update()
-    {
-        // Sürekli yukarı doğru uç
-        transform.Translate(Vector3.up * Time.deltaTime);
+    // Kamera hareketinden sonra çalışsın diye LateUpdate kullanıyoruz
+    void LateUpdate() 
+    { 
+        if (mainCamera != null)
+        {
+            // Yazının rotasyonunu kameranın rotasyonuyla eşitleniyor
+            transform.rotation = mainCamera.transform.rotation;
+        }
+
+        // Yukarı uçacak
+        // Space.World ekledim
+        // Çünkü yazı döndüğü için kendi yukarısı değişti. Biz dünyanın yukarısına gitmesini istiyoruz
+        transform.Translate(Vector3.up * Time.deltaTime, Space.World); 
     }
 
-    // GameManager bu fonksiyonu çağırıp yazıyı ve rengi değiştirecek
-    public void SetText(string metin, Color renk)
-    {
-        textComponent.text = metin;
-        textComponent.color = renk;
+    public void SetText(string t, Color c) 
+    { 
+        textComponent.text = t; 
+        textComponent.color = c; 
     }
 }
