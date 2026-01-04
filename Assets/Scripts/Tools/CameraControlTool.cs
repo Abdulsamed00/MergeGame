@@ -8,7 +8,7 @@ public class CameraControlTool : MonoBehaviour
     [Header("Settings")]
     public float rotateSpeed = 6f;
     private float distance;
-   private float height;
+    private float height;
     private float currentAngle;
     private float targetAngle;
 

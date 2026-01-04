@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,16 +12,28 @@ public class GameManager : MonoBehaviour
     public List<LevelData> tumLeveller;
     
     [Header("Mevcut Durumlar")]
-    public int suankiLevelIndex = 0; // 1. Bölüm
-    public int suankiBinaSayisi = 0;
+    public int suankiLevelIndex = 0;
+    // public int suankiBinaSayisi = 0; // BUNU SİLDİK, ARTIK SAYMAYACAĞIZ, KONTROL EDECEĞİZ
+    public int suankiPopulasyon = 0;
     public bool oyunBittiMi = false;
+
+    // Şu anki level verisine dışarıdan (BirlestirmeYoneticisi'nden) erişebilmek için public property yapabiliriz
+    public LevelData SuankiLevelData => suankiLevelData; 
 
     [Header("Referanslar")] 
     public GridManager gridManager;
     public PlacementManager placementManager;
+    public GameObject floatingTextPrefab;
 
+    [Header("UI Panelleri")]
     public GameObject winPanel;
     public GameObject losePanel;
+    
+    [Header("UI Textler")]
+    public Text winBaslikText;
+    public Text winSonrakiLevelText;
+    public Text loseBaslikText;
+    public Text populasyonText; 
 
     private LevelData suankiLevelData;
 
@@ -33,90 +44,201 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        LeveliBaslat(suankiLevelIndex);
+        int gelenLevel = DataTransfer.secilenLevelIndex;
+        LeveliBaslat(gelenLevel);
     }
 
     public void LeveliBaslat(int index)
     {
-        if (index >= tumLeveller.Count)
-        {
-            Debug.Log("Oyun bitti");
-            return;
-        }
+        if (index >= tumLeveller.Count) return;
 
         suankiLevelIndex = index;
         suankiLevelData = tumLeveller[index];
         
-        //değişkenleri sıfırlıyoruz
-        suankiBinaSayisi = 0;
+        // suankiBinaSayisi = 0; // SİLDİK
+        suankiPopulasyon = 0;
         oyunBittiMi = false;
+        
+        UpdatePopulasyonUI();
         winPanel.SetActive(false);
         losePanel.SetActive(false);
 
         gridManager.GridiOlustur(suankiLevelData.gridGenislik, suankiLevelData.gridYukseklik);
-
         placementManager.SetupSpawnList(suankiLevelData.levelObjeleri);
         placementManager.SpawnYeniObje();
     }
         
-        //Bu fonksiyonu BirlestirmeYoneticisi çağıracak (Bina oluşunca)
-        public void BinaYapildi()
+    public void UretimYapildi(ObjeVerisi uretilenObjeVerisi, Vector3 worldPos)
+    {
+        if (oyunBittiMi) return;
+
+        if (uretilenObjeVerisi.tur == ObjeTuru.Bina)
         {
-            if (oyunBittiMi)
+            // suankiBinaSayisi++; // ARTIK GEREK YOK
+
+            int kazanilanPop = Random.Range(uretilenObjeVerisi.minPopulasyon, uretilenObjeVerisi.maxPopulasyon + 1);
+            suankiPopulasyon += kazanilanPop;
+            
+            UpdatePopulasyonUI();
+            ShowFloatingText(worldPos, "+" + kazanilanPop);
+        }
+    }
+
+    private void UpdatePopulasyonUI()
+    {
+        if(populasyonText != null) populasyonText.text = "Nüfus: " + suankiPopulasyon;
+    }
+
+    private void ShowFloatingText(Vector3 pos, string text)
+    {
+        if (floatingTextPrefab != null)
+        {
+            Vector3 spawnPos = pos + Vector3.up * 1.5f; 
+            GameObject go = Instantiate(floatingTextPrefab, spawnPos, Quaternion.identity);
+            go.GetComponent<FloatingText>().SetText(text, Color.green);
+        }
+    }
+
+    // --- YENİ KAZANMA KONTROLÜ ---
+    // Griddeki tüm binaları tarar ve hedeflerle karşılaştırır.
+    private bool HedeflerTamamlandiMi()
+    {
+        if (suankiLevelData.hedefler == null || suankiLevelData.hedefler.Count == 0) return true; // Hedef yoksa kazanmış say (veya false yapabilirsin)
+
+        // Hedef listesindeki her bir madde için kontrol yap
+        foreach (var hedef in suankiLevelData.hedefler)
+        {
+            int sahadakiAdet = 0;
+
+            // GridManager içindeki array'e erişip sayıyoruz
+            // (GridManager kodunda gridArray public olmalı veya erişim fonksiyonu olmalı)
+            // Senin GridManager kodun bende yok ama genelde şöyledir:
+            for (int x = 0; x < suankiLevelData.gridGenislik; x++)
             {
-                return;
+                for (int z = 0; z < suankiLevelData.gridYukseklik; z++)
+                {
+                    GridCell hucre = gridManager.GetCell(new Vector3Int(x, 0, z)); // Veya senin GridManager erişimin nasılsa
+                    if (hucre != null && !hucre.IsEmpty())
+                    {
+                        if (hucre.currentObject.verisi == hedef.istenenObje)
+                        {
+                            sahadakiAdet++;
+                        }
+                    }
+                }
             }
 
-            suankiBinaSayisi++;
-            Debug.Log("Bina yapıldı Toplam bina;" + suankiBinaSayisi);
+            // Eğer bu hedef için sayı yetersizse, henüz kazanmadık demektir.
+            if (sahadakiAdet < hedef.adet)
+            {
+                return false;
+            }
         }
 
-        public void HamleBittiKontrolu()
-        {
-            if (oyunBittiMi)
-            {
-                return;
-            }
+        // Döngü bitti ve hiç 'return false' olmadıysa tüm hedefler tamamdır.
+        return true;
+    }
 
-            if (gridManager.GridTamamenDoluMu())
-            {
-                OyunBittiKararVer();
-            }
-        }
+    public void HamleBittiKontrolu()
+    {
+        if (oyunBittiMi) return;
 
-        public void OyunBittiKararVer()
+        if (gridManager.GridTamamenDoluMu())
         {
-            oyunBittiMi = true;
-            if (suankiBinaSayisi >= suankiLevelData.hedeflenenBinaSayisi)
+            // YENİ FONKSİYONU ÇAĞIRIYORUZ
+            if (HedeflerTamamlandiMi())
             {
-                Debug.Log("Kazandın");
-                winPanel.SetActive(true);
+                OyunBittiKararVer(true);
             }
             else
             {
-                Debug.Log("Kaybettin");
-                losePanel.SetActive(true);
+                OyunBittiKararVer(false);
             }
         }
-        public void SonrakiLevelButonu()
-        {
-            //Bir sonraki levele geç
-            //Save Sistemi yapılınca buraya 'Save(suankiLevelIndex + 1)' kodunu eklenecek)
-            LeveliBaslat(suankiLevelIndex + 1);
-        }
+    }
 
-        public void YenidenOynaButonu()
+    public void OyunBittiKararVer(bool kazandiMi)
+    {
+        if (oyunBittiMi) return;
+        oyunBittiMi = true;
+
+        if (kazandiMi)
         {
-            //Aynı leveli baştan başlat
-            LeveliBaslat(suankiLevelIndex);
+            Debug.Log("KAZANDIN!");
+            int kazanilanYildiz = YildizHesapla();
+            KaydetYildiz(suankiLevelIndex, kazanilanYildiz);
+
+            int acilacakLevelIndex = suankiLevelIndex + 1;
+            int enYuksekLevel = PlayerPrefs.GetInt("HighestUnlockedLevel", 0);
+            
+            if (acilacakLevelIndex > enYuksekLevel)
+            {
+                PlayerPrefs.SetInt("HighestUnlockedLevel", acilacakLevelIndex);
+                PlayerPrefs.Save();
+            }
+
+            winBaslikText.text = suankiLevelData.levelAdi + " Tamamlandı!";
+            
+            if (suankiLevelIndex + 1 < tumLeveller.Count)
+                winSonrakiLevelText.text = tumLeveller[suankiLevelIndex + 1].levelAdi;
+            else
+                winSonrakiLevelText.text = "Oyun Bitti!";
+
+            winPanel.SetActive(true);
         }
-    
-        public void AnaMenuButonu()
+        else
         {
-            //Ana menü sahnesine dön
-            Debug.Log("Ana Menüye Dönüldü");
+            loseBaslikText.text = "Başarısız!";
+            losePanel.SetActive(true);
         }
-        
+    }
     
+    int YildizHesapla()
+    {
+        // Puan hesaplama mantığı: Büyükten küçüğe kontrol et
+        if (suankiPopulasyon >= suankiLevelData.yildiz3Puani) return 3;
+        if (suankiPopulasyon >= suankiLevelData.yildiz2Puani) return 2;
+        if (suankiPopulasyon >= suankiLevelData.yildiz1Puani) return 1;
+        return 0;
+    }
+
+    void KaydetYildiz(int levelIndex, int yildizSayisi)
+    {
+        string saveKey = "Level_" + levelIndex + "_Stars";
+        int eskiYildiz = PlayerPrefs.GetInt(saveKey, 0);
+        // Sadece daha yüksek bir skor yaptıysa kaydet
+        if (yildizSayisi > eskiYildiz)
+        {
+            PlayerPrefs.SetInt(saveKey, yildizSayisi);
+            PlayerPrefs.Save();
+        }
+    }
     
+    public void AnaMenuButonu()
+    {
+        SceneManager.LoadScene("UI"); 
+    }
+
+    public void SonrakiLevelButonu()
+    {
+        DataTransfer.secilenLevelIndex = suankiLevelIndex + 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void YenidenOynaButonu()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void AnaMenuLosePaneldenDon()
+    {
+        losePanel.SetActive(false);
+        SceneManager.LoadScene("UI");
+    }
+    
+    public void AnaMenuWinPaneldenDon()
+    {
+        winPanel.SetActive(false);
+        SceneManager.LoadScene("UI");
+    }
 }
