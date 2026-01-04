@@ -604,8 +604,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b3c5330e5c907d542b6faec723e05c38, type: 2}
   - {fileID: 11400000, guid: 093055578af022345ada58e19e1e15df, type: 2}
   - {fileID: 11400000, guid: 4a3227325f1ea1b4cb343107abf09491, type: 2}
+  - {fileID: 11400000, guid: 0f6d1244845ed7b41b83af11a344d776, type: 2}
+  - {fileID: 11400000, guid: a85fd9c70872ba54e9ebcfb0c15f432d, type: 2}
+  - {fileID: 11400000, guid: 95a04d0489e262a4cb26dc28e6ee3c2d, type: 2}
+  - {fileID: 11400000, guid: 3ba1118dd4aacf54cb2c70c6785a62d4, type: 2}
+  - {fileID: 11400000, guid: 478df719e26a54542ae0ff1805d33588, type: 2}
+  - {fileID: 11400000, guid: a9956758fc26d4e4f9d7cc7ae986283e, type: 2}
+  - {fileID: 11400000, guid: 385b0b5ff1f316f40ab79ab1a2432913, type: 2}
   suankiLevelIndex: 0
-  suankiBinaSayisi: 0
   suankiPopulasyon: 0
   oyunBittiMi: 0
   gridManager: {fileID: 19238771}
@@ -617,9 +623,6 @@ MonoBehaviour:
   winSonrakiLevelText: {fileID: 1953594402}
   loseBaslikText: {fileID: 2037171314}
   populasyonText: {fileID: 635617405}
-  star1On: {fileID: 0}
-  star2On: {fileID: 0}
-  star3On: {fileID: 0}
 --- !u!4 &184452837
 Transform:
   m_ObjectHideFlags: 0
@@ -2919,6 +2922,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 55290d8857355f94d84f11a177bb3f1a, type: 2}
   - {fileID: 11400000, guid: 1a48467a6b4a8d14f9309dfe83e9eda9, type: 2}
   - {fileID: 11400000, guid: 9c041a9049df43949ab797ff77a73932, type: 2}
+  - {fileID: 11400000, guid: 8eddf3e232cf058448af13bafa70aa9d, type: 2}
   gridManager: {fileID: 19238771}
 --- !u!4 &2142878909
 Transform:
