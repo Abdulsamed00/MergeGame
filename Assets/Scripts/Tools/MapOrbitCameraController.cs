@@ -35,7 +35,7 @@ public class MapOrbitCameraController : MonoBehaviour
 
     void Update()
     {
-        // 📱 MOBIL
+        //  MOBIL
         if (Input.touchCount == 1)
             RotateTouch();
         else if (Input.touchCount == 2)
@@ -49,7 +49,7 @@ public class MapOrbitCameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        // 🧈 SMOOTH ROTATION
+        //  SMOOTH ROTATION
         currentAngle = Mathf.LerpAngle(
             currentAngle,
             targetAngle,
@@ -67,7 +67,7 @@ public class MapOrbitCameraController : MonoBehaviour
         cam.transform.LookAt(mapCenter);
     }
 
-    // ---------- TOUCH ----------
+    //  PARMAK 
 
     void RotateTouch()
     {
@@ -102,7 +102,7 @@ public class MapOrbitCameraController : MonoBehaviour
         currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
     }
 
-    // ---------- MOUSE (EDITOR) ----------
+    // MOUSE EDİTÖR
 
     void RotateMouse()
     {

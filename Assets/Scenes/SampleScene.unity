@@ -728,7 +728,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 754773131}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.0686462, y: -0.28727198, z: 2.9200523}
+  m_LocalPosition: {x: 2.068646, y: 0.287272, z: 1.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1229,10 +1229,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 963194227}
-  mapCenter: {fileID: 754773133}
+  mapCenter: {fileID: 2002533764}
   rotationSpeed: 0.2
   smoothSpeed: 8
-  zoomSpeed: 0.05
+  zoomSpeed: 0.02
   minDistance: 8
   maxDistance: 18
 --- !u!1 &1017831758
@@ -1330,6 +1330,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1017831758}
   m_CullTransparentMesh: 1
+--- !u!1 &1025660037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1025660039}
+  - component: {fileID: 1025660038}
+  m_Layer: 0
+  m_Name: AndroidPause
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1025660038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025660037}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f42aa1f0acd23744ca1262d7b301ac86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1025660039
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025660037}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.2920318, y: 1.0324718, z: 4.55328}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1131656921
 GameObject:
   m_ObjectHideFlags: 0
@@ -1610,6 +1654,7 @@ GameObject:
   - component: {fileID: 1404443557}
   - component: {fileID: 1404443559}
   - component: {fileID: 1404443558}
+  - component: {fileID: 1404443560}
   m_Layer: 5
   m_Name: LosePanel
   m_TagString: Untagged
@@ -1677,6 +1722,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1404443556}
   m_CullTransparentMesh: 1
+--- !u!114 &1404443560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404443556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be87c1e65b2a18a4f86417465c95405b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1520393543
 GameObject:
   m_ObjectHideFlags: 0
@@ -2076,7 +2133,7 @@ GameObject:
   - component: {fileID: 1704086580}
   - component: {fileID: 1704086579}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: PauseManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2103,7 +2160,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1704086578}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 159.3277, y: 1878.3124, z: 38.070328}
+  m_LocalPosition: {x: 159.3277, y: 1885, z: 38.070328}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2484,6 +2541,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988540468}
   m_CullTransparentMesh: 1
+--- !u!1 &2002533763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2002533764}
+  m_Layer: 0
+  m_Name: CameraOrbit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2002533764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002533763}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.068646, y: 0.287272, z: 1.89}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2014189365
 GameObject:
   m_ObjectHideFlags: 0
