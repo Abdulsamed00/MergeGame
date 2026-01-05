@@ -184,7 +184,7 @@ MonoBehaviour:
   cellPrefab: {fileID: 582348012461025155, guid: 9828a1b4f48258047a1c1f71262e0bd7, type: 3}
   width: 4
   height: 4
-  cameraController: {fileID: 963194229}
+  cameraController: {fileID: 0}
 --- !u!1 &64211273
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,7 +498,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 963194229}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CameraControlTool, Assembly-CSharp
         m_MethodName: RotateRight
         m_Mode: 1
@@ -1225,11 +1225,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5543710d7b43dd45883243ffad7592e, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e5d5d3057edb4c4e9f2863d6ca7e915, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  rotateSpeed: 5
+  cam: {fileID: 963194227}
+  mapCenter: {fileID: 754773133}
+  rotationSpeed: 0.2
+  smoothSpeed: 8
+  zoomSpeed: 0.05
+  minDistance: 8
+  maxDistance: 18
 --- !u!1 &1017831758
 GameObject:
   m_ObjectHideFlags: 0
@@ -1756,7 +1761,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 963194229}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CameraControlTool, Assembly-CSharp
         m_MethodName: RotateLeft
         m_Mode: 1
@@ -2382,8 +2387,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -340, y: 743}
-  m_SizeDelta: {x: 249.7449, y: 204.1346}
+  m_AnchoredPosition: {x: -414.06195, y: 868}
+  m_SizeDelta: {x: 101.621, y: 107.9758}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1988540470
 MonoBehaviour:

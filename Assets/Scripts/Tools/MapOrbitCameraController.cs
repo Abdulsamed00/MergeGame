@@ -1,0 +1,129 @@
+using UnityEngine;
+
+public class MapOrbitCameraController : MonoBehaviour
+{
+    [Header("References")]
+    public Camera cam;
+    public Transform mapCenter;
+
+    [Header("Rotation")]
+    public float rotationSpeed = 0.2f;
+    public float smoothSpeed = 8f;
+
+    [Header("Zoom")]
+    public float zoomSpeed = 0.02f;
+    public float minDistance = 8f;
+    public float maxDistance = 18f;
+
+    private float currentAngle;
+    private float targetAngle;
+    private float currentDistance;
+
+    private Vector2 lastTouchPos;
+    private Vector3 lastMousePos;
+
+    void Start()
+    {
+        Vector3 offset = cam.transform.position - mapCenter.position;
+
+        currentDistance = offset.magnitude;
+        currentAngle = Mathf.Atan2(offset.x, offset.z) * Mathf.Rad2Deg;
+        targetAngle = currentAngle;
+
+        cam.transform.LookAt(mapCenter);
+    }
+
+    void Update()
+    {
+        // 📱 MOBIL
+        if (Input.touchCount == 1)
+            RotateTouch();
+        else if (Input.touchCount == 2)
+            ZoomTouch();
+
+#if UNITY_EDITOR
+        RotateMouse();
+        ZoomMouse();
+#endif
+    }
+
+    void LateUpdate()
+    {
+        // 🧈 SMOOTH ROTATION
+        currentAngle = Mathf.LerpAngle(
+            currentAngle,
+            targetAngle,
+            Time.deltaTime * smoothSpeed
+        );
+
+        Vector3 dir = Quaternion.Euler(0f, currentAngle, 0f) * Vector3.back;
+
+        Vector3 newPos =
+            mapCenter.position +
+            dir * currentDistance +
+            Vector3.up * (cam.transform.position.y - mapCenter.position.y);
+
+        cam.transform.position = newPos;
+        cam.transform.LookAt(mapCenter);
+    }
+
+    // ---------- TOUCH ----------
+
+    void RotateTouch()
+    {
+        Touch touch = Input.GetTouch(0);
+
+        if (touch.phase == TouchPhase.Began)
+            lastTouchPos = touch.position;
+
+        if (touch.phase == TouchPhase.Moved)
+        {
+            float deltaX = touch.position.x - lastTouchPos.x;
+            targetAngle += deltaX * rotationSpeed;
+            lastTouchPos = touch.position;
+        }
+    }
+
+    void ZoomTouch()
+    {
+        Touch t0 = Input.GetTouch(0);
+        Touch t1 = Input.GetTouch(1);
+
+        float prevDist = Vector2.Distance(
+            t0.position - t0.deltaPosition,
+            t1.position - t1.deltaPosition
+        );
+
+        float currDist = Vector2.Distance(t0.position, t1.position);
+
+        float diff = currDist - prevDist;
+
+        currentDistance -= diff * zoomSpeed;
+        currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
+    }
+
+    // ---------- MOUSE (EDITOR) ----------
+
+    void RotateMouse()
+    {
+        if (Input.GetMouseButtonDown(0))
+            lastMousePos = Input.mousePosition;
+
+        if (Input.GetMouseButton(0))
+        {
+            float deltaX = Input.mousePosition.x - lastMousePos.x;
+            targetAngle += deltaX * rotationSpeed;
+            lastMousePos = Input.mousePosition;
+        }
+    }
+
+    void ZoomMouse()
+    {
+        float scroll = Input.mouseScrollDelta.y;
+        if (scroll != 0)
+        {
+            currentDistance -= scroll * zoomSpeed * 20f;
+            currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
+        }
+    }
+}
