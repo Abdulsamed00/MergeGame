@@ -18,4 +18,4 @@ MonoBehaviour:
   tur: 1
   minPopulasyon: 20
   maxPopulasyon: 30
-  objeSeviyesi: 0
+  objeSeviyesi: 1
