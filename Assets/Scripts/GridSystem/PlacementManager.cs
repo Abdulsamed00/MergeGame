@@ -483,6 +483,7 @@ public class PlacementManager : MonoBehaviour
         CreatePreview();
         SelectFirstEmptyCell();
     }
+    
 }
 
 [System.Serializable]
