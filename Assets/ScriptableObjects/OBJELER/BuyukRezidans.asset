@@ -19,3 +19,4 @@ MonoBehaviour:
   minPopulasyon: 50
   maxPopulasyon: 70
   objeSeviyesi: 5
+  collectionID: 8
