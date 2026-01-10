@@ -207,7 +207,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         Vector3 pos = gridManager.grid.GetCellCenterWorld(hedefHucre.cellPosition);
         GameObject yeniBina = Instantiate(binaVerisi.objePrefab, pos, Quaternion.identity);
         PlaceableObject po = yeniBina.GetComponent<PlaceableObject>();
-    
+
         po.verisi = binaVerisi;
         po.currentCell = hedefHucre;
         hedefHucre.currentObject = po;
@@ -217,6 +217,24 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         po.transform.position = pos + Vector3.up * po.heightOffset;
         po.BoyutuGuncelle();
         po.SetPreviewMode(false);
+        
+        // --- YENİ EKLENEN: KOLEKSİYON KAYDI (TÜRÜ NE OLURSA OLSUN KAYDET) ---
+        if (CollectionManager.Instance != null)
+        {
+            // Manager sahnedeyse direkt kaydet
+            CollectionManager.Instance.ObjeAcildi(binaVerisi.collectionID);
+        }
+        else
+        {
+            // Manager yoksa (Test vs.) garantilemek için hafızaya yaz
+            string key = "Collection_" + binaVerisi.collectionID;
+            if (PlayerPrefs.GetInt(key, 0) == 0)
+            {
+                PlayerPrefs.SetInt(key, 1);
+                PlayerPrefs.Save();
+            }
+        }
+        // --------------------------------------------------------------------
         
         GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
         

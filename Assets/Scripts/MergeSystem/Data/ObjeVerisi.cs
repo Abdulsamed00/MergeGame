@@ -14,6 +14,7 @@ public class ObjeVerisi : ScriptableObject
     public string objeAdi;
     public GameObject objePrefab;
     
+    
 
     public Sprite uiIkonu; //Sonraki obje kutusunda çıkacak ikon.
     
@@ -25,4 +26,6 @@ public class ObjeVerisi : ScriptableObject
     public int maxPopulasyon = 0;
     
     public int objeSeviyesi = 0;
+    
+    public int collectionID;
 }

@@ -81,6 +81,24 @@ public class GameManager : MonoBehaviour
             
             UpdatePopulasyonUI();
             ShowFloatingText(worldPos, "+" + kazanilanPop);
+            
+            if (CollectionManager.Instance != null)
+            {
+                // Objenin ID'sini gönderip kaydettiriyoruz
+                CollectionManager.Instance.ObjeAcildi(uretilenObjeVerisi.collectionID);
+                Debug.Log("Koleksiyon Kaydı Gönderildi: " + uretilenObjeVerisi.objeAdi);
+            }
+            else
+            {
+                // Eğer hata alırsan bunu görmek için:
+                Debug.LogWarning("CollectionManager bulunamadı! Sahneye ekledin mi?");
+                
+                // GEÇİCİ ÇÖZÜM (Eğer CollectionManager sadece menüdeyse):
+                // Direkt PlayerPrefs'e buradan da yazabiliriz garanti olsun diye:
+                string key = "Collection_" + uretilenObjeVerisi.collectionID;
+                PlayerPrefs.SetInt(key, 1);
+                PlayerPrefs.Save();
+            }
         }
     }
 

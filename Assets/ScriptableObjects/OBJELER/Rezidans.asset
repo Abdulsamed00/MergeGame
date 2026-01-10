@@ -18,4 +18,5 @@ MonoBehaviour:
   tur: 1
   minPopulasyon: 50
   maxPopulasyon: 60
-  objeSeviyesi: 0
+  objeSeviyesi: 4
+  collectionID: 7

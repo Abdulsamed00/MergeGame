@@ -9,7 +9,7 @@ public class PlacementManager : MonoBehaviour
     public BirlestirmeYoneticisi birlestirmeYoneticisi;
 
     [Header("Spawn Sistemi")]
-    public List<LevelSpawnVerisi> mevcutLevelObjeleri; // Yeni sistemin (LevelSpawnVerisi)
+    public List<LevelSpawnVerisi> mevcutLevelObjeleri;
 
     // Kuyruk
     public ObjeVerisi siradakiObjeVerisi;
@@ -156,7 +156,6 @@ public class PlacementManager : MonoBehaviour
                 yerdekiGercekObje.currentCell = selectedCell;
                 selectedCell.currentObject = yerdekiGercekObje;
                 
-                // Hareket ettirdiğimiz için hakkı bitti (0)
                 yerdekiGercekObje.hareketHakki = 0; 
 
                 yerdekiGercekObje.BoyutuGuncelle();
@@ -169,14 +168,11 @@ public class PlacementManager : MonoBehaviour
             }
             else
             {
-                // --- YENİ SPAWN KOYMA ---
+                // --- YENİ SPAWN KOYMA (BURADA KAYIT YAPIYORUZ) ---
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, Quaternion.identity);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
                 po.verisi = siradakiObjeVerisi;
-
-                // --- DÜZELTME BURADA ---
-                // Yeni doğan objenin 1 hareket hakkı olsun istiyoruz.
                 po.hareketHakki = 1; 
 
                 var previewPO = previewObject.GetComponent<PlaceableObject>();
@@ -185,14 +181,31 @@ public class PlacementManager : MonoBehaviour
                     po.icindekiMalzemeler = new List<ObjeVerisi>(previewPO.icindekiMalzemeler);
                 }
 
-                // HATA BURADAYDI: po.hareketHakki = 0; satırını SİLDİM.
-                // Artık hakkı 1 olarak kalacak.
-
                 po.BoyutuGuncelle();
                 po.SetPreviewMode(false);
                 
                 po.currentCell = selectedCell;
                 selectedCell.currentObject = po;
+
+                // --- KOLEKSİYON SİSTEMİ ENTEGRASYONU ---
+                if (po.verisi != null)
+                {
+                    if (CollectionManager.Instance != null)
+                    {
+                        CollectionManager.Instance.ObjeAcildi(po.verisi.collectionID);
+                    }
+                    else
+                    {
+                        // Menüye dönmeden de kaydolsun (Yedek Sistem)
+                        string key = "Collection_" + po.verisi.collectionID;
+                        if (PlayerPrefs.GetInt(key, 0) == 0)
+                        {
+                            PlayerPrefs.SetInt(key, 1);
+                            PlayerPrefs.Save();
+                        }
+                    }
+                }
+                // ----------------------------------------
 
                 islemGorenObje = po;
 
@@ -205,9 +218,6 @@ public class PlacementManager : MonoBehaviour
         {
             if (!yerdenMiAldik) 
             {
-                // Yeni spawn edilen obje (Preview) dolu yere konamaz (veya birleşemez) kuralı varsa burası çalışır.
-                // Eğer yeni spawn'ın da birleşmesini istiyorsan burayı açabiliriz ama
-                // şimdilik senin attığın koda sadık kalıyorum.
                 if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState();
                 IptalEt(); 
                 return;
@@ -329,7 +339,6 @@ public class PlacementManager : MonoBehaviour
                 }
                 else if (!pressedOnPreview && cell != null && !cell.IsEmpty())
                 {
-                    // BURASI ÇOK ÖNEMLİ: Objenin hareket hakkı var mı?
                     if (cell.currentObject.hareketHakki > 0)
                     {
                         if (previewObject != null) Destroy(previewObject);
@@ -407,7 +416,6 @@ public class PlacementManager : MonoBehaviour
         {
             bool secilebilir = false;
             
-            // 1 Birim Hareket Kısıtlaması
             if (yerdenMiAldik && kaynakHucre != null)
             {
                 int mesafeX = Mathf.Abs(targetCell.cellPosition.x - kaynakHucre.cellPosition.x);
