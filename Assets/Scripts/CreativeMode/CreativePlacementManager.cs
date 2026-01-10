@@ -11,6 +11,7 @@ public class CreativePlacementManager : MonoBehaviour
     private ObjeVerisi seciliObje;
     private GameObject preview;
     private CreativeGridCell currentCell;
+    private bool isEraserActive;
 
     void Awake()
     {
@@ -19,84 +20,79 @@ public class CreativePlacementManager : MonoBehaviour
 
     void Update()
     {
-        if (seciliObje == null || preview == null)
-            return;
+        if (seciliObje == null && !isEraserActive) return;
 
-        PreviewHareket();
+        HandleMouseInput();
 
-        if (Input.GetMouseButtonDown(0))
-            Koy();
+        if (currentCell != null)
+        {
+            if (isEraserActive)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    currentCell.Clear();
+                }
+            }
+            else
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Koy();
+                }
+            }
+        }
     }
 
+    public void ActivateEraser()
+    {
+        isEraserActive = true;
+        seciliObje = null;
+        Destroy(preview);
+    }
 
-    // -----------------------------
-    // BUTON → OBJE SEÇİMİ
-    // -----------------------------
     public void ObjeSec(ObjeVerisi veri)
     {
+        isEraserActive = false;
         seciliObje = veri;
 
-        if (preview != null)
-            Destroy(preview);
-
+        Destroy(preview);
         preview = Instantiate(veri.objePrefab);
-
-        // Preview SADECE görsel
+        
         foreach (var col in preview.GetComponentsInChildren<Collider>())
             col.enabled = false;
     }
 
-    // -----------------------------
-    // PREVIEW GRID'E YAPIŞIR
-    // -----------------------------
-    void PreviewHareket()
+    public void OnClearAllButtonClicked()
     {
-        if (preview == null) return;
-        
+        gridManager.ClearAllGrid();
+        isEraserActive = false;
+        seciliObje = null;
+        Destroy(preview);
+    }
+
+    void HandleMouseInput()
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
         {
             Vector3Int cellPos = grid.WorldToCell(hit.point);
-            CreativeGridCell cell = gridManager.GetCell(cellPos);
+            currentCell = gridManager.GetCell(cellPos);
 
-            if (cell == null)
-            {
-                currentCell = null;
-                return;
-            }
-
-            currentCell = cell;
-            preview.transform.position = cell.transform.position;
+            if (!isEraserActive && preview != null && currentCell != null)
+                preview.transform.position = currentCell.transform.position;
+        }
+        else
+        {
+            currentCell = null;
         }
     }
 
-    // -----------------------------
-    // TIK → OBJE YERLEŞTİR
-    // -----------------------------
     void Koy()
     {
-        if (seciliObje == null)
-        {
-            Debug.LogWarning("Henüz obje seçilmedi!");
-            return;
-        }
+        if (!currentCell.IsEmpty()) return;
 
-        if (currentCell == null)
-        {
-            Debug.LogWarning("Geçerli hücre yok!");
-            return;
-        }
-
-        if (!currentCell.IsEmpty())
-            return;
-
-        GameObject obj = Instantiate(
-            seciliObje.objePrefab,
-            currentCell.transform.position,
-            Quaternion.identity
-        );
-
+        GameObject obj = Instantiate(seciliObje.objePrefab, currentCell.transform.position, Quaternion.identity);
         currentCell.PlaceObject(obj);
     }
 }

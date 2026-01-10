@@ -86,4 +86,12 @@ public class CreativeGridManager : MonoBehaviour
         cell.Clear();
         return true;
     }
+    
+    public void ClearAllGrid()
+    {
+        foreach (var cell in cells.Values)
+        {
+            cell.Clear(); 
+        }
+    }
 }
