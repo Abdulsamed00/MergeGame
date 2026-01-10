@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public InitialSpawnManager initialSpawnManager;
     
     [Header("Bölüm Listesi")]
     public List<LevelData> tumLeveller;
@@ -45,27 +46,32 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         int gelenLevel = DataTransfer.secilenLevelIndex;
-        LeveliBaslat(gelenLevel);
+        StartCoroutine(LevelAkisi(gelenLevel));
     }
 
-    public void LeveliBaslat(int index)
+    IEnumerator LevelAkisi(int index)
     {
-        if (index >= tumLeveller.Count) return;
+        if (index >= tumLeveller.Count) yield break;
 
         suankiLevelIndex = index;
         suankiLevelData = tumLeveller[index];
         
-        // suankiBinaSayisi = 0; // SİLDİK
         suankiPopulasyon = 0;
         oyunBittiMi = false;
         
         UpdatePopulasyonUI();
         winPanel.SetActive(false);
         losePanel.SetActive(false);
-
-        gridManager.GridiOlustur(suankiLevelData.gridGenislik, suankiLevelData.gridYukseklik);
         placementManager.SetupSpawnList(suankiLevelData.levelObjeleri);
-        placementManager.SpawnYeniObje();
+        yield return StartCoroutine(gridManager.GridiAnimasyonluOlustur(suankiLevelData.gridGenislik, suankiLevelData.gridYukseklik));
+        if (initialSpawnManager != null)
+        {
+            initialSpawnManager.SpawnBaslat();
+        }
+        else
+        {
+            placementManager.SpawnYeniObje();
+        }
     }
         
     public void UretimYapildi(ObjeVerisi uretilenObjeVerisi, Vector3 worldPos)
