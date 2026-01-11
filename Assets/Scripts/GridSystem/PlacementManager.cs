@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
+[System.Serializable]
+public class SpriteEvent : UnityEvent<Sprite> { }
+
 public class PlacementManager : MonoBehaviour
 {
     public Grid grid;
@@ -46,6 +49,25 @@ public class PlacementManager : MonoBehaviour
         UpdateNextUI();
     }
 
+    // --- (YENİ EKLENEN KISIM) SAVE SİSTEMİ İÇİN ---
+    // GameManager kayıt dosyasını okuyunca bu fonksiyonu çağırıp
+    // oyuncunun elindeki objeyi eski haline getirecek.
+    public void LoadSpawnState(ObjeVerisi current, ObjeVerisi next)
+    {
+        siradakiObjeVerisi = current;
+        sonrakiObjeVerisi = next;
+        
+        UpdateNextUI();
+        
+        // Preview'ı (hayalet objeyi) hemen güncelle
+        if (previewObject != null) Destroy(previewObject);
+        currentPrefab = siradakiObjeVerisi.objePrefab;
+        
+        // Eğer oyun başladıysa ve preview oluşturmak gerekiyorsa:
+        SpawnYeniObje();
+    }
+    // ----------------------------------------------
+
     public void BeginPlacementAfterInitialSpawn()
     {
         SpawnYeniObje();
@@ -53,6 +75,15 @@ public class PlacementManager : MonoBehaviour
 
     public void SpawnYeniObje()
     {
+        // Eğer kayıt yüklenmişse ve elimizde zaten veri varsa rastgele seçme
+        if (siradakiObjeVerisi != null && currentPrefab == null)
+        {
+             currentPrefab = siradakiObjeVerisi.objePrefab;
+             CreatePreview();
+             SelectFirstEmptyCell();
+             return;
+        }
+
         HazirlaYeniSpawn();
     }
 
@@ -118,9 +149,7 @@ public class PlacementManager : MonoBehaviour
         if (selectedCell == null) return;
 
         // --- UNDO SİSTEMİ ---
-        bool hamleGecerliMi = false;
-        if (selectedCell.IsEmpty()) hamleGecerliMi = true;
-        else hamleGecerliMi = true; 
+        bool hamleGecerliMi = true; // Basitleştirildi
 
         if (hamleGecerliMi)
         {
@@ -128,7 +157,7 @@ public class PlacementManager : MonoBehaviour
         }
         // --------------------
 
-        // İPTAL DURUMU: Yerden aldığımızı aynı yere koyduysak
+        // İPTAL DURUMU
         if (yerdenMiAldik && selectedCell == kaynakHucre)
         {
             if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState();
@@ -168,7 +197,7 @@ public class PlacementManager : MonoBehaviour
             }
             else
             {
-                // --- YENİ SPAWN KOYMA (BURADA KAYIT YAPIYORUZ) ---
+                // --- YENİ SPAWN KOYMA ---
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, Quaternion.identity);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
@@ -187,25 +216,14 @@ public class PlacementManager : MonoBehaviour
                 po.currentCell = selectedCell;
                 selectedCell.currentObject = po;
 
-                // --- KOLEKSİYON SİSTEMİ ENTEGRASYONU ---
+                // GameManager üzerinden üretim bildirimi ve Kayıt
                 if (po.verisi != null)
                 {
-                    if (CollectionManager.Instance != null)
-                    {
-                        CollectionManager.Instance.ObjeAcildi(po.verisi.collectionID);
-                    }
-                    else
-                    {
-                        // Menüye dönmeden de kaydolsun (Yedek Sistem)
-                        string key = "Collection_" + po.verisi.collectionID;
-                        if (PlayerPrefs.GetInt(key, 0) == 0)
-                        {
-                            PlayerPrefs.SetInt(key, 1);
-                            PlayerPrefs.Save();
-                        }
-                    }
+                    GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
+                    
+                    // HAMLE YAPILDIĞINDA OTOMATİK KAYDETMEK İSTERSEN:
+                    GameManager.Instance.OyunuKaydet();
                 }
-                // ----------------------------------------
 
                 islemGorenObje = po;
 
@@ -236,6 +254,9 @@ public class PlacementManager : MonoBehaviour
                 Destroy(previewObject);
 
                 IslemTamamlandi(true); 
+                
+                // Birleştirme sonrası da kayıt alalım
+                GameManager.Instance.OyunuKaydet();
             }
             else
             {
@@ -491,8 +512,4 @@ public class PlacementManager : MonoBehaviour
         CreatePreview();
         SelectFirstEmptyCell();
     }
-    
 }
-
-[System.Serializable]
-public class SpriteEvent : UnityEvent<Sprite> { }
