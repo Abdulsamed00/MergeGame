@@ -9,16 +9,18 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public InitialSpawnManager initialSpawnManager;
     
+    // --- BU KISIM ARTIK GEREKSİZ, SİLDİM (saveID GameManager'da değil objelerde olur) ---
+    // public string saveID; 
+    
     [Header("Bölüm Listesi")]
     public List<LevelData> tumLeveller;
     
     [Header("Mevcut Durumlar")]
     public int suankiLevelIndex = 0;
-    // public int suankiBinaSayisi = 0; // BUNU SİLDİK, ARTIK SAYMAYACAĞIZ, KONTROL EDECEĞİZ
     public int suankiPopulasyon = 0;
     public bool oyunBittiMi = false;
 
-    // Şu anki level verisine dışarıdan (BirlestirmeYoneticisi'nden) erişebilmek için public property yapabiliriz
+    // Şu anki level verisine dışarıdan erişim
     public LevelData SuankiLevelData => suankiLevelData; 
 
     [Header("Referanslar")] 
@@ -38,6 +40,10 @@ public class GameManager : MonoBehaviour
 
     private LevelData suankiLevelData;
 
+    // --- KAYIT SİSTEMİ İÇİN SÖZLÜK ---
+    // Save dosyasındaki "String ID"yi gerçek "ScriptableObject"e çevirmek için kullanacağız.
+    private Dictionary<string, ObjeVerisi> objeSozlugu = new Dictionary<string, ObjeVerisi>();
+
     private void Awake()
     {
         Instance = this;
@@ -46,7 +52,46 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         int gelenLevel = DataTransfer.secilenLevelIndex;
+
+        // Önce Level datasını alalım ki sözlüğü oluşturabilelim
+        if (gelenLevel < tumLeveller.Count)
+        {
+            suankiLevelData = tumLeveller[gelenLevel];
+            // Sözlüğü doldur (Load işlemi için gerekli)
+            SozlukOlustur(suankiLevelData);
+        }
+
         StartCoroutine(LevelAkisi(gelenLevel));
+    }
+
+    // --- SÖZLÜK OLUŞTURMA ---
+    // Levelde kullanılabilecek tüm objeleri hafızaya alıyoruz
+    void SozlukOlustur(LevelData data)
+    {
+        objeSozlugu.Clear();
+
+        // 1. Spawn Listesindekileri Ekle
+        foreach(var spawnItem in data.levelObjeleri)
+        {
+            EkleSozluge(spawnItem.obje);
+        }
+        // 2. Hedeflerdeki Objeleri Ekle 
+        foreach(var hedef in data.hedefler)
+        {
+            EkleSozluge(hedef.istenenObje);
+        }
+        // 3. İzin verilen en üst obje
+        if(data.izinVerilenEnUstObje != null) EkleSozluge(data.izinVerilenEnUstObje);
+    }
+
+    void EkleSozluge(ObjeVerisi veri)
+    {
+        // Eğer verinin ID'si varsa ve sözlükte yoksa ekle
+        if(veri != null && !string.IsNullOrEmpty(veri.saveID))
+        {
+            if(!objeSozlugu.ContainsKey(veri.saveID))
+                objeSozlugu.Add(veri.saveID, veri);
+        }
     }
 
     IEnumerator LevelAkisi(int index)
@@ -56,22 +101,161 @@ public class GameManager : MonoBehaviour
         suankiLevelIndex = index;
         suankiLevelData = tumLeveller[index];
         
+        // Resetleme işlemleri
         suankiPopulasyon = 0;
         oyunBittiMi = false;
         
         UpdatePopulasyonUI();
         winPanel.SetActive(false);
         losePanel.SetActive(false);
+        
+        // PlacementManager'a level objelerini yükle
         placementManager.SetupSpawnList(suankiLevelData.levelObjeleri);
+
+        // Grid'i animasyonlu oluştur
         yield return StartCoroutine(gridManager.GridiAnimasyonluOlustur(suankiLevelData.gridGenislik, suankiLevelData.gridYukseklik));
-        if (initialSpawnManager != null)
+
+        // *** KAYIT KONTROLÜ (BURASI YENİ) ***
+        // Eğer bu level için kayıt dosyası varsa onu yükle, yoksa sıfırdan başla
+        if (SaveManager.HasSaveFile(suankiLevelIndex))
         {
-            initialSpawnManager.SpawnBaslat();
+            Debug.Log($"Level {suankiLevelIndex} için kayıt bulundu, yükleniyor...");
+            LoadGameIslemi();
         }
         else
         {
-            placementManager.SpawnYeniObje();
+            Debug.Log("Kayıt yok, sıfırdan başlanıyor.");
+            if (initialSpawnManager != null)
+            {
+                initialSpawnManager.SpawnBaslat();
+            }
+            else
+            {
+                placementManager.SpawnYeniObje();
+            }
         }
+    }
+
+    // --- KAYDETME FONKSİYONU ---
+    public void OyunuKaydet()
+    {
+        // Oyun bittiyse kaydetme (Zaten bitişte siliyoruz)
+        if (oyunBittiMi) return;
+
+        SaveData data = new SaveData();
+        data.levelIndex = suankiLevelIndex;
+        data.currentPopulation = suankiPopulasyon;
+
+        // 1. ELİMİZDEKİ VE SIRADAKİ OBJEYİ KAYDET
+        if (placementManager.siradakiObjeVerisi != null)
+            data.currentSpawnObjectID = placementManager.siradakiObjeVerisi.saveID;
+            
+        if (placementManager.sonrakiObjeVerisi != null)
+            data.nextSpawnObjectID = placementManager.sonrakiObjeVerisi.saveID;
+
+        // 2. GRIDDEKİ TÜM OBJELERİ KAYDET
+        List<GridCell> allCells = gridManager.GetAllCells();
+        foreach (var cell in allCells)
+        {
+            // Hücre dolu mu?
+            if (!cell.IsEmpty() && cell.currentObject != null)
+            {
+                PlaceableObject objScript = cell.currentObject;
+                
+                // Objenin verisi var mı?
+                if (objScript.verisi != null)
+                {
+                    GridObjectData objData = new GridObjectData();
+                    
+                    // Temel Veriler
+                    objData.objectID = objScript.verisi.saveID;
+                    objData.x = cell.cellPosition.x;
+                    objData.z = cell.cellPosition.z;
+                    
+                    // Durum Verileri
+                    objData.movementRights = objScript.hareketHakki;
+                    objData.isLocked = objScript.kilitliMi;
+
+                    // Stack (İç Malzemeler) Verisi
+                    foreach(var icMalzeme in objScript.icindekiMalzemeler)
+                    {
+                        if(icMalzeme != null) objData.stackedItemIDs.Add(icMalzeme.saveID);
+                    }
+
+                    data.placedObjects.Add(objData);
+                }
+            }
+        }
+
+        // Dosyaya yaz
+        SaveManager.Save(data, suankiLevelIndex);
+    }
+
+    // --- YÜKLEME FONKSİYONU ---
+    void LoadGameIslemi()
+    {
+        SaveData data = SaveManager.Load(suankiLevelIndex);
+        if (data == null) return;
+
+        // 1. Genel Veriler
+        suankiPopulasyon = data.currentPopulation;
+        UpdatePopulasyonUI();
+
+        // 2. Grid Objelerini Yerleştir
+        foreach (var savedObj in data.placedObjects)
+        {
+            // ID'den scriptable object'i bul
+            if (objeSozlugu.TryGetValue(savedObj.objectID, out ObjeVerisi anaVeri))
+            {
+                GridCell cell = gridManager.GetCell(new Vector3Int(savedObj.x, 0, savedObj.z));
+                
+                if (cell != null)
+                {
+                    // Objeyi oluştur
+                    GameObject go = Instantiate(anaVeri.objePrefab, cell.transform.position, Quaternion.identity);
+                    PlaceableObject po = go.GetComponent<PlaceableObject>();
+
+                    // Verileri Geri Yükle
+                    po.verisi = anaVeri;
+                    po.hareketHakki = savedObj.movementRights;
+                    po.kilitliMi = savedObj.isLocked;
+                    
+                    // Stack Listesini Doldur (İçindeki malzemeler)
+                    po.icindekiMalzemeler.Clear();
+                    foreach(string stackID in savedObj.stackedItemIDs)
+                    {
+                        if(objeSozlugu.TryGetValue(stackID, out ObjeVerisi stackVeri))
+                        {
+                            po.icindekiMalzemeler.Add(stackVeri);
+                        }
+                    }
+                    
+                    // Görseli Güncelle (Büyük mü küçük mü?)
+                    po.BoyutuGuncelle(); 
+                    
+                    // Grid'e Tanıt
+                    po.currentCell = cell;
+                    cell.currentObject = po;
+                }
+            }
+        }
+
+        // 3. Spawn Sırasını Geri Yükle
+        ObjeVerisi siradaki = null;
+        ObjeVerisi sonraki = null;
+
+        if (!string.IsNullOrEmpty(data.currentSpawnObjectID)) 
+            objeSozlugu.TryGetValue(data.currentSpawnObjectID, out siradaki);
+            
+        if (!string.IsNullOrEmpty(data.nextSpawnObjectID)) 
+            objeSozlugu.TryGetValue(data.nextSpawnObjectID, out sonraki);
+
+        // Eğer save hatalıysa veya null geldiyse rastgele ata
+        if(siradaki == null) siradaki = suankiLevelData.levelObjeleri[0].obje; 
+        if(sonraki == null) sonraki = suankiLevelData.levelObjeleri[0].obje;
+
+        // PlacementManager'a bu verileri zorla yükle
+        placementManager.LoadSpawnState(siradaki, sonraki);
     }
         
     public void UretimYapildi(ObjeVerisi uretilenObjeVerisi, Vector3 worldPos)
@@ -80,8 +264,6 @@ public class GameManager : MonoBehaviour
 
         if (uretilenObjeVerisi.tur == ObjeTuru.Bina)
         {
-            // suankiBinaSayisi++; // ARTIK GEREK YOK
-
             int kazanilanPop = Random.Range(uretilenObjeVerisi.minPopulasyon, uretilenObjeVerisi.maxPopulasyon + 1);
             suankiPopulasyon += kazanilanPop;
             
@@ -90,22 +272,18 @@ public class GameManager : MonoBehaviour
             
             if (CollectionManager.Instance != null)
             {
-                // Objenin ID'sini gönderip kaydettiriyoruz
                 CollectionManager.Instance.ObjeAcildi(uretilenObjeVerisi.collectionID);
-                Debug.Log("Koleksiyon Kaydı Gönderildi: " + uretilenObjeVerisi.objeAdi);
             }
             else
             {
-                // Eğer hata alırsan bunu görmek için:
-                Debug.LogWarning("CollectionManager bulunamadı! Sahneye ekledin mi?");
-                
-                // GEÇİCİ ÇÖZÜM (Eğer CollectionManager sadece menüdeyse):
-                // Direkt PlayerPrefs'e buradan da yazabiliriz garanti olsun diye:
                 string key = "Collection_" + uretilenObjeVerisi.collectionID;
                 PlayerPrefs.SetInt(key, 1);
                 PlayerPrefs.Save();
             }
         }
+        
+        // Her hamleden sonra otomatik kaydetmek istersen burayı açabilirsin:
+        // OyunuKaydet();
     }
 
     private void UpdatePopulasyonUI()
@@ -123,43 +301,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // --- YENİ KAZANMA KONTROLÜ ---
-    // Griddeki tüm binaları tarar ve hedeflerle karşılaştırır.
     private bool HedeflerTamamlandiMi()
     {
-        if (suankiLevelData.hedefler == null || suankiLevelData.hedefler.Count == 0) return true; // Hedef yoksa kazanmış say (veya false yapabilirsin)
+        if (suankiLevelData.hedefler == null || suankiLevelData.hedefler.Count == 0) return true;
 
-        // Hedef listesindeki her bir madde için kontrol yap
         foreach (var hedef in suankiLevelData.hedefler)
         {
             int sahadakiAdet = 0;
-
-            // GridManager içindeki array'e erişip sayıyoruz
-            // (GridManager kodunda gridArray public olmalı veya erişim fonksiyonu olmalı)
-            // Senin GridManager kodun bende yok ama genelde şöyledir:
-            for (int x = 0; x < suankiLevelData.gridGenislik; x++)
+            // GridManager'dan tüm hücreleri çekip sayıyoruz
+            foreach(var hucre in gridManager.GetAllCells())
             {
-                for (int z = 0; z < suankiLevelData.gridYukseklik; z++)
+                if (hucre != null && !hucre.IsEmpty())
                 {
-                    GridCell hucre = gridManager.GetCell(new Vector3Int(x, 0, z)); // Veya senin GridManager erişimin nasılsa
-                    if (hucre != null && !hucre.IsEmpty())
+                    if (hucre.currentObject.verisi == hedef.istenenObje)
                     {
-                        if (hucre.currentObject.verisi == hedef.istenenObje)
-                        {
-                            sahadakiAdet++;
-                        }
+                        sahadakiAdet++;
                     }
                 }
             }
 
-            // Eğer bu hedef için sayı yetersizse, henüz kazanmadık demektir.
-            if (sahadakiAdet < hedef.adet)
-            {
-                return false;
-            }
+            if (sahadakiAdet < hedef.adet) return false;
         }
-
-        // Döngü bitti ve hiç 'return false' olmadıysa tüm hedefler tamamdır.
         return true;
     }
 
@@ -169,7 +331,6 @@ public class GameManager : MonoBehaviour
 
         if (gridManager.GridTamamenDoluMu())
         {
-            // YENİ FONKSİYONU ÇAĞIRIYORUZ
             if (HedeflerTamamlandiMi())
             {
                 OyunBittiKararVer(true);
@@ -189,6 +350,11 @@ public class GameManager : MonoBehaviour
         if (kazandiMi)
         {
             Debug.Log("KAZANDIN!");
+            
+            // --- KAYIT SİLME ---
+            // Oyuncu kazandığına göre bu levelin "yarım kalan" kaydını silelim.
+            SaveManager.DeleteSave(suankiLevelIndex);
+
             int kazanilanYildiz = YildizHesapla();
             KaydetYildiz(suankiLevelIndex, kazanilanYildiz);
 
@@ -212,6 +378,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            // Kaybederse kayıt silinmez, oyuncu çıkıp girerse kaldığı yerden (hamle bitmeden önce) devam edebilir 
+            // Veya istersen burada da silebilirsin.
+            
             loseBaslikText.text = "Başarısız!";
             losePanel.SetActive(true);
         }
@@ -219,7 +388,6 @@ public class GameManager : MonoBehaviour
     
     int YildizHesapla()
     {
-        // Puan hesaplama mantığı: Büyükten küçüğe kontrol et
         if (suankiPopulasyon >= suankiLevelData.yildiz3Puani) return 3;
         if (suankiPopulasyon >= suankiLevelData.yildiz2Puani) return 2;
         if (suankiPopulasyon >= suankiLevelData.yildiz1Puani) return 1;
@@ -230,7 +398,6 @@ public class GameManager : MonoBehaviour
     {
         string saveKey = "Level_" + levelIndex + "_Stars";
         int eskiYildiz = PlayerPrefs.GetInt(saveKey, 0);
-        // Sadece daha yüksek bir skor yaptıysa kaydet
         if (yildizSayisi > eskiYildiz)
         {
             PlayerPrefs.SetInt(saveKey, yildizSayisi);
@@ -238,8 +405,22 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    // --- UYGULAMA YAŞAM DÖNGÜSÜ ---
+    // Oyun arka plana atıldığında veya kapatıldığında otomatik kaydet
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus) OyunuKaydet();
+    }
+
+    private void OnApplicationQuit()
+    {
+        OyunuKaydet();
+    }
+
+    // --- BUTON FONKSİYONLARI ---
     public void AnaMenuButonu()
     {
+        OyunuKaydet(); // Çıkarken garanti olsun
         SceneManager.LoadScene("UI"); 
     }
 
@@ -251,18 +432,18 @@ public class GameManager : MonoBehaviour
 
     public void YenidenOynaButonu()
     {
+        // Yeniden oynarken eski kaydı silmeliyiz ki sıfırdan başlasın
+        SaveManager.DeleteSave(suankiLevelIndex);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void AnaMenuLosePaneldenDon()
     {
-        losePanel.SetActive(false);
         SceneManager.LoadScene("UI");
     }
     
     public void AnaMenuWinPaneldenDon()
     {
-        winPanel.SetActive(false);
         SceneManager.LoadScene("UI");
     }
 }

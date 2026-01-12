@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: BuyukBina
   m_EditorClassIdentifier: 
+  saveID: 5
   objeAdi: "B\xFCy\xFCk Bina"
   objePrefab: {fileID: 2568770644584877080, guid: dde66b775613b864d898b3ca3af5cd18, type: 3}
   uiIkonu: {fileID: 21300000, guid: 849072621b55b1444aa2c8c22bc4a764, type: 3}
