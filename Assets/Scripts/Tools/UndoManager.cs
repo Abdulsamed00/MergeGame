@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // Standart UI kütüphanesi
+using UnityEngine.UI; 
 
 public class UndoManager : MonoBehaviour
 {
@@ -13,10 +13,12 @@ public class UndoManager : MonoBehaviour
     [Header("Undo Hakkı ve UI Ayarları")]
     public int baslangicHakki = 3; 
     public Text hakText; 
-    private int kalanHak;
+    
+    // GameManager'ın erişip kaydedebilmesi için Property yaptık
+    public int KalanHak { get; private set; }
 
+    // Oyun içi anlık durumları (Snapshots) tutan yığın
     private Stack<GameState> history = new Stack<GameState>();
-    //Son objenin verilerini
 
     private void Awake()
     {
@@ -25,29 +27,53 @@ public class UndoManager : MonoBehaviour
 
     private void Start()
     {
-        kalanHak = baslangicHakki;
+        // Eğer dışarıdan (Load işleminden) bir hak yüklenmediyse varsayılanı kullan
+        if (KalanHak == 0) KalanHak = baslangicHakki;
         UpdateUI();
     }
 
+    // --- SAVE/LOAD SİSTEMİ İÇİN EKLENEN FONKSİYONLAR ---
+    
+    // Oyun yüklenirken kayıtlı hakkı geri koymak için
+    public void LoadRights(int rights)
+    {
+        KalanHak = rights;
+        UpdateUI();
+    }
+
+    // Yeni level veya kayıt yüklendiğinde eski geçmişi silmek için
+    public void ResetHistory()
+    {
+        history.Clear();
+        // Eğer LoadRights çağrılmazsa (yeni oyunsa) hakkı resetle
+        KalanHak = baslangicHakki; 
+        UpdateUI();
+    }
+    // ----------------------------------------------------
+
+    // Hamle yapmadan hemen önce çağrılır
     public void SaveState()
     {
-        GameState state = new GameState();//Oyunun anlık fotoğrafını alır
+        GameState state = new GameState();
+        
+        // Sıradaki objelerin verilerini sakla
         state.siradakiVeri = placementManager.siradakiObjeVerisi; 
         state.sonrakiVeri = placementManager.sonrakiObjeVerisi;
-        //PlacementManager scripttindeki siradakiObjeVerisi ve sonrakiObjeVerisi Undo yapıldıktan sonrada aynı kalsın diye kaydedilir
 
-        state.gridObjects = new List<ObjectState>();//Grid üzerindeki tüm objeleri alır
+        state.gridObjects = new List<ObjectState>();
         
-        foreach (var cell in gridManager.GetAllCells())//Griddeki tüm hücreleri dolaşır
+        // Grid üzerindeki tüm objeleri kaydet
+        foreach (var cell in gridManager.GetAllCells())
         {
-            if (!cell.IsEmpty())//Eğer hücre boş değilse devam edilir
+            if (!cell.IsEmpty() && cell.currentObject != null)
             {
-                ObjectState objState = new ObjectState();//Bir objenin kaydı
+                ObjectState objState = new ObjectState();
                 objState.position = cell.cellPosition;
                 objState.data = cell.currentObject.verisi;
                 objState.isLocked = cell.currentObject.kilitliMi;
                 objState.hareketHakki = cell.currentObject.hareketHakki;
 
+                // Stack (içindeki malzemeler) listesini kopyala
                 if (cell.currentObject.icindekiMalzemeler != null)
                 {
                     objState.materials = new List<ObjeVerisi>(cell.currentObject.icindekiMalzemeler);
@@ -57,29 +83,28 @@ public class UndoManager : MonoBehaviour
                     objState.materials = new List<ObjeVerisi>();
                 }
                 
-                state.gridObjects.Add(objState);//Obje GameState'e eklenir
+                state.gridObjects.Add(objState);
             }
         }
-        history.Push(state);//Oyundaki son durumu stacke koyar ve artık undo yapılabilir
+        history.Push(state);
     }
 
     public void Undo()
     {
-        if (history.Count == 0)
+        // Geçmiş yoksa veya hak bittiyse işlem yapma
+        if (history.Count == 0 || KalanHak <= 0)
         {
             return;
         }
 
-        // Hak bittiyse işlem yapma
-        if (kalanHak <= 0)
-        {
-            return;
-        }
+        // 1. Son durumu çek
+        GameState lastState = history.Pop();
+        
+        // 2. Sahneyi temizle
+        gridManager.TemizleVeYokEtPublic();
 
-        GameState lastState = history.Pop();//Stack'ten en son kaydedilen durum alınır.
-        gridManager.TemizleVeYokEtPublic();//Sahnedeki tüm objeler silinir.
-
-        foreach (var objState in lastState.gridObjects)//Kaydedilen tüm objeler tekrar geri yüklenir.
+        // 3. Objeleri tek tek geri yerleştir
+        foreach (var objState in lastState.gridObjects)
         {
             GridCell cell = gridManager.GetCell(objState.position);
             Vector3 worldPos = gridManager.grid.GetCellCenterWorld(objState.position);
@@ -87,30 +112,32 @@ public class UndoManager : MonoBehaviour
             GameObject newObj = Instantiate(objState.data.objePrefab, worldPos, Quaternion.identity);
             PlaceableObject po = newObj.GetComponent<PlaceableObject>();
 
+            // Verileri geri yükle
             po.verisi = objState.data;
             po.currentCell = cell;
             po.kilitliMi = objState.isLocked;
             po.hareketHakki = objState.hareketHakki;
             po.icindekiMalzemeler = new List<ObjeVerisi>(objState.materials);
-            //Objelere tüm eski değerleri geri verilir
             
+            // Görsel ayarlar
             po.transform.position = worldPos + Vector3.up * po.heightOffset;
             po.BoyutuGuncelle();
             po.SetPreviewMode(false);
 
-            cell.currentObject = po;//Hücreye bu obje atanır
+            cell.currentObject = po;
         }
 
-        placementManager.siradakiObjeVerisi = lastState.siradakiVeri;
-        placementManager.sonrakiObjeVerisi = lastState.sonrakiVeri;
-        placementManager.ForceUpdatePreview(); 
-        //UI'daki sıradaki objeler güncellenir.
+        // 4. ELİMİZDEKİ OBJEYİ DÜZELT (Önemli Değişiklik Burası)
+        // PlacementManager'daki LoadSpawnState fonksiyonunu kullanarak
+        // hem veriyi hem de eldeki 3D görseli (Preview) güncelliyoruz.
+        placementManager.LoadSpawnState(lastState.siradakiVeri, lastState.sonrakiVeri);
 
-        //Hakkı azalt ve ekrana sadece sayıyı yaz
-        kalanHak--;
+        // 5. Hakkı düş ve UI güncelle
+        KalanHak--;
         UpdateUI();
     }
     
+    // Merge iptali gibi durumlarda son state'i silmek gerekebilir
     public void RemoveLastState()
     {
         if (history.Count > 0)
@@ -118,31 +145,32 @@ public class UndoManager : MonoBehaviour
             history.Pop();
         }
     }
-    //Son kaydı siler merge gibi işlemlerden sonra kullanılır
 
-        private void UpdateUI()
+    private void UpdateUI()
     {
         if (hakText != null)
         {
-            hakText.text = kalanHak.ToString();
+            hakText.text = KalanHak.ToString();
         }
     }
 }
+
+// --- YARDIMCI SINIFLAR ---
 
 [System.Serializable]
 public class GameState
 {
     public ObjeVerisi siradakiVeri;
     public ObjeVerisi sonrakiVeri;
-    public List<ObjectState> gridObjects;//Haritadaki tüm objelerin listesi
+    public List<ObjectState> gridObjects;
 }
 
 [System.Serializable]
 public class ObjectState
 {
-    public Vector3Int position;//Objenin pozisyonu
-    public ObjeVerisi data;//Objenin türü
-    public bool isLocked;//Objenin durumu
-    public int hareketHakki;//Objenin hareket hakkı
-    public List<ObjeVerisi> materials;//Objenin stack durumu
+    public Vector3Int position;
+    public ObjeVerisi data;
+    public bool isLocked;
+    public int hareketHakki;
+    public List<ObjeVerisi> materials;
 }

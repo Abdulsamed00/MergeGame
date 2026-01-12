@@ -601,7 +601,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 580724f60f36bd843bf66929748e0ccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridManager: {fileID: 19238771}
+  placementManager: {fileID: 754773132}
+  undoManager: {fileID: 184452838}
   initialSpawnManager: {fileID: 763053676}
+  floatingTextPrefab: {fileID: 2111349851906122655, guid: ef671c70c4cd3744dae3415836a38a38, type: 3}
+  winPanel: {fileID: 1669761394}
+  losePanel: {fileID: 1404443556}
+  winBaslikText: {fileID: 64211274}
+  winSonrakiLevelText: {fileID: 1953594402}
+  loseBaslikText: {fileID: 2037171314}
+  populasyonText: {fileID: 635617405}
   tumLeveller:
   - {fileID: 11400000, guid: b3c5330e5c907d542b6faec723e05c38, type: 2}
   - {fileID: 11400000, guid: 093055578af022345ada58e19e1e15df, type: 2}
@@ -616,15 +626,6 @@ MonoBehaviour:
   suankiLevelIndex: 0
   suankiPopulasyon: 0
   oyunBittiMi: 0
-  gridManager: {fileID: 19238771}
-  placementManager: {fileID: 754773132}
-  floatingTextPrefab: {fileID: 2111349851906122655, guid: ef671c70c4cd3744dae3415836a38a38, type: 3}
-  winPanel: {fileID: 1669761394}
-  losePanel: {fileID: 1404443556}
-  winBaslikText: {fileID: 64211274}
-  winSonrakiLevelText: {fileID: 1953594402}
-  loseBaslikText: {fileID: 2037171314}
-  populasyonText: {fileID: 635617405}
 --- !u!4 &184452837
 Transform:
   m_ObjectHideFlags: 0
@@ -2926,7 +2927,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9c041a9049df43949ab797ff77a73932, type: 2}
   - {fileID: 11400000, guid: 8eddf3e232cf058448af13bafa70aa9d, type: 2}
   gridManager: {fileID: 19238771}
-  mergeAnimDuration: 0.5
 --- !u!4 &2142878909
 Transform:
   m_ObjectHideFlags: 0
