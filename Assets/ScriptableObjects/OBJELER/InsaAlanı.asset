@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "InsaAlan\u0131"
   m_EditorClassIdentifier: 
   objeAdi: "\u0130n\u015Fa Alan\u0131"
-  objePrefab: {fileID: 3423260363810963354, guid: 708ab7c86fccdcd45961a58aeada4ca3, type: 3}
+  objePrefab: {fileID: 7063297309061776637, guid: 348b0e6501a9d3e4a9d1852c9a2ae1df, type: 3}
   uiIkonu: {fileID: 21300000, guid: f52dae33a81a71041be437807907b78d, type: 3}
   tur: 0
   minPopulasyon: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bina
   m_EditorClassIdentifier: 
   objeAdi: Bina
-  objePrefab: {fileID: 8430541925567354895, guid: d91919df694dc30428ef04e9f7b05a34, type: 3}
+  objePrefab: {fileID: 327317685494286415, guid: 93645bf158d664b41817df619d3b1570, type: 3}
   uiIkonu: {fileID: 21300000, guid: 849072621b55b1444aa2c8c22bc4a764, type: 3}
   tur: 1
   minPopulasyon: 20

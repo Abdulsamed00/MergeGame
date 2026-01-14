@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Gokdelen
   m_EditorClassIdentifier: 
   objeAdi: "G\xF6kdelen"
-  objePrefab: {fileID: 2496720253931891732, guid: 470dca1de61f7e441be14649507198cc, type: 3}
+  objePrefab: {fileID: 1327831999354397550, guid: d38dbb0bd94692b449b95b4648d8202f, type: 3}
   uiIkonu: {fileID: 21300000, guid: 849072621b55b1444aa2c8c22bc4a764, type: 3}
   tur: 1
   minPopulasyon: 30

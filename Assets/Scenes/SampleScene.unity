@@ -2926,7 +2926,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9c041a9049df43949ab797ff77a73932, type: 2}
   - {fileID: 11400000, guid: 8eddf3e232cf058448af13bafa70aa9d, type: 2}
   gridManager: {fileID: 19238771}
-  mergeAnimDuration: 0.5
 --- !u!4 &2142878909
 Transform:
   m_ObjectHideFlags: 0

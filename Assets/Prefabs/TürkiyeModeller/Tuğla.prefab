@@ -102,5 +102,5 @@ MonoBehaviour:
   kilitliMi: 0
   hareketHakki: 1
   normalScale: {x: 100, y: 100, z: 100}
-  buyukScale: {x: 101, y: 101, z: 101}
+  buyukScale: {x: 110, y: 110, z: 110}
   icindekiMalzemeler: []

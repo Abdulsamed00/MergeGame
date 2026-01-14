@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BuyukBina
   m_EditorClassIdentifier: 
   objeAdi: "B\xFCy\xFCk Bina"
-  objePrefab: {fileID: 2568770644584877080, guid: dde66b775613b864d898b3ca3af5cd18, type: 3}
+  objePrefab: {fileID: 600645080478009421, guid: a74e99a9b71d8af40b76f953025f2997, type: 3}
   uiIkonu: {fileID: 21300000, guid: 849072621b55b1444aa2c8c22bc4a764, type: 3}
   tur: 1
   minPopulasyon: 25

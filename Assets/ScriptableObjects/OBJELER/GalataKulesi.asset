@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GalataKulesi
   m_EditorClassIdentifier: 
   objeAdi: Galata Kulesi
-  objePrefab: {fileID: 1319046469590834884, guid: 2caaf783940e06f46805e5fadcc4022f, type: 3}
+  objePrefab: {fileID: 2448456012579947929, guid: 40b1206ce80e9ab4e8fd799b44cbe40d, type: 3}
   uiIkonu: {fileID: 21300000, guid: 849072621b55b1444aa2c8c22bc4a764, type: 3}
   tur: 1
   minPopulasyon: 0
