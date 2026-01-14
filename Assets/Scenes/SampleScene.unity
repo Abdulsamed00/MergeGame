@@ -606,6 +606,7 @@ MonoBehaviour:
   undoManager: {fileID: 184452838}
   initialSpawnManager: {fileID: 763053676}
   floatingTextPrefab: {fileID: 2111349851906122655, guid: ef671c70c4cd3744dae3415836a38a38, type: 3}
+  birlestirmeYoneticisi: {fileID: 2142878908}
   winPanel: {fileID: 1669761394}
   losePanel: {fileID: 1404443556}
   winBaslikText: {fileID: 64211274}
