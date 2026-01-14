@@ -44,7 +44,7 @@ public class GridManager : MonoBehaviour
                 Vector3 worldPos = grid.GetCellCenterWorld(cellPos); 
 
                 // Hücreyi oluştur (Animator'ı Entry state'inde olduğu için animasyon otomatik başlar)
-                GridCell cell = Instantiate(cellPrefab, worldPos, Quaternion.identity, transform);
+                GridCell cell = Instantiate(cellPrefab, worldPos, cellPrefab.transform.rotation, transform);
                 cell.cellPosition = cellPos;
 
                 cells.Add(cellPos, cell);

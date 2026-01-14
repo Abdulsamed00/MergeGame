@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6004347009633520194}
   - component: {fileID: 2170609700329815131}
   - component: {fileID: -850785930908465045}
-  - component: {fileID: -3680265714084139141}
   m_Layer: 0
   m_Name: Bina
   m_TagString: Untagged
@@ -114,24 +113,8 @@ MonoBehaviour:
   verisi: {fileID: 11400000, guid: cbcb555f7f651fe44bd8a88b9daefc04, type: 2}
   currentCell: {fileID: 0}
   heightOffset: 0.5
---- !u!95 &-3680265714084139141
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8430541925567354895}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 724abdc6d2d415d4db3bf1d680226bb9, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  kilitliMi: 0
+  hareketHakki: 0
+  normalScale: {x: 0.6, y: 0.6, z: 0.6}
+  buyukScale: {x: 1, y: 1, z: 1}
+  icindekiMalzemeler: []

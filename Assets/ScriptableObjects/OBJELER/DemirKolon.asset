@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveID: 2
   objeAdi: Demir Kolon
-  objePrefab: {fileID: 4862341061578095771, guid: f0328c64a5c1aa541be96a79126db094, type: 3}
+  objePrefab: {fileID: 1432004794084772879, guid: 599110e70e94094449abaa7e528baf21, type: 3}
   uiIkonu: {fileID: 21300000, guid: 9084bc3753b8bb3408948eda5b07aa6b, type: 3}
   tur: 0
   minPopulasyon: 0
