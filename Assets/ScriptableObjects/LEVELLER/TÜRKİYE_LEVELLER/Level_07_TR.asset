@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7057f6dee15b284d975e22a8316f357, type: 3}
+  m_Name: Level_07_TR
+  m_EditorClassIdentifier: 
+  levelID: 6
+  ulkeAdi: "T\xFCrkiye"
+  levelAdi: Level 7
+  gridGenislik: 6
+  gridYukseklik: 6
+  hedefler:
+  - istenenObje: {fileID: 11400000, guid: 4d24efd2f81c42948bd93d1a4a1d9638, type: 2}
+    adet: 3
+  - istenenObje: {fileID: 11400000, guid: ba0aba9dbd8641847be273035652bfcb, type: 2}
+    adet: 2
+  izinVerilenEnUstObje: {fileID: 11400000, guid: ba0aba9dbd8641847be273035652bfcb, type: 2}
+  levelObjeleri:
+  - obje: {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
+    spawnYuzdesi: 50
+  - obje: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
+    spawnYuzdesi: 50
+  yildiz1Puani: 60
+  yildiz2Puani: 85
+  yildiz3Puani: 120
