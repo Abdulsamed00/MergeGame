@@ -2,9 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class SpriteEvent : UnityEvent<Sprite> { }
-
 public class PlacementManager : MonoBehaviour
 {
     public Grid grid;
@@ -21,8 +18,8 @@ public class PlacementManager : MonoBehaviour
     [Header("UI Event")]
     public SpriteEvent OnNextObjectChanged;
 
-    private GameObject currentPrefab; // Şu an elimizdeki prefab
-    private GameObject previewObject; // Hayalet (görsel) obje
+    private GameObject currentPrefab;
+    private GameObject previewObject;
     private GridCell selectedCell;
     private bool pressedOnPreview = false;
     private bool isDragging = false;
@@ -44,37 +41,10 @@ public class PlacementManager : MonoBehaviour
     public void SetupSpawnList(List<LevelSpawnVerisi> gelenListe)
     {
         mevcutLevelObjeleri = gelenListe;
-        // İlk başlangıçta rastgele seçeriz (Load yoksa)
-        if (siradakiObjeVerisi == null)
-        {
-            siradakiObjeVerisi = GetWeightedRandomObject();
-            sonrakiObjeVerisi = GetWeightedRandomObject();
-            UpdateNextUI();
-        }
-    }
-
-    // --- (DÜZELTİLEN KISIM) SAVE/UNDO SİSTEMİ İÇİN ---
-    // GameManager veya UndoManager veriyi geri yüklerken bunu çağırır.
-    public void LoadSpawnState(ObjeVerisi current, ObjeVerisi next)
-    {
-        // 1. Verileri al
-        siradakiObjeVerisi = current;
-        sonrakiObjeVerisi = next;
-        
+        siradakiObjeVerisi = GetWeightedRandomObject();
+        sonrakiObjeVerisi = GetWeightedRandomObject();
         UpdateNextUI();
-        
-        // 2. Eski preview varsa temizle
-        if (previewObject != null) Destroy(previewObject);
-        
-        // 3. Elimizdeki prefabı veriye göre ayarla
-        // Bunu dolu yapıyoruz ki SpawnYeniObje fonksiyonu "yeni üretim yapma" desin.
-        currentPrefab = siradakiObjeVerisi.objePrefab;
-        
-        // 4. Görseli oluştur ve boş yere odakla
-        CreatePreview();
-        SelectFirstEmptyCell();
     }
-    // ----------------------------------------------
 
     public void BeginPlacementAfterInitialSpawn()
     {
@@ -83,17 +53,6 @@ public class PlacementManager : MonoBehaviour
 
     public void SpawnYeniObje()
     {
-        // --- DÜZELTME BURADA ---
-        // Eğer LoadSpawnState (Undo veya Load) çalıştıysa currentPrefab zaten doludur.
-        // Bu durumda YENİ random obje üretme, eldekini kullan.
-        if (currentPrefab != null)
-        {
-             if (previewObject == null) CreatePreview();
-             SelectFirstEmptyCell();
-             return; 
-        }
-
-        // Elimiz boşsa standart akışı çalıştır (Sırayı kaydır, yenisini çek)
         HazirlaYeniSpawn();
     }
 
@@ -101,12 +60,10 @@ public class PlacementManager : MonoBehaviour
     {
         if (mevcutLevelObjeleri == null || mevcutLevelObjeleri.Count == 0) return;
 
-        // Kuyruğu kaydır
         siradakiObjeVerisi = sonrakiObjeVerisi;
         sonrakiObjeVerisi = GetWeightedRandomObject();
         UpdateNextUI();
 
-        // Prefab'ı ayarla
         currentPrefab = siradakiObjeVerisi.objePrefab;
         CreatePreview();
         SelectFirstEmptyCell();
@@ -160,14 +117,21 @@ public class PlacementManager : MonoBehaviour
     {
         if (selectedCell == null) return;
 
-        // --- UNDO KAYDI AL ---
-        if (UndoManager.Instance != null) UndoManager.Instance.SaveState();
-        // ---------------------
+        // --- UNDO SİSTEMİ ---
+        bool hamleGecerliMi = false;
+        if (selectedCell.IsEmpty()) hamleGecerliMi = true;
+        else hamleGecerliMi = true; 
 
-        // İPTAL DURUMU (Yerden aldığını aynı yere geri koyma)
+        if (hamleGecerliMi)
+        {
+            if (UndoManager.Instance != null) UndoManager.Instance.SaveState();
+        }
+        // --------------------
+
+        // İPTAL DURUMU: Yerden aldığımızı aynı yere koyduysak
         if (yerdenMiAldik && selectedCell == kaynakHucre)
         {
-            if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState(); // Kaydı geri al
+            if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState();
             IptalEt();
             return;
         }
@@ -200,16 +164,11 @@ public class PlacementManager : MonoBehaviour
                 islemGorenObje = yerdekiGercekObje;
                 
                 Destroy(previewObject);
-                
-                // Taşımada yeni spawn gerekmez, ama eldeki obje kullanıldı sayılmaz (yerden aldık)
-                IslemTamamlandi(false); 
-                
-                // Hamle bittiği için kaydet
-                GameManager.Instance.HamleBittiKontrolu();
+                IslemTamamlandi(true); 
             }
             else
             {
-                // --- YENİ SPAWN KOYMA ---
+                // --- YENİ SPAWN KOYMA (BURADA KAYIT YAPIYORUZ) ---
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, Quaternion.identity);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
@@ -228,20 +187,30 @@ public class PlacementManager : MonoBehaviour
                 po.currentCell = selectedCell;
                 selectedCell.currentObject = po;
 
-                // Üretim bildirimi ve kayıt
+                // --- KOLEKSİYON SİSTEMİ ENTEGRASYONU ---
                 if (po.verisi != null)
                 {
-                    GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
+                    if (CollectionManager.Instance != null)
+                    {
+                        CollectionManager.Instance.ObjeAcildi(po.verisi.collectionID);
+                    }
+                    else
+                    {
+                        // Menüye dönmeden de kaydolsun (Yedek Sistem)
+                        string key = "Collection_" + po.verisi.collectionID;
+                        if (PlayerPrefs.GetInt(key, 0) == 0)
+                        {
+                            PlayerPrefs.SetInt(key, 1);
+                            PlayerPrefs.Save();
+                        }
+                    }
                 }
+                // ----------------------------------------
 
                 islemGorenObje = po;
 
                 Destroy(previewObject);
-                
-                // Yeni obje koyduk, artık elimizdeki bitti. true gönderiyoruz.
                 IslemTamamlandi(true); 
-
-                GameManager.Instance.HamleBittiKontrolu();
             }
         }
         // B. DOLU YERE KOYMA (MANUEL BİRLEŞTİRME)
@@ -249,7 +218,6 @@ public class PlacementManager : MonoBehaviour
         {
             if (!yerdenMiAldik) 
             {
-                // Yeni objeyi dolu yere koymaya çalışırsan iptal et
                 if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState();
                 IptalEt(); 
                 return;
@@ -267,9 +235,7 @@ public class PlacementManager : MonoBehaviour
                 Destroy(yerdekiGercekObje.gameObject);
                 Destroy(previewObject);
 
-                IslemTamamlandi(false); // Yerden aldığımızı birleştirdik, yeni spawn gerekmez
-                
-                GameManager.Instance.HamleBittiKontrolu();
+                IslemTamamlandi(true); 
             }
             else
             {
@@ -283,6 +249,8 @@ public class PlacementManager : MonoBehaviour
         {
             birlestirmeYoneticisi.OtomatikTarifKontrolu(islemGorenObje);
         }
+
+        GameManager.Instance.HamleBittiKontrolu();
     }
 
     void IslemTamamlandi(bool yeniSpawnGerekli)
@@ -295,26 +263,7 @@ public class PlacementManager : MonoBehaviour
 
         if (yeniSpawnGerekli)
         {
-            // Elimizdeki objeyi kullandık, referansı boşalt
-            currentPrefab = null; 
             SpawnYeniObje();
-        }
-        else
-        {
-            // Yerden aldık veya taşıdık, elimizdeki spawn hakkı duruyor mu?
-            // Eğer taşıma yaptıysak spawn sırası bozulmamalı.
-            // Sadece preview'ı tekrar aç
-            if(currentPrefab == null && siradakiObjeVerisi != null)
-            {
-                currentPrefab = siradakiObjeVerisi.objePrefab;
-            }
-            
-            // Eğer hala elimizde koyacak bir şey varsa preview aç
-            if (currentPrefab != null)
-            {
-                CreatePreview();
-                SelectFirstEmptyCell();
-            }
         }
     }
 
@@ -330,13 +279,6 @@ public class PlacementManager : MonoBehaviour
             yerdenMiAldik = false;
             yerdekiGercekObje = null;
             kaynakHucre = null;
-            
-            // Preview'ı geri getir
-            if(currentPrefab != null)
-            {
-                CreatePreview();
-                SelectFirstEmptyCell();
-            }
         }
         else
         {
@@ -357,13 +299,6 @@ public class PlacementManager : MonoBehaviour
             yerdenMiAldik = false;
             yerdekiGercekObje = null;
             kaynakHucre = null;
-            
-            // İptal sonrası normal spawn moduna dön
-             if(currentPrefab != null)
-            {
-                CreatePreview();
-                SelectFirstEmptyCell();
-            }
         }
         else
         {
@@ -371,7 +306,6 @@ public class PlacementManager : MonoBehaviour
         }
     }
 
-    // --- Input ve Helper Fonksiyonlar (Değişiklik Yok) ---
     void HandleInput()
     {
         if (Input.GetMouseButtonDown(0))
@@ -412,7 +346,7 @@ public class PlacementManager : MonoBehaviour
                         yerdenMiAldik = true;
                         kaynakHucre = cell;
                         yerdekiGercekObje = cell.currentObject;
-                        currentPrefab = yerdekiGercekObje.verisi.objePrefab; // Taşıma için prefabı değiştir
+                        currentPrefab = yerdekiGercekObje.verisi.objePrefab;
                         
                         kaynakHucre.currentObject = null;
 
@@ -487,7 +421,10 @@ public class PlacementManager : MonoBehaviour
                 int mesafeX = Mathf.Abs(targetCell.cellPosition.x - kaynakHucre.cellPosition.x);
                 int mesafeZ = Mathf.Abs(targetCell.cellPosition.z - kaynakHucre.cellPosition.z);
                 
-                if (mesafeX + mesafeZ > 1) return; 
+                if (mesafeX + mesafeZ > 1) 
+                {
+                    return; 
+                }
             }
 
             if (targetCell.IsEmpty()) 
@@ -499,9 +436,12 @@ public class PlacementManager : MonoBehaviour
                 if (yerdenMiAldik)
                 {
                     var yerdeki = targetCell.currentObject;
-                    if (yerdeki != null && yerdeki.verisi == yerdekiGercekObje.verisi)
+                    if (yerdeki != null)
                     {
-                        secilebilir = true;
+                        if (yerdeki.verisi == yerdekiGercekObje.verisi)
+                        {
+                            secilebilir = true;
+                        }
                     }
                 }
                 
@@ -551,4 +491,8 @@ public class PlacementManager : MonoBehaviour
         CreatePreview();
         SelectFirstEmptyCell();
     }
+    
 }
+
+[System.Serializable]
+public class SpriteEvent : UnityEvent<Sprite> { }

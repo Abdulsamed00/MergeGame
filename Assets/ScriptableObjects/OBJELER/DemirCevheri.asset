@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveID: 1
   objeAdi: Demir Cevheri
-  objePrefab: {fileID: 5632238470136821875, guid: cc0fa2236d5fe564680b2cc5c5c92b13, type: 3}
+  objePrefab: {fileID: 4866365457604847219, guid: f6b7973e74065454cac63237db2c58e2, type: 3}
   uiIkonu: {fileID: 21300000, guid: 8028d37700a07ff4fa085086cad9d07c, type: 3}
   tur: 0
   minPopulasyon: 0

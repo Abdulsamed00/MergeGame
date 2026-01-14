@@ -239,20 +239,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
         
         OtomatikTarifKontrolu(po);
-        
-        po.transform.position = pos + Vector3.up * po.heightOffset;
-        po.BoyutuGuncelle();
-        po.SetPreviewMode(false);
-        
-        // Koleksiyon kodların burada kalabilir...
-        
-        GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
-        
-        // --- BURAYA EKLE: ZORLA KAYDET ---
-        GameManager.Instance.OyunuKaydet();
     }
-    
-    
 
     private bool TarifSadeceAyniTurdenMi(BirlestirmeVerisi tarif)
     {
