@@ -15,12 +15,12 @@ public class MapOrbitCameraController : MonoBehaviour
     public float minDistance = 8f;
     public float maxDistance = 18f;
 
-    private float currentAngle;
-    private float targetAngle;
-    private float currentDistance;
+    float currentAngle;
+    float targetAngle;
+    float currentDistance;
 
-    private Vector2 lastTouchPos;
-    private Vector3 lastMousePos;
+    Vector2 lastTouchPos;
+    Vector3 lastMousePos;
 
     void Start()
     {
@@ -35,21 +35,33 @@ public class MapOrbitCameraController : MonoBehaviour
 
     void Update()
     {
-        //  MOBIL
+        // 📱 MOBİL
         if (Input.touchCount == 1)
-            RotateTouch();
+        {
+            if (!IsOnGameArea(Input.GetTouch(0).position))
+                RotateTouch();
+        }
         else if (Input.touchCount == 2)
-            ZoomTouch();
+        {
+            Vector2 mid =
+                (Input.GetTouch(0).position + Input.GetTouch(1).position) * 0.5f;
+
+            if (!IsOnGameArea(mid))
+                ZoomTouch();
+        }
 
 #if UNITY_EDITOR
-        RotateMouse();
-        ZoomMouse();
+        // 🖱️ MOUSE
+        if (!IsOnGameArea(Input.mousePosition))
+        {
+            RotateMouse();
+            ZoomMouse();
+        }
 #endif
     }
 
     void LateUpdate()
     {
-        //  SMOOTH ROTATION
         currentAngle = Mathf.LerpAngle(
             currentAngle,
             targetAngle,
@@ -67,20 +79,34 @@ public class MapOrbitCameraController : MonoBehaviour
         cam.transform.LookAt(mapCenter);
     }
 
-    //  PARMAK 
+    // ================== GAME AREA KONTROL ==================
+
+    bool IsOnGameArea(Vector2 screenPos)
+    {
+        Ray ray = cam.ScreenPointToRay(screenPos);
+
+        int mask = LayerMask.GetMask("GameArea");
+
+        if (Physics.Raycast(ray, 1000f, mask))
+            return true;
+
+        return false;
+    }
+
+    // ================== TOUCH ==================
 
     void RotateTouch()
     {
-        Touch touch = Input.GetTouch(0);
+        Touch t = Input.GetTouch(0);
 
-        if (touch.phase == TouchPhase.Began)
-            lastTouchPos = touch.position;
+        if (t.phase == TouchPhase.Began)
+            lastTouchPos = t.position;
 
-        if (touch.phase == TouchPhase.Moved)
+        if (t.phase == TouchPhase.Moved)
         {
-            float deltaX = touch.position.x - lastTouchPos.x;
+            float deltaX = t.position.x - lastTouchPos.x;
             targetAngle += deltaX * rotationSpeed;
-            lastTouchPos = touch.position;
+            lastTouchPos = t.position;
         }
     }
 
@@ -102,7 +128,7 @@ public class MapOrbitCameraController : MonoBehaviour
         currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
     }
 
-    // MOUSE EDİTÖR
+    // ================== MOUSE ==================
 
     void RotateMouse()
     {
