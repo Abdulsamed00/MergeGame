@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: "M\u0131s\u0131rEvi"
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: "M\u0131s\u0131r Evi"
+  objePrefab: {fileID: 3667570808240785131, guid: ea9290b1766a7504cb38da67074850e8, type: 3}
   uiIkonu: {fileID: 0}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0

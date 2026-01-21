@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Kereste
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: Kereste
+  objePrefab: {fileID: 6074498416505756288, guid: cada7a22d7ab156429ff376f8b01a18a, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

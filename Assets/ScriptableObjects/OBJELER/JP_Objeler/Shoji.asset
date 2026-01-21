@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Shoji
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: Shoji
+  objePrefab: {fileID: 2758127644321657516, guid: db1c2fc66387f5a49a95648a49d90212, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

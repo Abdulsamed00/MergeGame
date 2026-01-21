@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Palmiye
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: Palmiye
+  objePrefab: {fileID: 6562488189363830845, guid: 2f96c39b5e24a91408c28abe8d2cb766, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

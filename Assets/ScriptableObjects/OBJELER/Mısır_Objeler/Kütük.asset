@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: "K\xFCt\xFCk"
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: "K\xFCt\xFCk"
+  objePrefab: {fileID: 2298018408580050286, guid: f909981265d31ee4e8f606c84e7ea200, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

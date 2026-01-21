@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: "K\xFC\xE7\xFCkPiramit"
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: "K\xFC\xE7\xFCk Piramit"
+  objePrefab: {fileID: 6184128233457151646, guid: 389e3e1c6d4646f46ac531d30f0cf738, type: 3}
   uiIkonu: {fileID: 0}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0

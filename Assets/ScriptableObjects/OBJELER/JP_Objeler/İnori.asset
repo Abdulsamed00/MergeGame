@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: "\u0130nori"
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: Inari Shrine
+  objePrefab: {fileID: 9091748268197979939, guid: 4e1804eb0c690114dafa740f53fca16c, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

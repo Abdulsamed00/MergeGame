@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Sfenks
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: Sfenks
+  objePrefab: {fileID: 2131040009046348178, guid: 6edab595617fef0478f83fcf6ca130c1, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

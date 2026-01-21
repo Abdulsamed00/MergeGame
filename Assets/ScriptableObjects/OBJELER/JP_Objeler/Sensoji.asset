@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Sensoji
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: "Sensoji Tap\u0131na\u011F\u0131"
+  objePrefab: {fileID: 5825883154949374066, guid: 3757144907699dd4ea922f36c324ec38, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

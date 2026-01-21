@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
-  m_Name: GelenekselJaponEvi4
+  m_Name: GelenekselJaponyaEvi1
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: Geleneksel Japonya Evi 2
-  objePrefab: {fileID: 1913855998982295866, guid: 238ae5c8e4908c648af6a646f1ac19b2, type: 3}
+  objeAdi: Geleneksel Japonya Evi
+  objePrefab: {fileID: 5119890149007942653, guid: c03d9fcdf66293d45a4fb93d2848a05e, type: 3}
   uiIkonu: {fileID: 0}
   tur: 1
   minPopulasyon: 0

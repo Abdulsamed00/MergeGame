@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Tori
   m_EditorClassIdentifier: 
   saveID: 
-  objeAdi: 
-  objePrefab: {fileID: 0}
+  objeAdi: Torii
+  objePrefab: {fileID: 542754894498359074, guid: d59201c4aa856864ea00b73b85221fe9, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0
