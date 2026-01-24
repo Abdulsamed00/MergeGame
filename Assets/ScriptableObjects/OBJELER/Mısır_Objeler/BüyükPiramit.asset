@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveID: 
   objeAdi: "B\xFCy\xFCk Piramit"
-  objePrefab: {fileID: 3326317898769809415, guid: 83c39506974e59649a35638e1e28a387, type: 3}
+  objePrefab: {fileID: 6620253990547698961, guid: 83c39506974e59649a35638e1e28a387, type: 3}
   uiIkonu: {fileID: 0}
   tur: 1
   minPopulasyon: 0

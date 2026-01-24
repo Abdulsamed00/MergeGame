@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveID: 
   objeAdi: "Mumya Ba\u015Flar\u0131"
-  objePrefab: {fileID: 7497419306910378796, guid: 053004724f66d804589ca20a5eba53fe, type: 3}
+  objePrefab: {fileID: 5841626558024086774, guid: 053004724f66d804589ca20a5eba53fe, type: 3}
   uiIkonu: {fileID: 0}
   tur: 1
   minPopulasyon: 0

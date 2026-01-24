@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveID: 
   objeAdi: "Kum Kayas\u0131"
-  objePrefab: {fileID: 8863446072230221473, guid: 6c20fd7063df908429146addb8b66d97, type: 3}
+  objePrefab: {fileID: 8475776828060789171, guid: 6c20fd7063df908429146addb8b66d97, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

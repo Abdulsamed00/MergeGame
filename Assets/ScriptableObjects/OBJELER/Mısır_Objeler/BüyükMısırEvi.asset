@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveID: 
   objeAdi: "B\xFCy\xFCk M\u0131s\u0131r Evi"
-  objePrefab: {fileID: 4464584148438924664, guid: 0d7f827412553a245b099f1db413282f, type: 3}
+  objePrefab: {fileID: 2809891348309099512, guid: 0d7f827412553a245b099f1db413282f, type: 3}
   uiIkonu: {fileID: 0}
   tur: 1
   minPopulasyon: 0

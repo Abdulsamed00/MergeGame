@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveID: 
   objeAdi: "Kum Ta\u015F\u0131"
-  objePrefab: {fileID: 8813267789048955598, guid: 186723556f27a194dbf6b2b96c40a666, type: 3}
+  objePrefab: {fileID: 987754044943618922, guid: 186723556f27a194dbf6b2b96c40a666, type: 3}
   uiIkonu: {fileID: 0}
   tur: 0
   minPopulasyon: 0

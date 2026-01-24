@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveID: 
   objeAdi: Orta Piramit
-  objePrefab: {fileID: 1993233124516632331, guid: 46d5bccaf6cc0234da16ffe6f124a617, type: 3}
+  objePrefab: {fileID: 1000769831089510613, guid: 46d5bccaf6cc0234da16ffe6f124a617, type: 3}
   uiIkonu: {fileID: 0}
   tur: 1
   minPopulasyon: 0
