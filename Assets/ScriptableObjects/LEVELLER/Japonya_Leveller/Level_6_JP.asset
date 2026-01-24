@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7057f6dee15b284d975e22a8316f357, type: 3}
   m_Name: Level_6_JP
   m_EditorClassIdentifier: 
-  levelID: 0
-  ulkeAdi: 
-  levelAdi: 
-  gridGenislik: 0
-  gridYukseklik: 0
+  levelID: 15
+  ulkeAdi: Japonya
+  levelAdi: Level 6
+  gridGenislik: 5
+  gridYukseklik: 5
   hedefler: []
   izinVerilenEnUstObje: {fileID: 0}
   levelObjeleri: []
