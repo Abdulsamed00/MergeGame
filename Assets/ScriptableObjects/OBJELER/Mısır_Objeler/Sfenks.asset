@@ -16,7 +16,7 @@ MonoBehaviour:
   objeAdi: Sfenks
   objePrefab: {fileID: 6886401347830652855, guid: 6edab595617fef0478f83fcf6ca130c1, type: 3}
   uiIkonu: {fileID: 0}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0

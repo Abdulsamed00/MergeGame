@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: GelenekselJaponyaEvi1
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 17
   objeAdi: Geleneksel Japonya Evi
   objePrefab: {fileID: 5119890149007942653, guid: c03d9fcdf66293d45a4fb93d2848a05e, type: 3}
   uiIkonu: {fileID: 0}

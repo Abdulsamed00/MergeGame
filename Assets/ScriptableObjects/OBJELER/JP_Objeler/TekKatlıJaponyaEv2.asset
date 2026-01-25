@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: "TekKatl\u0131JaponyaEv2"
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 16
   objeAdi: "Tek Katl\u0131 Japonya evi 2"
   objePrefab: {fileID: 7957802198438767904, guid: da550d2297679d04096caee4f3498885, type: 3}
   uiIkonu: {fileID: 0}

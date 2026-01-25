@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: Bambu
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 12
   objeAdi: Bambu
   objePrefab: {fileID: 5026105060972685150, guid: 2749a2ee6dce78c4d891cd28332f9a8b, type: 3}
   uiIkonu: {fileID: 0}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: Sakura
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 11
   objeAdi: Sakura
   objePrefab: {fileID: 768854635408175748, guid: 6fceed573d2c40441a0c0e6b081023ab, type: 3}
   uiIkonu: {fileID: 0}

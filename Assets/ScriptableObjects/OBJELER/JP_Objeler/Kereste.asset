@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: Kereste
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 13
   objeAdi: Kereste
   objePrefab: {fileID: 6074498416505756288, guid: cada7a22d7ab156429ff376f8b01a18a, type: 3}
   uiIkonu: {fileID: 0}
