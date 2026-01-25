@@ -20,6 +20,6 @@ MonoBehaviour:
   hedefler: []
   izinVerilenEnUstObje: {fileID: 0}
   levelObjeleri: []
-  yildiz1Puani: 0
-  yildiz2Puani: 0
-  yildiz3Puani: 0
+  yildiz1Puani: 15
+  yildiz2Puani: 30
+  yildiz3Puani: 45
