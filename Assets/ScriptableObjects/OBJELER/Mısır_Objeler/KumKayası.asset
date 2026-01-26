@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: "KumKayas\u0131"
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 35
   objeAdi: "Kum Kayas\u0131"
   objePrefab: {fileID: 8475776828060789171, guid: 6c20fd7063df908429146addb8b66d97, type: 3}
   uiIkonu: {fileID: 0}

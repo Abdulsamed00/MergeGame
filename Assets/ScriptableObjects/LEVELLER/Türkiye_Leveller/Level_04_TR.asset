@@ -18,9 +18,7 @@ MonoBehaviour:
   gridGenislik: 5
   gridYukseklik: 5
   hedefler:
-  - istenenObje: {fileID: 11400000, guid: cbcb555f7f651fe44bd8a88b9daefc04, type: 2}
-    adet: 4
-  - istenenObje: {fileID: 11400000, guid: 4d24efd2f81c42948bd93d1a4a1d9638, type: 2}
+  - istenenObje: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
     adet: 1
   izinVerilenEnUstObje: {fileID: 11400000, guid: 4d24efd2f81c42948bd93d1a4a1d9638, type: 2}
   levelObjeleri:

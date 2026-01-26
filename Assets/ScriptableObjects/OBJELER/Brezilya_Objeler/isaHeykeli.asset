@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: isaHeykeli
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 32
   objeAdi: "\u0130sa Heykeli"
   objePrefab: {fileID: 3910972817940435325, guid: 76e69a94f9b463b47b1a2b32b2026b65, type: 3}
   uiIkonu: {fileID: 0}

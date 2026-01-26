@@ -217,6 +217,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7526722732961180178}
+  - component: {fileID: 2819222336858918729}
   m_Layer: 0
   m_Name: Briket
   m_TagString: Untagged
@@ -244,6 +245,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2819222336858918729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7151605012092842152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6f5d351783df94d90c6506ec8e0cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verisi: {fileID: 11400000, guid: e991c3d9ce264cc4fafdf1acec7e0359, type: 2}
+  currentCell: {fileID: 0}
+  heightOffset: 0.5
+  kilitliMi: 0
+  hareketHakki: 1
+  normalScale: {x: 100, y: 100, z: 100}
+  buyukScale: {x: 110, y: 110, z: 110}
+  icindekiMalzemeler: []
 --- !u!1 &7238006447718367133
 GameObject:
   m_ObjectHideFlags: 0

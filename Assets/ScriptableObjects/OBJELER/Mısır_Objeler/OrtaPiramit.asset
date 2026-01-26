@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: OrtaPiramit
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 41
   objeAdi: Orta Piramit
   objePrefab: {fileID: 1000769831089510613, guid: 46d5bccaf6cc0234da16ffe6f124a617, type: 3}
   uiIkonu: {fileID: 0}

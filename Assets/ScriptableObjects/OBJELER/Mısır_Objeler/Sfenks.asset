@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: Sfenks
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 39
   objeAdi: Sfenks
   objePrefab: {fileID: 6886401347830652855, guid: 6edab595617fef0478f83fcf6ca130c1, type: 3}
   uiIkonu: {fileID: 0}

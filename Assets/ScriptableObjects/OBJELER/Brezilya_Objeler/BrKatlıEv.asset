@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: "BrKatl\u0131Ev"
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 28
   objeAdi: "Katl\u0131 Brezilya Evi"
   objePrefab: {fileID: 5762098315908791071, guid: fb52fa10fe0897745b1409f8c095d6b8, type: 3}
   uiIkonu: {fileID: 0}

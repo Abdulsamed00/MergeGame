@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5806280394018221995}
   - component: {fileID: 7438775415986610190}
   - component: {fileID: 4674491900518634692}
+  - component: {fileID: -5821682112142052277}
   m_Layer: 0
   m_Name: BPramit
   m_TagString: Untagged
@@ -83,3 +84,23 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-5821682112142052277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6620253990547698961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6f5d351783df94d90c6506ec8e0cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verisi: {fileID: 11400000, guid: b5ef3d27adcc5a7408ffc33993714b11, type: 2}
+  currentCell: {fileID: 0}
+  heightOffset: 0.5
+  kilitliMi: 0
+  hareketHakki: 1
+  normalScale: {x: 100, y: 100, z: 100}
+  buyukScale: {x: 110, y: 110, z: 110}
+  icindekiMalzemeler: []

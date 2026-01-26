@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: "K\xFC\xE7\xFCkPiramit"
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 40
   objeAdi: "K\xFC\xE7\xFCk Piramit"
   objePrefab: {fileID: 590954172826722979, guid: 389e3e1c6d4646f46ac531d30f0cf738, type: 3}
   uiIkonu: {fileID: 0}

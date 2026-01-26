@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: "K\xFCt\xFCk"
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 36
   objeAdi: "K\xFCt\xFCk"
   objePrefab: {fileID: 4845062764563967478, guid: f909981265d31ee4e8f606c84e7ea200, type: 3}
   uiIkonu: {fileID: 0}

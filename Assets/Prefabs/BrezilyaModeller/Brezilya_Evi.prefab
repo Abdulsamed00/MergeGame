@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1465166058702663689}
   - component: {fileID: 2592537718867197868}
   - component: {fileID: 296811068744895334}
+  - component: {fileID: 8171507413226884036}
   m_Layer: 0
   m_Name: Brezilya_Evi
   m_TagString: Untagged
@@ -86,3 +87,23 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8171507413226884036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2242370849101195955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6f5d351783df94d90c6506ec8e0cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verisi: {fileID: 11400000, guid: 7fab760cd0749e44faea07dfce8eab35, type: 2}
+  currentCell: {fileID: 0}
+  heightOffset: 0.5
+  kilitliMi: 0
+  hareketHakki: 1
+  normalScale: {x: 100, y: 100, z: 100}
+  buyukScale: {x: 110, y: 110, z: 110}
+  icindekiMalzemeler: []

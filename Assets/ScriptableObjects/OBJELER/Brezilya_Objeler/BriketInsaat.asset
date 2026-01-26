@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: BriketInsaat
   m_EditorClassIdentifier: 
-  saveID: 
+  saveID: 25
   objeAdi: "Briketten \u0130n\u015Faat"
   objePrefab: {fileID: 6135313777061951370, guid: 7704283b8907eeb438892da13e5d52bc, type: 3}
   uiIkonu: {fileID: 0}
