@@ -212,7 +212,7 @@ public class PlacementManager : MonoBehaviour
             else
             {
                 // --- YENİ SPAWN KOYMA (BURADA KAYIT YAPIYORUZ) ---
-                GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, Quaternion.identity);
+                GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, currentPrefab.transform.rotation);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
                 po.verisi = siradakiObjeVerisi;

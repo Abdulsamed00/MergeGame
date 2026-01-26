@@ -111,7 +111,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
     private void BinaOlustur(GridCell hedefHucre, ObjeVerisi binaVerisi)
     {
         Vector3 pos = gridManager.grid.GetCellCenterWorld(hedefHucre.cellPosition);
-        GameObject yeniBina = Instantiate(binaVerisi.objePrefab, pos, Quaternion.identity);
+        GameObject yeniBina = Instantiate(binaVerisi.objePrefab, pos, binaVerisi.objePrefab.transform.rotation);
         PlaceableObject po = yeniBina.GetComponent<PlaceableObject>();
 
         po.verisi = binaVerisi;
