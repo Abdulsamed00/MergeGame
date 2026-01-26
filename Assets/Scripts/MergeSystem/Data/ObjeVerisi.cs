@@ -32,4 +32,6 @@ public class ObjeVerisi : ScriptableObject
     public int objeSeviyesi = 0;
     
     public int collectionID;
+    
+    
 }

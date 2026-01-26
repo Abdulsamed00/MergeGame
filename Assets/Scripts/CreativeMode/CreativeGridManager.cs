@@ -12,7 +12,7 @@ public class CreativeGridManager : MonoBehaviour
 
     private Dictionary<Vector3Int, CreativeGridCell> cells = new();
 
-    void Start()
+    void Awake()
     {
         CreateGrid();
     }
@@ -65,14 +65,15 @@ public class CreativeGridManager : MonoBehaviour
         return grid.WorldToCell(worldPos);
     }
 
-    public bool PlaceObject(Vector3Int pos, GameObject obj)
+    public bool PlaceObject(Vector3Int pos, GameObject obj, ObjeVerisi veri)
     {
         CreativeGridCell cell = GetCell(pos);
 
         if (cell == null || !cell.IsEmpty())
             return false;
 
-        cell.PlaceObject(obj);
+        // Buradaki PlaceObject fonksiyonu CreativeGridCell içindekidir
+        cell.PlaceObject(obj, veri); 
         return true;
     }
 
@@ -93,5 +94,20 @@ public class CreativeGridManager : MonoBehaviour
         {
             cell.Clear(); 
         }
+    }
+    public List<CreativeGridCell> GetAllOccupiedCells()
+    {
+        List<CreativeGridCell> doluHucreler = new List<CreativeGridCell>();
+        
+        // Dictionary içindeki tüm hücreleri tek tek kontrol ediyoruz
+        foreach (var cell in cells.Values)
+        {
+            // Eğer hücre boş değilse listeye ekle
+            if (!cell.IsEmpty())
+            {
+                doluHucreler.Add(cell);
+            }
+        }
+        return doluHucreler;
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
   m_Name: Gokdelen
   m_EditorClassIdentifier: 
-  saveID: 8
+  saveID: 6
   objeAdi: "G\xF6kdelen"
   objePrefab: {fileID: 1327831999354397550, guid: d38dbb0bd94692b449b95b4648d8202f, type: 3}
   uiIkonu: {fileID: 21300000, guid: 849072621b55b1444aa2c8c22bc4a764, type: 3}
