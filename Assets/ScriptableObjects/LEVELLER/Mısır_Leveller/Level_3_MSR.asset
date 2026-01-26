@@ -17,6 +17,7 @@ MonoBehaviour:
   levelAdi: Level 3
   gridGenislik: 4
   gridYukseklik: 4
+  zeminPrefabi: {fileID: 4644411018722687616, guid: 649d2fbff1328f846a90bbf10382203a, type: 3}
   hedefler: []
   izinVerilenEnUstObje: {fileID: 0}
   levelObjeleri: []

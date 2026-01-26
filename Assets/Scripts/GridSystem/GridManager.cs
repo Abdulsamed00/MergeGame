@@ -20,7 +20,7 @@ public class GridManager : MonoBehaviour
     private Dictionary<Vector3Int, GridCell> cells = new();
 
     // --- DEĞİŞİKLİK BURADA: Void yerine IEnumerator ---
-    public IEnumerator GridiAnimasyonluOlustur(int w, int h)
+    public IEnumerator GridiAnimasyonluOlustur(int w, int h, GridCell zeminPrefabi)
     {
         TemizleVeYokEt();
 

@@ -126,8 +126,8 @@ public class GameManager : MonoBehaviour
         placementManager.SetupSpawnList(suankiLevelData.levelObjeleri);
 
         // Grid'i animasyonlu oluştur
-        yield return StartCoroutine(gridManager.GridiAnimasyonluOlustur(suankiLevelData.gridGenislik, suankiLevelData.gridYukseklik));
-
+        yield return StartCoroutine(gridManager.GridiAnimasyonluOlustur(suankiLevelData.gridGenislik, suankiLevelData.gridYukseklik, suankiLevelData.zeminPrefabi // <--- YENİ EKLENEN PARAMETRE
+        ));
         // *** KAYIT KONTROLÜ ***
         // Eğer bu level için kayıt dosyası varsa onu yükle, yoksa sıfırdan başla
         if (SaveManager.HasSaveFile(suankiLevelIndex))

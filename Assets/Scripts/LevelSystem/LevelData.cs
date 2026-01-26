@@ -26,7 +26,10 @@ public class LevelData : ScriptableObject
 
     public int gridGenislik;
     public int gridYukseklik;
-
+    
+    [Header("Görsel Ayarlar")]
+    [Tooltip("Bu levelda zemin nasıl görünecek? Boş bırakılırsa varsayılan kullanılır.")]
+    public GridCell zeminPrefabi;
     
     [Header("Görevler")]
     public List<LevelHedef> hedefler;

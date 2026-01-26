@@ -92,9 +92,10 @@ public class CreativePlacementManager : MonoBehaviour
     {
         if (!currentCell.IsEmpty()) return;
 
-        GameObject obj = Instantiate(seciliObje.objePrefab, currentCell.transform.position, Quaternion.identity);
+        Quaternion rot = Quaternion.Euler(90, 0, 0); 
+        GameObject obj = Instantiate(seciliObje.objePrefab, currentCell.transform.position, rot);
 
-        // DİKKAT: Buraya 'seciliObje' parametresini eklemediysen veri gitmez ve kayıt çalışmaz!
-        currentCell.PlaceObject(obj, seciliObje); 
+        currentCell.PlaceObject(obj, seciliObje);
     }
+
 }

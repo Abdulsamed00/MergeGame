@@ -1322,7 +1322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 1271769469}
-  cellPrefab: {fileID: -7585287572178171762, guid: e750422788a6eb24e8922fb27f3c625e, type: 3}
+  cellPrefab: {fileID: 7939645876076692547, guid: fe9324a56d4af224984ccd4698635552, type: 3}
   width: 9
   height: 9
 --- !u!1 &1271769467
@@ -1351,7 +1351,7 @@ Grid:
   m_GameObject: {fileID: 1271769467}
   m_Enabled: 1
   m_CellSize: {x: 1, y: 1, z: 1}
-  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellGap: {x: 0.1, y: 0.1, z: 0.1}
   m_CellLayout: 0
   m_CellSwizzle: 0
 --- !u!4 &1271769470

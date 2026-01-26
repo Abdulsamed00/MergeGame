@@ -28,12 +28,7 @@ public class CreativeGridManager : MonoBehaviour
                 Vector3Int cellPos = new Vector3Int(x, 0, z);
                 Vector3 worldPos = grid.GetCellCenterWorld(cellPos);
 
-                CreativeGridCell cell = Instantiate(
-                    cellPrefab,
-                    worldPos,
-                    Quaternion.identity,
-                    transform
-                );
+                CreativeGridCell cell = Instantiate(cellPrefab, worldPos, cellPrefab.transform.rotation, transform);
 
                 cell.Init(cellPos);
                 cells.Add(cellPos, cell);
