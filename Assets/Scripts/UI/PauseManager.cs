@@ -39,6 +39,6 @@ public class PauseManager : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1f;
 
-        SceneManager.LoadScene("UiScence");
+        SceneManager.LoadScene("UI");
     }
 }
