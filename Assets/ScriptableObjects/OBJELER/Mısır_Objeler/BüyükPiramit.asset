@@ -17,7 +17,7 @@ MonoBehaviour:
   objePrefab: {fileID: 6620253990547698961, guid: 83c39506974e59649a35638e1e28a387, type: 3}
   uiIkonu: {fileID: 0}
   tur: 1
-  minPopulasyon: 0
-  maxPopulasyon: 0
-  objeSeviyesi: 0
+  minPopulasyon: 20
+  maxPopulasyon: 30
+  objeSeviyesi: 6
   collectionID: 43
