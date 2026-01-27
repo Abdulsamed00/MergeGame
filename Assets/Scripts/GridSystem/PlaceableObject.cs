@@ -5,7 +5,7 @@ public class PlaceableObject : MonoBehaviour
 {
     public ObjeVerisi verisi;
     public GridCell currentCell;
-    public float heightOffset = 0.5f;
+    public float heightOffset = 0f;
     
     [Header("Durum")]
     public bool kilitliMi = false;
