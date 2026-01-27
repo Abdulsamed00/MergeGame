@@ -99,7 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verisi: {fileID: 11400000, guid: 69d9ad3b5860b3b42b6f35face0aa29c, type: 2}
   currentCell: {fileID: 0}
-  heightOffset: 0.5
+  heightOffset: 0
   kilitliMi: 0
   hareketHakki: 1
   normalScale: {x: 100, y: 100, z: 100}
