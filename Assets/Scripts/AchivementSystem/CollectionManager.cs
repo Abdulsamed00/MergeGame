@@ -108,9 +108,10 @@ public class CollectionManager : MonoBehaviour
 
             if (veri.objePrefab != null)
             {
-                current3DModel = Instantiate(veri.objePrefab, studioSpawnPoint.position, Quaternion.identity, studioSpawnPoint);
+                current3DModel = Instantiate(veri.objePrefab, studioSpawnPoint.position, veri.objePrefab.transform.rotation, studioSpawnPoint);
                 SetLayerRecursively(current3DModel, LayerMask.NameToLayer("3DUI"));
-                current3DModel.transform.localRotation = Quaternion.Euler(0, 45, 0); 
+                current3DModel.transform.localRotation = veri.objePrefab.transform.rotation;
+                current3DModel.transform.Rotate(0, 45, 0, Space.World); 
                 
                 // Objelerin animasyon oynuyordu, durdurdum
                 Animator[] tumAnimatorler = current3DModel.GetComponentsInChildren<Animator>();
