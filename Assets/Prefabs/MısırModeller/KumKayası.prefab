@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8475776828060789171
+--- !u!1 &2943584564458785351
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9145635133519082249}
-  - component: {fileID: 5279354728519810220}
-  - component: {fileID: 7971651090701830246}
-  - component: {fileID: -9090108507451555876}
+  - component: {fileID: 951704255716768178}
+  - component: {fileID: 769742446453754211}
+  - component: {fileID: 4926553782663956324}
+  - component: {fileID: 6238776093201568845}
   m_Layer: 0
-  m_Name: "KumKayas\u0131"
+  m_Name: Gorsel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9145635133519082249
+--- !u!4 &951704255716768178
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8475776828060789171}
-  m_LocalRotation: {x: -0.015772725, y: -0.39952242, z: 0.42382246, w: 0.8127162}
-  m_LocalPosition: {x: 2.839077, y: 0.41779414, z: 0.22070949}
-  m_LocalScale: {x: 99.99999, y: 100.00001, z: 100}
+  m_GameObject: {fileID: 2943584564458785351}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 9145635133519082249}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5279354728519810220
+--- !u!33 &769742446453754211
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8475776828060789171}
+  m_GameObject: {fileID: 2943584564458785351}
   m_Mesh: {fileID: -5495902117074765545, guid: c6b3b5fdc475d47408d5e574fe52f0fe, type: 3}
---- !u!23 &7971651090701830246
+--- !u!23 &4926553782663956324
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8475776828060789171}
+  m_GameObject: {fileID: 2943584564458785351}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -84,6 +84,60 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &6238776093201568845
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2943584564458785351}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &8475776828060789171
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9145635133519082249}
+  - component: {fileID: -9090108507451555876}
+  m_Layer: 0
+  m_Name: "KumKayas\u0131"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9145635133519082249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8475776828060789171}
+  m_LocalRotation: {x: -0.015772725, y: -0.39952242, z: 0.42382246, w: 0.8127162}
+  m_LocalPosition: {x: 2.839077, y: 0.41779414, z: 0.22070949}
+  m_LocalScale: {x: 99.99999, y: 100.00001, z: 100}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 951704255716768178}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-9090108507451555876
 MonoBehaviour:
   m_ObjectHideFlags: 0

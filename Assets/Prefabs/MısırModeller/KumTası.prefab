@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 504092815016430032}
-  - component: {fileID: 3553689938915395189}
-  - component: {fileID: 1636435463319220927}
   - component: {fileID: 7061308550498912184}
   m_Layer: 0
   m_Name: "KumTas\u0131"
@@ -30,25 +28,80 @@ Transform:
   m_LocalPosition: {x: 0.16217029, y: 0.028490826, z: -0.022306137}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4666662956236627748}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3553689938915395189
+--- !u!114 &7061308550498912184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987754044943618922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6f5d351783df94d90c6506ec8e0cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verisi: {fileID: 11400000, guid: 91cc21050356c42499e4381fe2059bfc, type: 2}
+  currentCell: {fileID: 0}
+  heightOffset: 0.5
+  kilitliMi: 0
+  hareketHakki: 1
+  normalScale: {x: 100, y: 100, z: 100}
+  buyukScale: {x: 110, y: 110, z: 110}
+  icindekiMalzemeler: []
+--- !u!1 &7220639816813073230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4666662956236627748}
+  - component: {fileID: 4584785797184662025}
+  - component: {fileID: 2905144491849910788}
+  - component: {fileID: 6382162770441442886}
+  m_Layer: 0
+  m_Name: Gorsel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4666662956236627748
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7220639816813073230}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 504092815016430032}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &4584785797184662025
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 987754044943618922}
+  m_GameObject: {fileID: 7220639816813073230}
   m_Mesh: {fileID: -5495902117074765545, guid: d2edf00abe1193a46801ca8210003865, type: 3}
---- !u!23 &1636435463319220927
+--- !u!23 &2905144491849910788
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 987754044943618922}
+  m_GameObject: {fileID: 7220639816813073230}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -84,23 +137,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7061308550498912184
-MonoBehaviour:
+--- !u!95 &6382162770441442886
+Animator:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 987754044943618922}
+  m_GameObject: {fileID: 7220639816813073230}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab6f5d351783df94d90c6506ec8e0cfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  verisi: {fileID: 11400000, guid: 91cc21050356c42499e4381fe2059bfc, type: 2}
-  currentCell: {fileID: 0}
-  heightOffset: 0.5
-  kilitliMi: 0
-  hareketHakki: 1
-  normalScale: {x: 100, y: 100, z: 100}
-  buyukScale: {x: 110, y: 110, z: 110}
-  icindekiMalzemeler: []
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

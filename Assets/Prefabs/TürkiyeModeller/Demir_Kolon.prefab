@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1771128967355700917}
-  - component: {fileID: 3403467858673080592}
-  - component: {fileID: 639366792610573786}
   - component: {fileID: -6579840462628416060}
   m_Layer: 0
   m_Name: Demir_Kolon
@@ -30,25 +28,80 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 603670530711062148}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3403467858673080592
+--- !u!114 &-6579840462628416060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432004794084772879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6f5d351783df94d90c6506ec8e0cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verisi: {fileID: 11400000, guid: ffabf0023c5bc4546a3bc6c1fa4c2809, type: 2}
+  currentCell: {fileID: 0}
+  heightOffset: 0.5
+  kilitliMi: 0
+  hareketHakki: 1
+  normalScale: {x: 100, y: 100, z: 100}
+  buyukScale: {x: 110, y: 110, z: 110}
+  icindekiMalzemeler: []
+--- !u!1 &5340002587895666242
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 603670530711062148}
+  - component: {fileID: 2767875387750735309}
+  - component: {fileID: 1770699850808577808}
+  - component: {fileID: 4081361776510252200}
+  m_Layer: 0
+  m_Name: Gorsel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &603670530711062148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5340002587895666242}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1771128967355700917}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &2767875387750735309
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1432004794084772879}
+  m_GameObject: {fileID: 5340002587895666242}
   m_Mesh: {fileID: 4493585093827132993, guid: f423d02ae3e34f649a06b3facec1b463, type: 3}
---- !u!23 &639366792610573786
+--- !u!23 &1770699850808577808
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1432004794084772879}
+  m_GameObject: {fileID: 5340002587895666242}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -85,23 +138,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-6579840462628416060
-MonoBehaviour:
+--- !u!95 &4081361776510252200
+Animator:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1432004794084772879}
+  m_GameObject: {fileID: 5340002587895666242}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab6f5d351783df94d90c6506ec8e0cfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  verisi: {fileID: 11400000, guid: ffabf0023c5bc4546a3bc6c1fa4c2809, type: 2}
-  currentCell: {fileID: 0}
-  heightOffset: 0.5
-  kilitliMi: 0
-  hareketHakki: 1
-  normalScale: {x: 100, y: 100, z: 100}
-  buyukScale: {x: 110, y: 110, z: 110}
-  icindekiMalzemeler: []
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
