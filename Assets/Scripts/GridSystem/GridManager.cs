@@ -1,41 +1,41 @@
 using UnityEngine;
-using UnityEngine.Tilemaps; // Grid sistemiyle uyumlu çalışabilmek için
-using System.Collections.Generic; // Dictionary kullanabilmek için
+using System.Collections; // IEnumerator için gerekli
+using System.Collections.Generic;
 
 public class GridManager : MonoBehaviour
 {
     [Header("Grid Ayarları")]
     public Grid grid;
-    public GridCell cellPrefab; // Hücre için instantiate edilecek prefab
+    public GridCell cellPrefab;
 
-    // Bu değerleri artık GameManager yönetecek, o yüzden HideInInspector kalabilir
     [HideInInspector] public int width = 4;
     [HideInInspector] public int height = 4;
     
     [Header("Camera")]
     public CameraControlTool cameraController;
 
-    // Hücreleri tuttuğumuz sözlük
-    private Dictionary<Vector3Int, GridCell> cells = new Dictionary<Vector3Int, GridCell>();
+    [Header("Animasyon Zamanlaması")]
+    public float hucreAnimasyonSuresi = 0.1f; // Her hücrenin düşmesi kaç saniye sürüyor?
 
-    void Start()
-    {
-        // BURASI ARTIK BOŞ.
-        // Çünkü Grid'i oyun başlar başlamaz değil, 
-        // GameManager "Bölüm Yükle" emri verince oluşturacağız.
-    }
+    private Dictionary<Vector3Int, GridCell> cells = new();
 
-    // --- YENİ: GameManager tarafından çağrılacak ana fonksiyon ---
-    public void GridiOlustur(int w, int h)
+    // --- DEĞİŞİKLİK BURADA: Void yerine IEnumerator ---
+    public IEnumerator GridiAnimasyonluOlustur(int w, int h, GridCell zeminPrefabi)
     {
-        // 1. Önce eski grid varsa temizle (Yeniden Oyna yapınca sahne karışmasın)
         TemizleVeYokEt();
 
-        // 2. Yeni boyutları ayarla
         width = w;
         height = h;
+        
+        // Kamera hemen ortalansın ki animasyonu izleyebilelim
+        if (cameraController != null)
+        {
+            // Gridin tahmini merkezini hesapla
+            Vector3 centerLogic = grid.GetCellCenterWorld(new Vector3Int(width / 2, 0, height / 2));
+            cameraController.InitFromGridCenter(centerLogic);
+        }
 
-        // 3. Grid'i fiziksel olarak oluştur
+        // Hücreleri Tek Tek Oluşturma Döngüsü
         for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < height; z++)
@@ -43,34 +43,38 @@ public class GridManager : MonoBehaviour
                 Vector3Int cellPos = new Vector3Int(x, 0, z); 
                 Vector3 worldPos = grid.GetCellCenterWorld(cellPos); 
 
-                GridCell cell = Instantiate(cellPrefab, worldPos, Quaternion.identity, transform);
+                GridCell kullanilacakPrefab =
+                    zeminPrefabi != null ? zeminPrefabi : cellPrefab;
+
+                GridCell cell = Instantiate(
+                    kullanilacakPrefab,
+                    worldPos,
+                    kullanilacakPrefab.transform.rotation,
+                    transform
+                );
                 cell.cellPosition = cellPos;
 
                 cells.Add(cellPos, cell);
+
+                // --- BEKLEME ---
+                // Animasyonun bitmesini (veya bir sonrakine geçmeyi) bekle
+                yield return new WaitForSeconds(hucreAnimasyonSuresi);
             }
         }
-
-        // 4. Grid oluştuğu için kamerayı ortala (Senin eski kodun)
-        if (cameraController != null)
-        {
-            Vector3 center = GetGridExactCenterWorld();
-            cameraController.InitFromGridCenter(center);
-        }
+        
+        // Grid bitti, son hücrenin de yerine oturması için minik bir bekleme daha
+        yield return new WaitForSeconds(0.1f);
     }
 
-    // --- YENİ: Kaybetme Kontrolü İçin ---
+    // --- Diğer Fonksiyonlar Aynen Kalıyor ---
     public bool GridTamamenDoluMu()
     {
         foreach (var cell in cells.Values)
         {
-            // Eğer tek bir tane bile boş hücre varsa grid dolmamıştır
             if (cell.IsEmpty()) return false;
         }
-        // Hiç boş yer bulunamadı, demek ki dolu
         return true;
     }
-
-    // --- YARDIMCI FONKSİYONLAR ---
 
     public GridCell GetCell(Vector3Int pos)
     {
@@ -82,10 +86,7 @@ public class GridManager : MonoBehaviour
     {
         foreach (var cell in cells.Values)
         {
-            if (cell.IsEmpty())
-            {
-                return cell;
-            }
+            if (cell.IsEmpty()) return cell;
         }
         return null;
     }
@@ -95,7 +96,6 @@ public class GridManager : MonoBehaviour
         return new List<GridCell>(cells.Values);
     }
 
-    // Eski ClearGrid sadece içini boşaltıyordu, bu ise her şeyi yok eder (Level reset için)
     private void TemizleVeYokEt()
     {
         foreach (var cell in cells.Values)
@@ -106,23 +106,27 @@ public class GridManager : MonoBehaviour
         cells.Clear();
     }
     
-    // Senin yazdığın kamera merkezleme kodu (Aynen korundu)
-    public Vector3 GetGridExactCenterWorld()
+    public void TemizleVeYokEtPublic()
     {
-        Bounds bounds = new Bounds();
-        bool first = true;
-
         foreach (var cell in cells.Values)
         {
-            if (first)
+            if (cell.currentObject != null)
             {
-                bounds = new Bounds(cell.transform.position, Vector3.zero);
-                first = false;
+                Destroy(cell.currentObject.gameObject);
+                cell.currentObject = null;
             }
-            else
-            {
-                bounds.Encapsulate(cell.transform.position);
-            }
+        }
+    }
+    
+    public Vector3 GetGridExactCenterWorld()
+    {
+        // Grid oluşurken kamera zaten ayarlandığı için burası artık opsiyonel ama kalabilir
+        Bounds bounds = new Bounds();
+        bool first = true;
+        foreach (var cell in cells.Values)
+        {
+            if (first) { bounds = new Bounds(cell.transform.position, Vector3.zero); first = false; }
+            else { bounds.Encapsulate(cell.transform.position); }
         }
         return bounds.center;
     }

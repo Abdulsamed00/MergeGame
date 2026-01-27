@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7057f6dee15b284d975e22a8316f357, type: 3}
+  m_Name: Level_3_JP
+  m_EditorClassIdentifier: 
+  levelID: 12
+  ulkeAdi: Japonya
+  levelAdi: Level 3
+  gridGenislik: 4
+  gridYukseklik: 4
+  zeminPrefabi: {fileID: -562397327319875813, guid: df5295ed8f1935f439afa95a17e0e8c0, type: 3}
+  hedefler:
+  - istenenObje: {fileID: 11400000, guid: 0ae8698239eb29f419a0a2cb16c93164, type: 2}
+    adet: 3
+  izinVerilenEnUstObje: {fileID: 11400000, guid: 0ae8698239eb29f419a0a2cb16c93164, type: 2}
+  levelObjeleri:
+  - obje: {fileID: 11400000, guid: 90f47787b74e007469dc70f8f93a92f9, type: 2}
+    spawnYuzdesi: 50
+  - obje: {fileID: 11400000, guid: 4ce45653e14766e419b0349b761686aa, type: 2}
+    spawnYuzdesi: 50
+  yildiz1Puani: 0
+  yildiz2Puani: 0
+  yildiz3Puani: 0

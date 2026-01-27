@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 891fec78c366d0d4698896cce8189590, type: 3}
+  m_Name: "KumKayas\u0131Tarif"
+  m_EditorClassIdentifier: 
+  tarifAdi: "Kum Kayas\u0131"
+  gerekenMalzemeler:
+  - {fileID: 11400000, guid: 91cc21050356c42499e4381fe2059bfc, type: 2}
+  - {fileID: 11400000, guid: 91cc21050356c42499e4381fe2059bfc, type: 2}
+  - {fileID: 11400000, guid: 91cc21050356c42499e4381fe2059bfc, type: 2}
+  sonucObjesi: {fileID: 11400000, guid: 70ffcd6e5cb6fd8448ab1c24962d1a71, type: 2}

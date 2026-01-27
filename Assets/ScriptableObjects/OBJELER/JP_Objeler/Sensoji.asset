@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3662de656d9b79a4585f6acc3e1cc292, type: 3}
+  m_Name: Sensoji
+  m_EditorClassIdentifier: 
+  saveID: 19
+  objeAdi: "Sensoji Tap\u0131na\u011F\u0131"
+  objePrefab: {fileID: 5825883154949374066, guid: 3757144907699dd4ea922f36c324ec38, type: 3}
+  uiIkonu: {fileID: 0}
+  tur: 1
+  minPopulasyon: 0
+  maxPopulasyon: 0
+  objeSeviyesi: 0
+  collectionID: 19

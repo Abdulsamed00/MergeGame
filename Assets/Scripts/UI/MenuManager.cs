@@ -8,6 +8,7 @@ public class MenuManager : MonoBehaviour
     public GameObject mainMenuPanel;
     public GameObject settingsPanel;
     public GameObject levelsPanel;
+    public GameObject BasarimPanel;
 
     [Header("Fade")]
     public Image fadeImage;
@@ -58,6 +59,18 @@ public class MenuManager : MonoBehaviour
         Debug.Log("Oyun kapatıldı");
     }
 
+    public void BasarimPanelAc()
+    {
+        mainMenuPanel.SetActive(false);
+        BasarimPanel.SetActive(true);
+    }
+    
+    public void BasarimPanelKapat()
+    {
+        BasarimPanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+    }
+    
     // ======================
     // LEVELS
     // ======================

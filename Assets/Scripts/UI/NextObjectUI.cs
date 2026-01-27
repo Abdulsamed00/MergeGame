@@ -4,11 +4,13 @@ using UnityEngine.UI;
 public class NextObjectUI : MonoBehaviour
 {
     [Header("UI Elemanlari")]
-    public Image nextObjectImage; // Buraya UI'daki Image'ı sürükle
+    public Image nextObjectImage;
 
     [Header("Bağlanti")]
     public PlacementManager placementManager;
 
+    //Dinleyicileri ekleme/kaldırma.
+    //Sadece UI aktifken dinliyor. Update fonksiyonu gereksiz yere çalışmıyor.
     void OnEnable()
     {
         if (placementManager != null)
@@ -25,6 +27,7 @@ public class NextObjectUI : MonoBehaviour
         }
     }
 
+    //UI görüntüsünü güncelleme fonksiyonu
     public void UpdateImage(Sprite newSprite)
     {
         if (newSprite != null)
