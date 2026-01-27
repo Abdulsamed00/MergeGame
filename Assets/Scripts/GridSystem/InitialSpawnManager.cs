@@ -58,7 +58,7 @@ public class InitialSpawnManager : MonoBehaviour
             grid.GetCellCenterWorld(cell.cellPosition) +
             Vector3.up * veri.objePrefab.GetComponent<PlaceableObject>().heightOffset;
 
-        GameObject obj = Instantiate(veri.objePrefab, spawnPos, Quaternion.identity);
+        GameObject obj = Instantiate(veri.objePrefab, spawnPos, veri.objePrefab.transform.rotation);
 
         PlaceableObject po = obj.GetComponent<PlaceableObject>();
         po.verisi = veri;
