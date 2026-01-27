@@ -28,6 +28,6 @@ MonoBehaviour:
     spawnYuzdesi: 50
   - obje: {fileID: 11400000, guid: 4ce45653e14766e419b0349b761686aa, type: 2}
     spawnYuzdesi: 50
-  yildiz1Puani: 0
-  yildiz2Puani: 0
-  yildiz3Puani: 0
+  yildiz1Puani: 35
+  yildiz2Puani: 60
+  yildiz3Puani: 85

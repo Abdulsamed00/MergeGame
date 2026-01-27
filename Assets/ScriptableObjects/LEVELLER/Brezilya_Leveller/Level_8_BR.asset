@@ -17,9 +17,17 @@ MonoBehaviour:
   levelAdi: Level 8
   gridGenislik: 6
   gridYukseklik: 6
-  hedefler: []
-  izinVerilenEnUstObje: {fileID: 0}
-  levelObjeleri: []
-  yildiz1Puani: 0
-  yildiz2Puani: 0
-  yildiz3Puani: 0
+  hedefler:
+  - istenenObje: {fileID: 11400000, guid: 57ee10437de85cf4d86ef1d191081db7, type: 2}
+    adet: 3
+  - istenenObje: {fileID: 11400000, guid: 5528c859e683c804f81dce3cff9d8373, type: 2}
+    adet: 2
+  izinVerilenEnUstObje: {fileID: 11400000, guid: 5528c859e683c804f81dce3cff9d8373, type: 2}
+  levelObjeleri:
+  - obje: {fileID: 11400000, guid: e991c3d9ce264cc4fafdf1acec7e0359, type: 2}
+    spawnYuzdesi: 50
+  - obje: {fileID: 11400000, guid: 69d9ad3b5860b3b42b6f35face0aa29c, type: 2}
+    spawnYuzdesi: 50
+  yildiz1Puani: 75
+  yildiz2Puani: 100
+  yildiz3Puani: 140
