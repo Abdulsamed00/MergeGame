@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 19238769}
-  cellPrefab: {fileID: 8255895135655642265, guid: 1891a6b3b1aef4741b7a8ed2c89a086b, type: 3}
+  cellPrefab: {fileID: 582348012461025155, guid: 9828a1b4f48258047a1c1f71262e0bd7, type: 3}
   width: 4
   height: 4
   cameraController: {fileID: 0}

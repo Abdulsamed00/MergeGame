@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 978708172339838675}
   - component: {fileID: 3058479249930750489}
   - component: {fileID: 4644411018722687616}
+  - component: {fileID: -629432920094422640}
   m_Layer: 0
   m_Name: Zemin
   m_TagString: Untagged
@@ -99,3 +100,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellPosition: {x: 0, y: 0, z: 0}
   currentObject: {fileID: 0}
+--- !u!65 &-629432920094422640
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562658314228149196}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.01, y: 0.010000003, z: 0.0012032747}
+  m_Center: {x: 0, y: 0, z: 0.0005042217}
