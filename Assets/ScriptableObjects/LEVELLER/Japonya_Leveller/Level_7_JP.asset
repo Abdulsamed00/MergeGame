@@ -18,6 +18,7 @@ MonoBehaviour:
   gridGenislik: 6
   gridYukseklik: 6
   zeminPrefabi: {fileID: -562397327319875813, guid: df5295ed8f1935f439afa95a17e0e8c0, type: 3}
+  baslangicObjeSayisi: 3
   hedefler:
   - istenenObje: {fileID: 11400000, guid: 8bf7ee14bb336f84c98b42106c2ca61f, type: 2}
     adet: 3
@@ -29,6 +30,6 @@ MonoBehaviour:
     spawnYuzdesi: 50
   - obje: {fileID: 11400000, guid: 4ce45653e14766e419b0349b761686aa, type: 2}
     spawnYuzdesi: 50
-  yildiz1Puani: 60
-  yildiz2Puani: 85
-  yildiz3Puani: 120
+  yildiz1Puani: 125
+  yildiz2Puani: 250
+  yildiz3Puani: 500

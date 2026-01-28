@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tarifAdi: Inari Shrine
   gerekenMalzemeler:
-  - {fileID: 11400000, guid: e0272bea07dc3204a8d9cc4ea535ce5f, type: 2}
-  - {fileID: 11400000, guid: e0272bea07dc3204a8d9cc4ea535ce5f, type: 2}
   - {fileID: 11400000, guid: 2eb819843b3696040a3d204b267a62b5, type: 2}
+  - {fileID: 11400000, guid: e0272bea07dc3204a8d9cc4ea535ce5f, type: 2}
   sonucObjesi: {fileID: 11400000, guid: 47921cd23364de349b0ac76d0af6162e, type: 2}

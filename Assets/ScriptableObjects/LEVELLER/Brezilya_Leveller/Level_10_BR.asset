@@ -17,6 +17,8 @@ MonoBehaviour:
   levelAdi: Level 10
   gridGenislik: 6
   gridYukseklik: 6
+  zeminPrefabi: {fileID: 0}
+  baslangicObjeSayisi: 3
   hedefler:
   - istenenObje: {fileID: 11400000, guid: 7fab760cd0749e44faea07dfce8eab35, type: 2}
     adet: 1
@@ -36,6 +38,6 @@ MonoBehaviour:
     spawnYuzdesi: 50
   - obje: {fileID: 11400000, guid: 69d9ad3b5860b3b42b6f35face0aa29c, type: 2}
     spawnYuzdesi: 50
-  yildiz1Puani: 100
-  yildiz2Puani: 130
-  yildiz3Puani: 170
+  yildiz1Puani: 430
+  yildiz2Puani: 860
+  yildiz3Puani: 1720
