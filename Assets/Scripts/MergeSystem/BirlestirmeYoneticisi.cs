@@ -1,187 +1,195 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
 
 public class BirlestirmeYoneticisi : MonoBehaviour
 {
     public static BirlestirmeYoneticisi Instance;
+
+    [Header("Tarifler")]
     public List<BirlestirmeVerisi> tumTarifler;
+
+    [Header("Referanslar")]
     public GridManager gridManager;
 
+    [Header("Particle")]
+    public GameObject mergeParticlePrefab;
+
     [Header("Animasyon Zamanlaması")]
-    public float mergeBeklemeSuresi = 0.5f; // Merge ile Spawn arasındaki minik boşluk
+    public float mergeBeklemeSuresi = 0.5f;
 
     private void Awake()
     {
         Instance = this;
     }
-    
-    // Simülasyon: Birleşme olur mu?
+
+    // =======================
+    // MERGE OLABİLİR Mİ?
+    // =======================
     public bool CanMerge(PlaceableObject elimizdeki, PlaceableObject yerdeki)
     {
         if (elimizdeki == null || yerdeki == null) return false;
 
-        List<ObjeVerisi> toplamMalzemeler = new List<ObjeVerisi>();
-        toplamMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
-        toplamMalzemeler.AddRange(yerdeki.icindekiMalzemeler);
+        List<ObjeVerisi> toplam = new();
+        toplam.AddRange(elimizdeki.icindekiMalzemeler);
+        toplam.AddRange(yerdeki.icindekiMalzemeler);
 
-        BirlestirmeVerisi uygunTarif = TarifAra(toplamMalzemeler);
-        if (uygunTarif != null)
+        BirlestirmeVerisi tarif = TarifAra(toplam);
+        if (tarif != null)
         {
-            if (SeviyeSiniriAsiliyorMu(uygunTarif.sonucObjesi)) return false;
-            return true; 
-        }
-
-        if (elimizdeki.verisi == yerdeki.verisi)
-        {
-            return true; 
-        }
-
-        return false;
-    }
-
-    private bool SeviyeSiniriAsiliyorMu(ObjeVerisi sonucObjesi)
-    {
-        if (GameManager.Instance == null || GameManager.Instance.SuankiLevelData == null) return false;
-        
-        ObjeVerisi sinir = GameManager.Instance.SuankiLevelData.izinVerilenEnUstObje;
-        if (sinir != null && sonucObjesi.objeSeviyesi > sinir.objeSeviyesi)
-        {
-            if (AudioManager.Instance != null)
-                AudioManager.Instance.PlayMergeError();
+            if (SeviyeSiniriAsiliyorMu(tarif.sonucObjesi)) return false;
             return true;
         }
-        return false;
+
+        return elimizdeki.verisi == yerdeki.verisi;
     }
 
-    // Gerçek İşlem: Birleştirmeyi Uygula
+    // =======================
+    // GERÇEK MERGE
+    // =======================
     public bool ManuelBirlestirme(PlaceableObject elimizdeki, PlaceableObject yerdeki)
     {
-        if (SeviyeSiniriAsiliyorMu(yerdeki.verisi)) return false;
-
-        List<ObjeVerisi> toplamMalzemeler = new List<ObjeVerisi>();
-        toplamMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
-        toplamMalzemeler.AddRange(yerdeki.icindekiMalzemeler);
-
-        BirlestirmeVerisi uygunTarif = TarifAra(toplamMalzemeler);
         GridCell hedefHucre = yerdeki.currentCell;
+        Vector3 particlePos = gridManager.grid.GetCellCenterWorld(hedefHucre.cellPosition)
+                              + Vector3.up * 0.6f;
 
-        // A) TARİF İLE BİRLEŞME (Bina Oluşumu)
-        if (uygunTarif != null)
+        List<ObjeVerisi> toplam = new();
+        toplam.AddRange(elimizdeki.icindekiMalzemeler);
+        toplam.AddRange(yerdeki.icindekiMalzemeler);
+
+        BirlestirmeVerisi tarif = TarifAra(toplam);
+
+        // =======================
+        // A) TARİFLİ BİRLEŞME
+        // =======================
+        if (tarif != null)
         {
-            if (SeviyeSiniriAsiliyorMu(uygunTarif.sonucObjesi)) return false;
-
-            if (AudioManager.Instance != null)
-                AudioManager.Instance.PlayMerge(); 
-
-            // Eski objeleri yok et
-            if (yerdeki != null) Destroy(yerdeki.gameObject);
+            if (SeviyeSiniriAsiliyorMu(tarif.sonucObjesi)) return false;
             
-            BinaOlustur(hedefHucre, uygunTarif.sonucObjesi);
+            if (yerdeki != null)
+                Destroy(yerdeki.gameObject);
+
+            BinaOlustur(hedefHucre, tarif.sonucObjesi);
             return true;
         }
 
-        // B) AYNI TÜR YIĞINLAMA (Stack)
+        // =======================
+        // B) STACK (AYNI OBJE)
+        // =======================
         if (elimizdeki.verisi == yerdeki.verisi)
         {
             yerdeki.icindekiMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
-            
             yerdeki.BoyutuGuncelle();
-            yerdeki.hareketHakki = 1; 
-            
-            // Stack Animasyonu
-            if (yerdeki != null) yerdeki.PlayStackAnimation(); 
+            yerdeki.hareketHakki = 1;
 
-            if (AudioManager.Instance != null) 
-                AudioManager.Instance.PlayButtonClick();
+            yerdeki.PlayStackAnimation();
 
-            return true; 
+            return true;
         }
 
         return false;
     }
 
+    // =======================
+    // PARTICLE
+    // =======================
+    void PlayMergeParticle(Vector3 pos)
+    {
+        if (mergeParticlePrefab == null) return;
+        Instantiate(mergeParticlePrefab, pos, Quaternion.identity);
+    }
+
+    // =======================
+    // TARİF BUL
+    // =======================
     BirlestirmeVerisi TarifAra(List<ObjeVerisi> malzemeler)
     {
         foreach (var tarif in tumTarifler)
         {
             if (tarif.gerekenMalzemeler.Count != malzemeler.Count) continue;
 
-            List<ObjeVerisi> kopyaMalzemeler = new List<ObjeVerisi>(malzemeler);
-            bool tarifUygun = true;
+            List<ObjeVerisi> kopya = new(malzemeler);
+            bool uygun = true;
 
             foreach (var gereken in tarif.gerekenMalzemeler)
             {
-                if (kopyaMalzemeler.Contains(gereken))
+                if (kopya.Contains(gereken))
+                    kopya.Remove(gereken);
+                else
                 {
-                    kopyaMalzemeler.Remove(gereken);
+                    uygun = false;
+                    break;
                 }
-                else { tarifUygun = false; break; }
             }
-            if (tarifUygun) return tarif;
+
+            if (uygun) return tarif;
         }
+
         return null;
     }
 
-    public void OtomatikTarifKontrolu(PlaceableObject merkezObje) { }
-
-    private void BinaOlustur(GridCell hedefHucre, ObjeVerisi binaVerisi)
+    // =======================
+    // SEVİYE SINIRI
+    // =======================
+    public bool SeviyeSiniriAsiliyorMu(ObjeVerisi sonuc)
     {
-        Vector3 pos = gridManager.grid.GetCellCenterWorld(hedefHucre.cellPosition);
-        GameObject yeniBina = Instantiate(binaVerisi.objePrefab, pos, binaVerisi.objePrefab.transform.rotation);
-        PlaceableObject po = yeniBina.GetComponent<PlaceableObject>();
+        // 1. KORUMA: Gelen sonuç verisi yoksa işlemi durdur (false dön)
+        if (sonuc == null) return false;
 
-        // --- KRİTİK DÜZELTME: GÖRÜNMEZLİK ---
-        // Obje oluşur oluşmaz boyutunu sıfırla ki ekranda "Pat" diye belirip durmasın.
-        // Animasyon onu büyütecek.
-        po.transform.localScale = Vector3.zero; 
-        // -------------------------------------
-
-        po.verisi = binaVerisi;
-        po.currentCell = hedefHucre;
-        hedefHucre.currentObject = po;
-
-        po.hareketHakki = 1; 
-        po.transform.position = pos + Vector3.up * po.heightOffset;
-        
-        po.icindekiMalzemeler.Clear(); 
-        
-        // Burada BoyutuGuncelle çağırmıyoruz çünkü scale'i 0 yaptık, bozmasın.
-        po.SetPreviewMode(false);
-
-        // --- SIRALI ANİMASYON ---
-        StartCoroutine(MergeVeSpawnSirasi(po));
-        // ------------------------
-        
-        if (CollectionManager.Instance != null)
-            CollectionManager.Instance.ObjeAcildi(binaVerisi.collectionID);
-        else
+        // 2. KORUMA: GameManager yoksa (Tutorial sahnesi veya yanlış başlangıç)
+        if (GameManager.Instance == null)
         {
-            string key = "Collection_" + binaVerisi.collectionID;
-            if (PlayerPrefs.GetInt(key, 0) == 0)
-            {
-                PlayerPrefs.SetInt(key, 1);
-                PlayerPrefs.Save();
-            }
+            // Eğer GameManager yoksa seviye sınırı da yoktur, izin ver.
+            return false;
         }
 
-        if(GameManager.Instance != null)
-            GameManager.Instance.UretimYapildi(binaVerisi, pos);
+        // 3. KORUMA: Level Data yüklenmemişse
+        if (GameManager.Instance.SuankiLevelData == null)
+        {
+            // Level verisi yoksa sınır yoktur.
+            return false;
+        }
+
+        // --- ASIL KOD ---
+        var sinir = GameManager.Instance.SuankiLevelData.izinVerilenEnUstObje;
+
+        // Sınır yoksa (null ise) her şeye izin ver, varsa karşılaştır.
+        return sinir != null && sonuc.objeSeviyesi > sinir.objeSeviyesi;
     }
+
+    // =======================
+    // BİNA OLUŞTUR
+    // =======================
+    void BinaOlustur(GridCell hucre, ObjeVerisi bina)
+    {
+        Vector3 pos = gridManager.grid.GetCellCenterWorld(hucre.cellPosition);
+
+        // 🔥 SADECE YENİ OBJE OLUŞURKEN PARTICLE
+        PlayMergeParticle(pos + Vector3.up * 0.6f);
+
+        GameObject go = Instantiate(bina.objePrefab, pos, bina.objePrefab.transform.rotation);
+
+        PlaceableObject po = go.GetComponent<PlaceableObject>();
+        po.transform.localScale = Vector3.zero;
+
+        po.verisi = bina;
+        po.currentCell = hucre;
+        hucre.currentObject = po;
+
+        po.hareketHakki = 1;
+        po.transform.position = pos + Vector3.up * po.heightOffset;
+        po.icindekiMalzemeler.Clear();
+        po.SetPreviewMode(false);
+
+        StartCoroutine(MergeVeSpawnSirasi(po));
+        
+        GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
+    }
+
 
     IEnumerator MergeVeSpawnSirasi(PlaceableObject po)
     {
-        // 1. Bekle (Eski objelerin yok oluşunu sindirmek için)
         yield return new WaitForSeconds(mergeBeklemeSuresi);
-
-        // 2. Spawn Animasyonu (Görünür Olma)
-        // Obje şu an Scale 0 (Görünmez). Spawn animasyonu onu 0 -> 1 yapacak.
         po.PlaySpawnAnimation();
-        
-        // Not: Merge animasyonunu burada çağırmıyoruz çünkü Merge zıplama efektidir.
-        // Görünmeyen objeyi zıplatmak işe yaramaz. Önce doğsun (Spawn), sonra gerekirse zıplar.
-        // Ama senin "Spawn en son olsun" isteğini görsel olarak en iyi böyle karşılıyoruz:
-        // Önceki objeler birleşti (yok oldu) -> Kısa sessizlik -> Yeni bina doğdu (Spawn).
     }
 }

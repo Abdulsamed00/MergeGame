@@ -26,6 +26,14 @@ public class GameManager : MonoBehaviour
     public Text loseBaslikText;
     public Text populasyonText; 
 
+    [Header("Partikül Efektleri")]
+    public GameObject winParticlePrefab;  
+    public GameObject loseParticlePrefab; 
+
+    [Header("Zamanlama")] // --- YENİ EKLENEN ---
+    [Tooltip("Oyun bittikten sonra UI açılmadan önce kaç saniye beklesin? (1 dakika için buraya 60 yaz)")]
+    public float oyunSonuBeklemeSuresi = 2.0f; // Varsayılan 2 saniye (Efektleri izlemek için ideal)
+
     [Header("Tutorial Ayarı")]
     public bool isTutorialScene = false; // <-- BU KUTUCUK İŞARETLENİNCE SAVE SİSTEMİ DURACAK
 
@@ -121,7 +129,9 @@ public class GameManager : MonoBehaviour
             Debug.Log("Kayıt yok, sıfırdan başlanıyor.");
             if (initialSpawnManager != null)
             {
-                initialSpawnManager.SpawnBaslat();
+                // --- DÜZELTME BURADA ---
+                // Artık "levelObjeleri" (şans listesi) ve "baslangicObjeSayisi" gönderiyoruz.
+                initialSpawnManager.SpawnBaslat(suankiLevelData.levelObjeleri, suankiLevelData.baslangicObjeSayisi);
             }
             else
             {
@@ -222,10 +232,7 @@ public class GameManager : MonoBehaviour
                     }
                     
                     po.BoyutuGuncelle();
-                    
-                    // --- KRİTİK EKLENTİ: Yüklenen objeyi Normal Moda zorla ---
                     po.SetPreviewMode(false); 
-                    // --------------------------------------------------------
                     
                     po.currentCell = cell;
                     cell.currentObject = po;
@@ -341,9 +348,18 @@ public class GameManager : MonoBehaviour
         if (oyunBittiMi) return;
         oyunBittiMi = true;
 
+        // Partikül Merkezini Bul
+        Vector3 particleCenter = Vector3.zero;
+        if (gridManager != null && gridManager.grid != null)
+        {
+            Vector3Int centerCell = new Vector3Int(suankiLevelData.gridGenislik / 2, 0, suankiLevelData.gridYukseklik / 2);
+            particleCenter = gridManager.grid.GetCellCenterWorld(centerCell);
+        }
+
         if (kazandiMi)
         {
             Debug.Log("KAZANDIN!");
+            if (winParticlePrefab != null) Instantiate(winParticlePrefab, particleCenter, Quaternion.identity);
             
             SaveManager.DeleteSave(suankiLevelIndex);
 
@@ -369,11 +385,33 @@ public class GameManager : MonoBehaviour
                     winSonrakiLevelText.text = "Oyun Bitti!";
             }
 
+            // --- DEĞİŞİKLİK: Paneli hemen açma, bekle ---
+            StartCoroutine(PanelAcmaSayaci(true)); 
+        }
+        else
+        {
+            if (loseParticlePrefab != null) Instantiate(loseParticlePrefab, particleCenter, Quaternion.identity);
+            
+            if(loseBaslikText) loseBaslikText.text = "Başarısız!";
+
+            // --- DEĞİŞİKLİK: Paneli hemen açma, bekle ---
+            StartCoroutine(PanelAcmaSayaci(false));
+        }
+    }
+
+    // --- YENİ EKLENEN: Bekleme Sayacı ---
+    IEnumerator PanelAcmaSayaci(bool win)
+    {
+        // Belirlenen süre kadar bekle
+        yield return new WaitForSeconds(oyunSonuBeklemeSuresi);
+
+        // Süre bitince paneli aç
+        if (win)
+        {
             if(winPanel) winPanel.SetActive(true);
         }
         else
         {
-            if(loseBaslikText) loseBaslikText.text = "Başarısız!";
             if(losePanel) losePanel.SetActive(true);
         }
     }

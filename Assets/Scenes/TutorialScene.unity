@@ -782,6 +782,9 @@ MonoBehaviour:
   winSonrakiLevelText: {fileID: 1953594402}
   loseBaslikText: {fileID: 2037171314}
   populasyonText: {fileID: 635617405}
+  winParticlePrefab: {fileID: 6208859485802548772, guid: 0f871c0bf570e7f45996b9236031412a, type: 3}
+  loseParticlePrefab: {fileID: 5635589874609990320, guid: 466d26d9aff684d4394d5cca0b992516, type: 3}
+  oyunSonuBeklemeSuresi: 2
   isTutorialScene: 1
   tumLeveller:
   - {fileID: 11400000, guid: b3c5330e5c907d542b6faec723e05c38, type: 2}
@@ -858,6 +861,7 @@ MonoBehaviour:
   placementManager: {fileID: 754773132}
   baslangicHakki: 3
   hakText: {fileID: 1752695398}
+  undoParticlePrefab: {fileID: 6077791467765451282, guid: 72698ec656eb4634d9795a743316b66e, type: 3}
 --- !u!1 &287674018
 GameObject:
   m_ObjectHideFlags: 0
@@ -1237,7 +1241,6 @@ MonoBehaviour:
   grid: {fileID: 19238769}
   gridManager: {fileID: 19238771}
   placementManager: {fileID: 754773132}
-  baslangicObjeleri: []
 --- !u!4 &763053677
 Transform:
   m_ObjectHideFlags: 0
@@ -2175,13 +2178,13 @@ MonoBehaviour:
   - obje: {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
     x: 1
     z: 2
-  - obje: {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
+  - obje: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
     x: 2
     z: 0
-  - obje: {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
+  - obje: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
     x: 2
     z: 1
-  - obje: {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
+  - obje: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
     x: 2
     z: 2
 --- !u!4 &1262358836
@@ -3656,6 +3659,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9447c4de5c67d4a4da9ed9fbf1086759, type: 2}
   - {fileID: 11400000, guid: 87929490836c76541bf3625b8b7f7ba1, type: 2}
   gridManager: {fileID: 19238771}
+  mergeParticlePrefab: {fileID: 5978421626813902089, guid: 6a8b9480ac2140446be5d26ad26846a2, type: 3}
   mergeBeklemeSuresi: 0.01
 --- !u!4 &2142878909
 Transform:
