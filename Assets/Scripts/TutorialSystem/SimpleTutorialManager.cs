@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // Text için
+using UnityEngine.UI; 
 using UnityEngine.SceneManagement;
 
 [System.Serializable]
@@ -18,12 +18,17 @@ public class SimpleTutorialManager : MonoBehaviour
 
     [Header("Referanslar")]
     public GridManager gridManager;
-    public Text instructionText; // Ekranda görevi yazacak Text
+    public Text instructionText; 
 
-    [Header("Hedef Objeler (Kontrol İçin)")]
-    public ObjeVerisi kolonVerisi;       // Sayılacak obje 1
-    public ObjeVerisi insaatAlaniVerisi; // Sayılacak obje 2
-    public ObjeVerisi evVerisi;          // Final ödülü
+    [Header("Grid Ayarları")]
+    public int gridWidth = 4;
+    public int gridHeight = 4;
+    public GridCell zeminPrefabi; // İsteğe bağlı, boş bırakılabilir
+
+    [Header("Hedef Objeler")]
+    public ObjeVerisi kolonVerisi;      
+    public ObjeVerisi insaatAlaniVerisi; 
+    public ObjeVerisi evVerisi;          
 
     [Header("Sahne Kurulumu")]
     public List<TutorialSetupItem> baslangicObjeleri;
@@ -35,82 +40,76 @@ public class SimpleTutorialManager : MonoBehaviour
         Instance = this;
     }
 
-    // GridManager start'ta gridi oluşturduktan sonra bunu çağırabilir 
-    // Veya GameManager'dan çağrılabilir.
-    // Biz garanti olsun diye Start'ta biraz bekleyip başlatacağız.
     void Start()
     {
-        StartCoroutine(BaslangicKurulumu());
+        StartCoroutine(BaslangicAkisi());
     }
 
-    IEnumerator BaslangicKurulumu()
+    IEnumerator BaslangicAkisi()
     {
-        // Grid'in ve diğer sistemlerin oturması için güvenli bekleme
-        yield return new WaitForSeconds(4.0f);
-
-        // 1. PlacementManager'ı KİLİTLE (Preview Yok, Spawn Yok)
+        // 1. PlacementManager'ı Hemen Kilitle (Oyuncu dokunamasın)
         if (PlacementManager.Instance != null)
         {
-            PlacementManager.Instance.tutorialModuAktif = true; // Kilit açıldı
-            PlacementManager.Instance.SetInputLock(false); // Tıklamaya izin ver ama spawn yapma
+            PlacementManager.Instance.tutorialModuAktif = true; 
+            PlacementManager.Instance.SetInputLock(true); // Grid oluşurken dokunmayı engelle
         }
 
-        // 2. Objeleri Sahneye Diz
+        // 2. GRID'İ OLUŞTUR VE ANİMASYONU BEKLE
+        // GameManager devre dışı olduğu için bunu biz çağırıyoruz.
+        yield return StartCoroutine(gridManager.GridiAnimasyonluOlustur(
+            gridWidth, 
+            gridHeight, 
+            zeminPrefabi, 
+            null // Callback kullanmıyoruz, Coroutine bitişini bekleyeceğiz
+        ));
+
+        // 3. Grid oturduktan sonra input kilidini aç (ama tutorial modu kalsın)
+        if (PlacementManager.Instance != null)
+        {
+            PlacementManager.Instance.SetInputLock(false);
+        }
+
+        // 4. Objeleri Sahneye Diz
         SetupScene();
 
-        // 3. İlk Durumu Kontrol Et ve Yazıyı Yaz
+        // 5. İlk Görevi Kontrol Et
         CheckTutorialStatus();
     }
 
     void SetupScene()
     {
-        Debug.Log($"Toplam {baslangicObjeleri.Count} adet obje yerleştirilmeye çalışılacak.");
-
         foreach (var item in baslangicObjeleri)
         {
             Vector3Int pos = new Vector3Int(item.x, 0, item.z);
             GridCell cell = gridManager.GetCell(pos);
 
-            // KONTROL 1: Hücre Var mı?
-            if (cell == null)
+            if (cell != null && cell.IsEmpty())
             {
-                Debug.LogError($"BAŞARISIZ: '{item.obje.name}' objesi ({item.x}, {item.z}) konumuna koyulamadı. SEBEP: Bu koordinatta Grid Hücresi YOK! (Grid sınırları dışında)");
-                continue; 
+                Vector3 worldPos = gridManager.grid.GetCellCenterWorld(pos);
+                Quaternion rot = item.obje.objePrefab.transform.rotation;
+
+                // Yükseklik ayarı
+                float yOffset = 0.5f;
+                PlaceableObject prefabScript = item.obje.objePrefab.GetComponent<PlaceableObject>();
+                if (prefabScript != null) yOffset = prefabScript.heightOffset;
+
+                Vector3 spawnPos = worldPos + Vector3.up * yOffset;
+
+                // Objeyi oluştur
+                GameObject obj = Instantiate(item.obje.objePrefab, spawnPos, rot);
+                PlaceableObject po = obj.GetComponent<PlaceableObject>();
+
+                po.verisi = item.obje;
+                po.currentCell = cell;
+                po.hareketHakki = 1; 
+                po.SetPreviewMode(false); 
+                
+                cell.currentObject = po;
+                po.PlaySpawnAnimation();
             }
-
-            // KONTROL 2: Hücre Boş mu?
-            if (!cell.IsEmpty())
-            {
-                Debug.LogError($"BAŞARISIZ: '{item.obje.name}' objesi ({item.x}, {item.z}) konumuna koyulamadı. SEBEP: Hücre DOLU! (Başka bir obje var)");
-                continue;
-            }
-
-            // BAŞARILI
-            Vector3 worldPos = gridManager.grid.GetCellCenterWorld(pos);
-            Quaternion rot = item.obje.objePrefab.transform.rotation;
-
-            float yOffset = 0.5f;
-            PlaceableObject prefabScript = item.obje.objePrefab.GetComponent<PlaceableObject>();
-            if (prefabScript != null) yOffset = prefabScript.heightOffset;
-
-            Vector3 spawnPos = worldPos + Vector3.up * yOffset;
-
-            GameObject obj = Instantiate(item.obje.objePrefab, spawnPos, rot);
-            PlaceableObject po = obj.GetComponent<PlaceableObject>();
-
-            po.verisi = item.obje;
-            po.currentCell = cell;
-            po.hareketHakki = 1; 
-            po.SetPreviewMode(false); 
-            
-            cell.currentObject = po;
-            po.PlaySpawnAnimation();
-            
-            Debug.Log($"BAŞARILI: {item.obje.name} -> ({item.x}, {item.z})");
         }
     }
 
-    // Bu fonksiyon her "Merge" (Birleşme) işleminden sonra çağrılmalı!
     public void CheckTutorialStatus()
     {
         if (tutorialBitti) return;
@@ -118,7 +117,6 @@ public class SimpleTutorialManager : MonoBehaviour
         int kolonSayisi = 0;
         int insaatAlaniSayisi = 0;
 
-        // Sahayı Tara
         foreach (var cell in gridManager.GetAllCells())
         {
             if (!cell.IsEmpty() && cell.currentObject != null)
@@ -128,23 +126,19 @@ public class SimpleTutorialManager : MonoBehaviour
             }
         }
 
-        // --- GÖREV MANTIĞI ---
-
-        // Hedef: 2 Kolon, 1 İnşaat Alanı
         bool kolonTamam = kolonSayisi >= 2;
         bool insaatTamam = insaatAlaniSayisi >= 1;
 
         if (!kolonTamam)
         {
-            UpdateText($"Görev: Demirleri birleştir ve {2 - kolonSayisi} tane daha Kolon yap.");
+            UpdateText($"Demirleri birleştir ve {2 - kolonSayisi} tane daha Kolon yap.");
         }
         else if (!insaatTamam)
         {
-            UpdateText("Görev: Tuğlaları birleştir ve İnşaat Alanı oluştur.");
+            UpdateText($"Tuğlaları birleştir ve {1 - insaatAlaniSayisi} adet İnşaat Alanı oluştur.");
         }
         else
         {
-            // HEPSİ TAMAM!
             StartCoroutine(FinalSequence());
         }
     }
@@ -158,22 +152,24 @@ public class SimpleTutorialManager : MonoBehaviour
     IEnumerator FinalSequence()
     {
         tutorialBitti = true;
-        UpdateText("Tebrikler! Ev inşa ediliyor...");
+        UpdateText("Tebrikler! Öğretici tamamlandı.\nAna menüye dönülüyor...");
 
         yield return new WaitForSeconds(1.0f);
 
-        // 1. Sahayı Temizle
         gridManager.TemizleVeYokEtPublic();
 
         yield return new WaitForSeconds(0.5f);
 
-        // 2. Evi (0,0) noktasına koy
         SpawnFinalHouse();
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(3.0f);
 
-        // 3. UI Sahnesine Dön
-        // Çıkmadan önce kilidi açalım ki normal oyun bozulmasın
+        // Tutorial bitti, normal oyuna dön
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+        
+        DataTransfer.secilenLevelIndex = 0; 
+
         if (PlacementManager.Instance != null)
             PlacementManager.Instance.tutorialModuAktif = false;
 
@@ -182,7 +178,8 @@ public class SimpleTutorialManager : MonoBehaviour
 
     void SpawnFinalHouse()
     {
-        Vector3Int centerPos = new Vector3Int(0, 0, 0); // İsteğe göre (1,1) veya (2,2) yapabilirsin
+        // Evi Grid'in ortasına koyalım (örn: 1,1 veya 2,2)
+        Vector3Int centerPos = new Vector3Int(gridWidth / 2, 0, gridHeight / 2);
         GridCell cell = gridManager.GetCell(centerPos);
 
         if (cell != null)
@@ -190,7 +187,6 @@ public class SimpleTutorialManager : MonoBehaviour
             Vector3 worldPos = gridManager.grid.GetCellCenterWorld(centerPos);
             GameObject ev = Instantiate(evVerisi.objePrefab, worldPos, evVerisi.objePrefab.transform.rotation);
             
-            // Yükseklik ayarı
             PlaceableObject po = ev.GetComponent<PlaceableObject>();
             ev.transform.position += Vector3.up * po.heightOffset;
             
