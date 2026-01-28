@@ -16,6 +16,9 @@ public class UndoManager : MonoBehaviour
     
     public int KalanHak { get; private set; }
 
+    [Header("Undo Particle")]
+    public GameObject undoParticlePrefab;
+
     private Stack<GameState> history = new Stack<GameState>();
 
     private void Awake()
@@ -42,10 +45,18 @@ public class UndoManager : MonoBehaviour
         UpdateUI();
     }
 
-    public void SaveState()
+    // --- DEĞİŞİKLİK 1: SaveState artık hangi hücrede işlem yapıldığını alıyor ---
+    public void SaveState(GridCell targetCell = null)
     {
         GameState state = new GameState();
         
+        // İşlem yapılan hücreyi kaydet (Particle için)
+        if (targetCell != null)
+        {
+            state.lastActionPos = targetCell.cellPosition;
+            state.hasActionPos = true;
+        }
+
         state.siradakiVeri = placementManager.siradakiObjeVerisi; 
         state.sonrakiVeri = placementManager.sonrakiObjeVerisi;
 
@@ -62,59 +73,46 @@ public class UndoManager : MonoBehaviour
                 objState.hareketHakki = cell.currentObject.hareketHakki;
 
                 if (cell.currentObject.icindekiMalzemeler != null)
-                {
                     objState.materials = new List<ObjeVerisi>(cell.currentObject.icindekiMalzemeler);
-                }
                 else
-                {
                     objState.materials = new List<ObjeVerisi>();
-                }
-                
+
                 state.gridObjects.Add(objState);
             }
         }
         history.Push(state);
     }
 
-    // --- DÜZELTME BURADA YAPILDI ---
     public void Undo()
     {
         if (history.Count == 0 || KalanHak <= 0)
-        {
             return;
-        }
 
-        // 1. Son durumu çek
         GameState lastState = history.Pop();
-        
-        // 2. Sahneyi temizle
+
+        // 1. Sahneyi temizle
         gridManager.TemizleVeYokEtPublic();
 
-        // 3. Objeleri tek tek geri yerleştir
+        // 2. Objeleri geri yükle
         foreach (var objState in lastState.gridObjects)
         {
             GridCell cell = gridManager.GetCell(objState.position);
             Vector3 worldPos = gridManager.grid.GetCellCenterWorld(objState.position);
 
-            // --- DEĞİŞİKLİK: Quaternion.identity YERİNE Prefab Rotasyonu ---
-            // objState.data.objePrefab.transform.rotation kullanıyoruz.
             GameObject newObj = Instantiate(
-                objState.data.objePrefab, 
-                worldPos, 
-                objState.data.objePrefab.transform.rotation // <-- BURASI DEĞİŞTİ
+                objState.data.objePrefab,
+                worldPos,
+                objState.data.objePrefab.transform.rotation
             );
-            // -------------------------------------------------------------
 
             PlaceableObject po = newObj.GetComponent<PlaceableObject>();
 
-            // Verileri geri yükle
             po.verisi = objState.data;
             po.currentCell = cell;
             po.kilitliMi = objState.isLocked;
             po.hareketHakki = objState.hareketHakki;
             po.icindekiMalzemeler = new List<ObjeVerisi>(objState.materials);
-            
-            // Görsel ayarlar (Offset'i burada pozisyona ekliyoruz)
+
             po.transform.position = worldPos + Vector3.up * po.heightOffset;
             po.BoyutuGuncelle();
             po.SetPreviewMode(false);
@@ -122,36 +120,50 @@ public class UndoManager : MonoBehaviour
             cell.currentObject = po;
         }
 
-        // 4. ELİMİZDEKİ OBJEYİ DÜZELT
-        placementManager.LoadSpawnState(lastState.siradakiVeri, lastState.sonrakiVeri);
+        // --- DEĞİŞİKLİK 2: Particle artık kayıtlı pozisyonda çıkıyor ---
+        if (undoParticlePrefab != null && lastState.hasActionPos)
+        {
+            Vector3 targetWorldPos = gridManager.grid.GetCellCenterWorld(lastState.lastActionPos);
+            Vector3 particlePos = targetWorldPos + Vector3.up * 0.6f; // Biraz yukarıda çıksın
+            Instantiate(undoParticlePrefab, particlePos, Quaternion.identity);
+        }
+        // -------------------------------------------------------------
 
-        // 5. Hakkı düş ve UI güncelle
+        // 4. Eldeki objeleri geri yükle
+        placementManager.LoadSpawnState(
+            lastState.siradakiVeri,
+            lastState.sonrakiVeri
+        );
+
         KalanHak--;
         UpdateUI();
     }
-    
+
     public void RemoveLastState()
     {
         if (history.Count > 0)
-        {
             history.Pop();
-        }
     }
 
     private void UpdateUI()
     {
         if (hakText != null)
-        {
             hakText.text = KalanHak.ToString();
-        }
     }
 }
 
-// --- YARDIMCI SINIFLAR ---
+// ======================
+// YARDIMCI SINIFLAR
+// ======================
 
 [System.Serializable]
 public class GameState
 {
+    // --- YENİ EKLENENLER ---
+    public Vector3Int lastActionPos; // İşlemin yapıldığı yer
+    public bool hasActionPos = false;
+    // -----------------------
+
     public ObjeVerisi siradakiVeri;
     public ObjeVerisi sonrakiVeri;
     public List<ObjectState> gridObjects;

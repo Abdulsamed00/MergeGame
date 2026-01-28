@@ -40,6 +40,7 @@ public class PlacementManager : MonoBehaviour
     private GridCell spawnOriginCell;
     
     private bool isInputLocked = false;
+    
 
     private void Awake() { Instance = this; }
     public void SetInputLock(bool locked) { isInputLocked = locked; if (previewObject != null) previewObject.SetActive(!locked); }
@@ -156,7 +157,7 @@ public class PlacementManager : MonoBehaviour
     void Place()
     {
         if (selectedCell == null) return;
-        if (UndoManager.Instance != null) UndoManager.Instance.SaveState();
+        if (UndoManager.Instance != null) UndoManager.Instance.SaveState(selectedCell);
 
         if (yerdenMiAldik && selectedCell == kaynakHucre)
         {
