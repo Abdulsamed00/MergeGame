@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Hedefleri tutmak için kutu
 [System.Serializable]
 public struct LevelHedef
 {
@@ -28,15 +27,18 @@ public class LevelData : ScriptableObject
     public int gridYukseklik;
     
     [Header("Görsel Ayarlar")]
-    [Tooltip("Bu levelda zemin nasıl görünecek? Boş bırakılırsa varsayılan kullanılır.")]
     public GridCell zeminPrefabi;
+    
+    [Header("Başlangıç Durumu")] 
+    // --- DEĞİŞİKLİK BURADA: Liste yerine sayı yaptık ---
+    [Tooltip("Oyun başlarken şans oranlarına göre kaç tane obje spawn olsun?")]
+    public int baslangicObjeSayisi = 3; 
+    // --------------------------------------------------
     
     [Header("Görevler")]
     public List<LevelHedef> hedefler;
    
     [Header("Kısıtlamalar")]
-    // Bu bölümde yapılabilecek en yüksek seviyeli bina
-    // Eğer oyuncu bunun üstüne çıkmaya çalışırsa birleşme olmayacak
     public ObjeVerisi izinVerilenEnUstObje; 
 
     public List<LevelSpawnVerisi> levelObjeleri;

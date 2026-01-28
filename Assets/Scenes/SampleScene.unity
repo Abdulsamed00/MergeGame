@@ -784,6 +784,7 @@ MonoBehaviour:
   populasyonText: {fileID: 635617405}
   winParticlePrefab: {fileID: 6208859485802548772, guid: 0f871c0bf570e7f45996b9236031412a, type: 3}
   loseParticlePrefab: {fileID: 5635589874609990320, guid: 466d26d9aff684d4394d5cca0b992516, type: 3}
+  oyunSonuBeklemeSuresi: 2
   tumLeveller:
   - {fileID: 11400000, guid: b3c5330e5c907d542b6faec723e05c38, type: 2}
   - {fileID: 11400000, guid: 093055578af022345ada58e19e1e15df, type: 2}
@@ -857,7 +858,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridManager: {fileID: 19238771}
   placementManager: {fileID: 754773132}
-  baslangicHakki: 10
+  baslangicHakki: 3
   hakText: {fileID: 1752695398}
   undoParticlePrefab: {fileID: 2615479441300250543, guid: b1d9e208d9a0ee745a55ebae73d52239, type: 3}
 --- !u!1 &287674018
@@ -1636,7 +1637,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e5d5d3057edb4c4e9f2863d6ca7e915, type: 3}
   m_Name: 

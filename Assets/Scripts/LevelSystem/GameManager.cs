@@ -72,6 +72,9 @@ public class GameManager : MonoBehaviour
         foreach(var spawnItem in data.levelObjeleri) EkleSozluge(spawnItem.obje);
         foreach(var hedef in data.hedefler) EkleSozluge(hedef.istenenObje);
         if(data.izinVerilenEnUstObje != null) EkleSozluge(data.izinVerilenEnUstObje);
+        
+        // --- ESKİ KOD SİLİNDİ: baslangicObjeleri artık liste değil ---
+        // Sadece yukarıdaki levelObjeleri'nden geleceği için ekstra eklemeye gerek yok.
 
         if (birlestirmeYoneticisi != null && birlestirmeYoneticisi.tumTarifler != null)
         {
@@ -124,7 +127,9 @@ public class GameManager : MonoBehaviour
             Debug.Log("Kayıt yok, sıfırdan başlanıyor.");
             if (initialSpawnManager != null)
             {
-                initialSpawnManager.SpawnBaslat();
+                // --- DÜZELTME BURADA ---
+                // Artık "levelObjeleri" (şans listesi) ve "baslangicObjeSayisi" gönderiyoruz.
+                initialSpawnManager.SpawnBaslat(suankiLevelData.levelObjeleri, suankiLevelData.baslangicObjeSayisi);
             }
             else
             {
@@ -132,7 +137,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
     public void OyunuKaydet()
     {
         if (oyunBittiMi) return;
