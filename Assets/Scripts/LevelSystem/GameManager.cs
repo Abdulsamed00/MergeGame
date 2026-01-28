@@ -54,7 +54,6 @@ public class GameManager : MonoBehaviour
 
         SozlukOlustur(suankiLevelData);
 
-        // Coroutine başlatıyoruz
         StartCoroutine(LevelAkisi());
     }
 
@@ -84,7 +83,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // --- BURASI DEĞİŞTİ ---
     IEnumerator LevelAkisi()
     {
         suankiPopulasyon = 0;
@@ -96,20 +94,16 @@ public class GameManager : MonoBehaviour
         
         placementManager.SetupSpawnList(suankiLevelData.levelObjeleri);
 
-        // Grid oluşturma fonksiyonuna "Bitince Ne Yapayım?" (Action) parametresi gönderiyoruz.
-        // Böylece Grid tamamen çizilmeden Load işlemi çalışmayacak.
         yield return StartCoroutine(gridManager.GridiAnimasyonluOlustur(
             suankiLevelData.gridGenislik, 
             suankiLevelData.gridYukseklik, 
             suankiLevelData.zeminPrefabi,
             () => {
-                // Grid bitti, şimdi kayıt kontrolü yapabiliriz
                 KayitKontrolVeBaslat();
             }
         ));
     }
 
-    // Grid bittikten sonra çalışacak fonksiyon
     void KayitKontrolVeBaslat()
     {
         if (SaveManager.HasSaveFile(suankiLevelIndex))
@@ -174,9 +168,7 @@ public class GameManager : MonoBehaviour
         SaveManager.Save(data, suankiLevelIndex);
     }
 
-    // --- BURASI DEĞİŞTİ (POZİSYON HESABI İÇİN) ---
-    // GameManager.cs içindeki LoadGameIslemi fonksiyonu
-
+    // --- BURADA DÜZELTME YAPILDI ---
     void LoadGameIslemi()
     {
         SaveData data = SaveManager.Load(suankiLevelIndex);
@@ -206,14 +198,7 @@ public class GameManager : MonoBehaviour
                     float offset = tempPO != null ? tempPO.heightOffset : 0.5f;
                     spawnPos.y += offset;
 
-                    // --- DÜZELTME BURADA ---
-                    // ESKİSİ: Quaternion.identity (Sıfır rotasyon)
-                    // YENİSİ: anaVeri.objePrefab.transform.rotation (Prefabın orijinal duruşu)
-                    
                     GameObject go = Instantiate(anaVeri.objePrefab, spawnPos, anaVeri.objePrefab.transform.rotation);
-                    
-                    // -----------------------
-
                     PlaceableObject po = go.GetComponent<PlaceableObject>();
 
                     po.verisi = anaVeri;
@@ -229,7 +214,11 @@ public class GameManager : MonoBehaviour
                         }
                     }
                     
-                    po.BoyutuGuncelle(); 
+                    po.BoyutuGuncelle();
+                    
+                    // --- KRİTİK EKLENTİ: Yüklenen objeyi Normal Moda zorla ---
+                    po.SetPreviewMode(false); 
+                    // --------------------------------------------------------
                     
                     po.currentCell = cell;
                     cell.currentObject = po;
@@ -237,7 +226,6 @@ public class GameManager : MonoBehaviour
             }
         }
         
-        // ... (Geri kalan kodlar aynı) ...
         ObjeVerisi siradaki = null;
         ObjeVerisi sonraki = null;
 

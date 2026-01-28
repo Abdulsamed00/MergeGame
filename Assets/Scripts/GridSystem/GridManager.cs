@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System; // Action için gerekli
+using System; 
 
 public class GridManager : MonoBehaviour
 {
@@ -20,7 +20,6 @@ public class GridManager : MonoBehaviour
 
     private Dictionary<Vector3Int, GridCell> cells = new();
 
-    // --- DEĞİŞİKLİK: Action onComplete parametresi eklendi ---
     public IEnumerator GridiAnimasyonluOlustur(int w, int h, GridCell zeminPrefabi, Action onComplete = null)
     {
         TemizleVeYokEt();
@@ -52,14 +51,34 @@ public class GridManager : MonoBehaviour
                 cell.cellPosition = cellPos;
                 cells.Add(cellPos, cell);
 
+                // --- DEĞİŞİKLİK BURADA ---
+                // "SetTrigger" satırını SİLDİK.
+                // Çünkü Animator'da "Entry -> CellAnim" bağlı olduğu için 
+                // obje oluşur oluşmaz animasyon OTOMATİK başlayacak.
+                
                 yield return new WaitForSeconds(hucreAnimasyonSuresi);
             }
         }
         
-        // Son bir bekleme (Animasyonların tamamen oturması için)
-        yield return new WaitForSeconds(0.1f);
+        // Animasyonların bitmesini bekle (Örn: 0.5sn)
+        yield return new WaitForSeconds(1f);
 
-        // --- DEĞİŞİKLİK: Grid bitti, GameManager'a haber ver ---
+        // --- OPTİMİZASYON VE KİLİTLEME ---
+        // Grid oluştu, animasyonlar bitti. Artık Animatörleri kapatalım.
+        // Böylece hem tekrar oynamazlar hem de performans artar.
+        foreach (var cell in cells.Values)
+        {
+            Animator anim = cell.GetComponent<Animator>();
+            if (anim == null) anim = cell.GetComponentInChildren<Animator>();
+            
+            if (anim != null)
+            {
+                // Animasyonun son karesinde durması için enabled false yapıyoruz.
+                // Eğer animasyonun "Loop Time"ı açıksa kapatmayı unutma!
+                anim.enabled = false; 
+            }
+        }
+
         if (onComplete != null)
         {
             onComplete.Invoke();

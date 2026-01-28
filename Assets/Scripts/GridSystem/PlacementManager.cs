@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections; // IEnumerator için gerekli
 using System.Collections.Generic;
 using UnityEngine.Events;
 
@@ -17,6 +18,9 @@ public class PlacementManager : MonoBehaviour
     // Kuyruk
     public ObjeVerisi siradakiObjeVerisi;
     public ObjeVerisi sonrakiObjeVerisi;
+
+    [Header("Animasyon Zamanlaması")]
+    public float spawnGecikmesi = 0.4f; // --- YENİ: Bekleme Süresi ---
 
     [Header("UI Event")]
     public SpriteEvent OnNextObjectChanged;
@@ -42,7 +46,8 @@ public class PlacementManager : MonoBehaviour
 
     void Update()
     {
-        if (isInputLocked || GameManager.Instance.oyunBittiMi)
+        // Preview yoksa (bekleme süresindeysek) input alma
+        if (isInputLocked || GameManager.Instance.oyunBittiMi || previewObject == null)
         {
             return;
         }
@@ -53,7 +58,6 @@ public class PlacementManager : MonoBehaviour
     public void SetupSpawnList(List<LevelSpawnVerisi> gelenListe)
     {
         mevcutLevelObjeleri = gelenListe;
-        // İlk başlangıçta rastgele seçeriz (Load yoksa)
         if (siradakiObjeVerisi == null)
         {
             siradakiObjeVerisi = GetWeightedRandomObject();
@@ -62,28 +66,19 @@ public class PlacementManager : MonoBehaviour
         }
     }
 
-    // --- (DÜZELTİLEN KISIM) SAVE/UNDO SİSTEMİ İÇİN ---
-    // GameManager veya UndoManager veriyi geri yüklerken bunu çağırır.
     public void LoadSpawnState(ObjeVerisi current, ObjeVerisi next)
     {
-        // 1. Verileri al
         siradakiObjeVerisi = current;
         sonrakiObjeVerisi = next;
         
         UpdateNextUI();
         
-        // 2. Eski preview varsa temizle
         if (previewObject != null) Destroy(previewObject);
         
-        // 3. Elimizdeki prefabı veriye göre ayarla
-        // Bunu dolu yapıyoruz ki SpawnYeniObje fonksiyonu "yeni üretim yapma" desin.
         currentPrefab = siradakiObjeVerisi.objePrefab;
-        
-        // 4. Görseli oluştur ve boş yere odakla
         CreatePreview();
         SelectFirstEmptyCell();
     }
-    // ----------------------------------------------
 
     public void BeginPlacementAfterInitialSpawn()
     {
@@ -92,17 +87,12 @@ public class PlacementManager : MonoBehaviour
 
     public void SpawnYeniObje()
     {
-        // --- DÜZELTME BURADA ---
-        // Eğer LoadSpawnState (Undo veya Load) çalıştıysa currentPrefab zaten doludur.
-        // Bu durumda YENİ random obje üretme, eldekini kullan.
         if (currentPrefab != null)
         {
              if (previewObject == null) CreatePreview();
              SelectFirstEmptyCell();
              return; 
         }
-
-        // Elimiz boşsa standart akışı çalıştır (Sırayı kaydır, yenisini çek)
         HazirlaYeniSpawn();
     }
 
@@ -168,21 +158,17 @@ public class PlacementManager : MonoBehaviour
         if (selectedCell == null) return;
         if (UndoManager.Instance != null) UndoManager.Instance.SaveState();
 
-        // --- DÜZELTME 1: AYNI YERE KOYMA (İPTAL) DURUMU ---
         if (yerdenMiAldik && selectedCell == kaynakHucre)
         {
             if (UndoManager.Instance != null) UndoManager.Instance.RemoveLastState();
-            IptalEt(); // Burası artık Spawn'ı geri getirecek
+            IptalEt();
             return;
         }
         
-        // Eski yeri temizle
         if (yerdenMiAldik && kaynakHucre != null)
         {
             kaynakHucre.currentObject = null;
         }
-
-        PlaceableObject islemGorenObje = null;
 
         // A. BOŞ YERE KOYMA
         if (selectedCell.IsEmpty())
@@ -203,15 +189,12 @@ public class PlacementManager : MonoBehaviour
                 
                 Destroy(previewObject);
                 
-                // Taşımada yeni spawn gerekmez, ama eldeki obje kullanıldı sayılmaz (yerden aldık)
                 IslemTamamlandi(false); 
-                
-                // Hamle bittiği için kaydet
                 GameManager.Instance.HamleBittiKontrolu();
             }
             else
             {
-                // --- YENİ SPAWN KOYMA (BURADA KAYIT YAPIYORUZ) ---
+                // --- YENİ SPAWN KOYMA ---
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, currentPrefab.transform.rotation);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
@@ -225,30 +208,28 @@ public class PlacementManager : MonoBehaviour
                 }
 
                 po.BoyutuGuncelle();
-                po.SetPreviewMode(false);
+                
+                // 1. Hayalet moddan çık (Preview -> Normal geçişi)
+                po.SetPreviewMode(false); 
+                
+                // Animasyon trigger'ı SİLİNDİ (Zıplama yapmasın diye)
                 
                 po.currentCell = selectedCell;
                 selectedCell.currentObject = po;
 
-                // --- KOLEKSİYON SİSTEMİ ENTEGRASYONU ---
                 if (po.verisi != null)
                 {
                     if (CollectionManager.Instance != null) CollectionManager.Instance.ObjeAcildi(po.verisi.collectionID);
                     else { string key = "Collection_" + po.verisi.collectionID; if (PlayerPrefs.GetInt(key, 0) == 0) { PlayerPrefs.SetInt(key, 1); PlayerPrefs.Save(); } }
                 }
-                // ----------------------------------------
-
-                islemGorenObje = po;
 
                 Destroy(previewObject);
                 
-                // Yeni obje koyduk, artık elimizdeki bitti. true gönderiyoruz.
                 IslemTamamlandi(true); 
-
                 GameManager.Instance.HamleBittiKontrolu();
             }
         }
-        // B. DOLU YERE KOYMA (MANUEL BİRLEŞTİRME)
+        // B. DOLU YERE KOYMA
         else
         {
             if (!yerdenMiAldik) 
@@ -268,8 +249,7 @@ public class PlacementManager : MonoBehaviour
                 Destroy(yerdekiGercekObje.gameObject);
                 Destroy(previewObject);
 
-                IslemTamamlandi(true); // Yerden aldığımızı birleştirdik, yeni spawn gerekmez
-                
+                IslemTamamlandi(true);
                 GameManager.Instance.HamleBittiKontrolu();
             }
             else
@@ -281,34 +261,36 @@ public class PlacementManager : MonoBehaviour
         GameManager.Instance.HamleBittiKontrolu();
     }
 
+    // --- YENİ SİSTEM: GECİKMELİ TAMAMLAMA ---
     void IslemTamamlandi(bool yeniSpawnGerekli)
     {
         yerdenMiAldik = false;
         yerdekiGercekObje = null;
         kaynakHucre = null;
         selectedCell = null;
-        previewObject = null;
+        previewObject = null; // Bu null olunca Update() durur, input alınmaz
         
-        // Eğer hareket ettiyse veya birleştiyse yeni obje spawn et
-        if (yeniSpawnGerekli) SpawnYeniObje();
+        StartCoroutine(GecikmeliSpawnRoutine(yeniSpawnGerekli));
+    }
+
+    IEnumerator GecikmeliSpawnRoutine(bool yeniSpawnGerekli)
+    {
+        // Animasyonların (Merge, Stack, vs.) nefes alması için bekle
+        yield return new WaitForSeconds(spawnGecikmesi);
 
         if (yeniSpawnGerekli)
         {
-            // Elimizdeki objeyi kullandık, referansı boşalt
             currentPrefab = null; 
             SpawnYeniObje();
         }
         else
         {
-            // Yerden aldık veya taşıdık, elimizdeki spawn hakkı duruyor mu?
-            // Eğer taşıma yaptıysak spawn sırası bozulmamalı.
-            // Sadece preview'ı tekrar aç
+            // Taşıma yaptıysak mevcut objeyi geri yükle
             if(currentPrefab == null && siradakiObjeVerisi != null)
             {
                 currentPrefab = siradakiObjeVerisi.objePrefab;
             }
             
-            // Eğer hala elimizde koyacak bir şey varsa preview aç
             if (currentPrefab != null)
             {
                 CreatePreview();
@@ -316,6 +298,7 @@ public class PlacementManager : MonoBehaviour
             }
         }
     }
+    // ----------------------------------------
 
     void GeriAl()
     {
@@ -330,9 +313,6 @@ public class PlacementManager : MonoBehaviour
             yerdekiGercekObje = null;
             kaynakHucre = null;
             
-            // --- DÜZELTME: GERİ ALININCA SPAWN TEKRAR GÖZÜKMELİ ---
-            // Oyuncu başarısız bir hamle yaptı ve obje eski yerine döndü.
-            // Bu durumda elindeki "Sıradaki Obje" (Spawn Preview) geri gelmeli.
             ForceUpdatePreview();
         }
         else
@@ -355,9 +335,6 @@ public class PlacementManager : MonoBehaviour
             yerdekiGercekObje = null;
             kaynakHucre = null;
             
-            // --- DÜZELTME: İPTAL EDİLİNCE SPAWN TEKRAR GÖZÜKMELİ ---
-            // Oyuncu taşıdığı objeyi aynı yere bıraktı (vazgeçti).
-            // O zaman oyun "Spawn Modu"na geri dönmeli ve sıradaki objeyi göstermeli.
             ForceUpdatePreview(); 
         }
         else
