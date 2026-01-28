@@ -47,7 +47,7 @@ public class CreativePlacementManager : MonoBehaviour
     {
         isEraserActive = true;
         seciliObje = null;
-        Destroy(preview);
+        if(preview != null) Destroy(preview);
     }
 
     public void ObjeSec(ObjeVerisi veri)
@@ -55,7 +55,7 @@ public class CreativePlacementManager : MonoBehaviour
         isEraserActive = false;
         seciliObje = veri;
 
-        Destroy(preview);
+        if(preview != null) Destroy(preview);
         preview = Instantiate(veri.objePrefab);
         
         foreach (var col in preview.GetComponentsInChildren<Collider>())
@@ -67,7 +67,7 @@ public class CreativePlacementManager : MonoBehaviour
         gridManager.ClearAllGrid();
         isEraserActive = false;
         seciliObje = null;
-        Destroy(preview);
+        if(preview != null) Destroy(preview);
     }
 
     void HandleMouseInput()
@@ -80,7 +80,17 @@ public class CreativePlacementManager : MonoBehaviour
             currentCell = gridManager.GetCell(cellPos);
 
             if (!isEraserActive && preview != null && currentCell != null)
-                preview.transform.position = currentCell.transform.position;
+            {
+                // --- DÜZELTME: PREVIEW POZİSYONU ---
+                Vector3 targetPos = currentCell.transform.position;
+                
+                // Yüksekliği ayarla
+                PlaceableObject po = preview.GetComponent<PlaceableObject>();
+                float offset = (po != null) ? po.heightOffset : 0.5f;
+                targetPos.y += offset;
+
+                preview.transform.position = targetPos;
+            }
         }
         else
         {
@@ -90,12 +100,14 @@ public class CreativePlacementManager : MonoBehaviour
 
     void Koy()
     {
-        if (!currentCell.IsEmpty()) return;
+        if (currentCell == null || !currentCell.IsEmpty()) return;
 
-        Quaternion rot = Quaternion.Euler(90, 0, 0); 
+        // --- DÜZELTME ---
+        // Quaternion.Euler(90, 0, 0) yerine prefabın orjinal duruşunu kullan:
+        Quaternion rot = seciliObje.objePrefab.transform.rotation; 
+
         GameObject obj = Instantiate(seciliObje.objePrefab, currentCell.transform.position, rot);
 
         currentCell.PlaceObject(obj, seciliObje);
     }
-
 }
