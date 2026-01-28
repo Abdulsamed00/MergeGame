@@ -33,11 +33,18 @@ public class PlaceableObject : MonoBehaviour
             icindekiMalzemeler.Add(verisi);
         }
         
-        // Animasyon varsa Start'ta boyutu aniden değiştirmek yerine
-        // Animator'ın scale değerini kullanmasına izin verin.
-        // Ama veri tutarlılığı için dahili değişkenleri güncelleyebiliriz.
-        if (icindekiMalzemeler.Count > 1) transform.localScale = buyukScale;
-        else transform.localScale = normalScale;
+        // Başlangıçta stackli mi değil mi kontrol et
+        // Eğer birden fazla malzeme varsa Stack modundadır
+        if (icindekiMalzemeler.Count > 1) 
+        {
+            transform.localScale = buyukScale;
+            SetStackedMode(true); // Animator'a söyle
+        }
+        else 
+        {
+            transform.localScale = normalScale;
+            SetStackedMode(false);
+        }
     }
 
     public void BoyutuGuncelle()
@@ -45,10 +52,12 @@ public class PlaceableObject : MonoBehaviour
         if (icindekiMalzemeler.Count > 1)
         {
             transform.localScale = buyukScale; 
+            SetStackedMode(true);
         }
         else
         {
             transform.localScale = normalScale; 
+            SetStackedMode(false);
         }
     }
 
@@ -59,9 +68,19 @@ public class PlaceableObject : MonoBehaviour
         if (animator != null) animator.SetBool("IsPreview", isPreview);
     }
 
+    // YENİ: Animator'a objenin stack halinde olduğunu bildirir
+    public void SetStackedMode(bool isStacked)
+    {
+        if (animator != null) animator.SetBool("IsStacked", isStacked);
+    }
+
     public void PlayMergeAnimation()
     {
-        if (animator != null) animator.SetTrigger("Merge");
+        if (animator != null)
+        {
+            SetStackedMode(false); // Merge olunca stack bozulur, normale döner
+            animator.SetTrigger("Merge");
+        }
     }
 
     public void PlaySpawnAnimation()
@@ -69,9 +88,12 @@ public class PlaceableObject : MonoBehaviour
         if (animator != null) animator.SetTrigger("Spawn");
     }
 
-    // --- YENİ EKLENEN: Stack Animasyonu ---
     public void PlayStackAnimation()
     {
-        if (animator != null) animator.SetTrigger("Stack");
+        if (animator != null)
+        {
+            SetStackedMode(true); // Stack animasyonu çalarken durumu da kilitle
+            animator.SetTrigger("Stack");
+        }
     }
 }

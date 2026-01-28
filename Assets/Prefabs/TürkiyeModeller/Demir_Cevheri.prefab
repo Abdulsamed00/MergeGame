@@ -95,7 +95,7 @@ Animator:
   m_GameObject: {fileID: 1739301151966755805}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5e8aa93c8b5bb21439a73e109ffee71d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verisi: {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
   currentCell: {fileID: 0}
-  heightOffset: 0.2
+  heightOffset: 0.1
   kilitliMi: 0
   hareketHakki: 1
   normalScale: {x: 100, y: 100, z: 100}
