@@ -126,16 +126,16 @@ public class SimpleTutorialManager : MonoBehaviour
             }
         }
 
-        bool kolonTamam = kolonSayisi >= 2;
-        bool insaatTamam = insaatAlaniSayisi >= 1;
+        bool kolonTamam = kolonSayisi >= 1;
+        bool insaatTamam = insaatAlaniSayisi >= 2;
 
         if (!kolonTamam)
         {
-            UpdateText($"Demirleri birleştir ve {2 - kolonSayisi} tane daha Kolon yap.");
+            UpdateText($"Demirleri birleştir ve {1 - kolonSayisi} tane daha Kolon yap.");
         }
         else if (!insaatTamam)
         {
-            UpdateText($"Tuğlaları birleştir ve {1 - insaatAlaniSayisi} adet İnşaat Alanı oluştur.");
+            UpdateText($"Tuğlaları birleştir ve {2 - insaatAlaniSayisi} adet İnşaat Alanı oluştur.");
         }
         else
         {

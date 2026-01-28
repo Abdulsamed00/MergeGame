@@ -131,11 +131,29 @@ public class BirlestirmeYoneticisi : MonoBehaviour
     // =======================
     // SEVİYE SINIRI
     // =======================
-    bool SeviyeSiniriAsiliyorMu(ObjeVerisi sonuc)
+    public bool SeviyeSiniriAsiliyorMu(ObjeVerisi sonuc)
     {
-        if (GameManager.Instance == null) return false;
+        // 1. KORUMA: Gelen sonuç verisi yoksa işlemi durdur (false dön)
+        if (sonuc == null) return false;
+
+        // 2. KORUMA: GameManager yoksa (Tutorial sahnesi veya yanlış başlangıç)
+        if (GameManager.Instance == null)
+        {
+            // Eğer GameManager yoksa seviye sınırı da yoktur, izin ver.
+            return false;
+        }
+
+        // 3. KORUMA: Level Data yüklenmemişse
+        if (GameManager.Instance.SuankiLevelData == null)
+        {
+            // Level verisi yoksa sınır yoktur.
+            return false;
+        }
+
+        // --- ASIL KOD ---
         var sinir = GameManager.Instance.SuankiLevelData.izinVerilenEnUstObje;
 
+        // Sınır yoksa (null ise) her şeye izin ver, varsa karşılaştır.
         return sinir != null && sonuc.objeSeviyesi > sinir.objeSeviyesi;
     }
 
