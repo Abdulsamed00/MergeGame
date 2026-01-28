@@ -18,11 +18,7 @@ MonoBehaviour:
   gridGenislik: 4
   gridYukseklik: 4
   zeminPrefabi: {fileID: 8255895135655642265, guid: 1891a6b3b1aef4741b7a8ed2c89a086b, type: 3}
-  baslangicObjeleri:
-  - {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
-  - {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
-  - {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
-  - {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
+  baslangicObjeSayisi: 3
   hedefler:
   - istenenObje: {fileID: 11400000, guid: cbcb555f7f651fe44bd8a88b9daefc04, type: 2}
     adet: 1

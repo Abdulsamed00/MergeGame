@@ -1239,7 +1239,6 @@ MonoBehaviour:
   grid: {fileID: 19238769}
   gridManager: {fileID: 19238771}
   placementManager: {fileID: 754773132}
-  baslangicObjeleri: []
 --- !u!4 &763053677
 Transform:
   m_ObjectHideFlags: 0
