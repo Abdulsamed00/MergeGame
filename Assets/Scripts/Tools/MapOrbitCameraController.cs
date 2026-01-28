@@ -38,21 +38,23 @@ public class MapOrbitCameraController : MonoBehaviour
         // 📱 MOBİL
         if (Input.touchCount == 1)
         {
-            if (!IsOnGameArea(Input.GetTouch(0).position))
-                RotateTouch();
+            Touch t = Input.GetTouch(0);
+
+            if (!IsTouchOnGrid(t.position))
+                RotateTouch(t);
         }
         else if (Input.touchCount == 2)
         {
             Vector2 mid =
                 (Input.GetTouch(0).position + Input.GetTouch(1).position) * 0.5f;
 
-            if (!IsOnGameArea(mid))
+            if (!IsTouchOnGrid(mid))
                 ZoomTouch();
         }
 
 #if UNITY_EDITOR
         // 🖱️ MOUSE
-        if (!IsOnGameArea(Input.mousePosition))
+        if (!IsTouchOnGrid(Input.mousePosition))
         {
             RotateMouse();
             ZoomMouse();
@@ -79,26 +81,25 @@ public class MapOrbitCameraController : MonoBehaviour
         cam.transform.LookAt(mapCenter);
     }
 
-    // ================== GAME AREA KONTROL ==================
+    // ================== GRID KONTROL ==================
 
-    bool IsOnGameArea(Vector2 screenPos)
+    bool IsTouchOnGrid(Vector2 screenPos)
     {
         Ray ray = cam.ScreenPointToRay(screenPos);
 
-        int mask = LayerMask.GetMask("GameArea");
-
-        if (Physics.Raycast(ray, 1000f, mask))
-            return true;
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+        {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Grid"))
+                return true;
+        }
 
         return false;
     }
 
     // ================== TOUCH ==================
 
-    void RotateTouch()
+    void RotateTouch(Touch t)
     {
-        Touch t = Input.GetTouch(0);
-
         if (t.phase == TouchPhase.Began)
             lastTouchPos = t.position;
 
