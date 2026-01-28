@@ -26,7 +26,7 @@ public class PlacementManager : MonoBehaviour
     public SpriteEvent OnNextObjectChanged;
 
     [Header("Tutorial Ayarı")]
-    public bool tutorialModuAktif = false; // SimpleTutorialManager bunu TRUE yapar
+    public bool tutorialModuAktif = false;
 
     private GameObject currentPrefab;
     private GameObject previewObject;
@@ -49,14 +49,12 @@ public class PlacementManager : MonoBehaviour
 
     void Update()
     {
-        // Oyun bittiyse veya kilitliyse dur
         if (isInputLocked || GameManager.Instance.oyunBittiMi)
         {
             return;
         }
         
-        // Normal modda elin boşsa (preview yoksa) tıklayamazsın.
-        // AMA Tutorial modundaysak elin boş olsa bile tıklayabilmelisin (yerdekileri taşımak için).
+        // Tutorialdaysak preview olmasa bile (elimiz boş olsa bile) tıklayabilelim
         if (!tutorialModuAktif && previewObject == null) 
         {
             return;
@@ -146,8 +144,10 @@ public class PlacementManager : MonoBehaviour
 
     void CreatePreview()
     {
-        // Tutorial aktifse Preview/Hayalet oluşturma
-        if (tutorialModuAktif) return; 
+        // --- İŞTE SİHİRLİ DOKUNUŞ BURADA ---
+        // Tutorial aktifse ve "Henüz yerden bir şey almadıysak" -> DUR (Yeni taş gelmesin).
+        // AMA "Yerden bir şey aldıysak" (yerdenMiAldik=true) -> DEVAM ET (Preview oluşsun).
+        if (tutorialModuAktif && !yerdenMiAldik) return; 
 
         if (previewObject != null) Destroy(previewObject);
         if (currentPrefab == null) return;
@@ -158,9 +158,14 @@ public class PlacementManager : MonoBehaviour
         var po = previewObject.GetComponent<PlaceableObject>();
         if (po != null)
         {
-            po.verisi = siradakiObjeVerisi;
+            // Eğer yeni spawn ise sıradakini, taşıma ise HandleInput içinde ayarlanacak
+            if (!yerdenMiAldik) po.verisi = siradakiObjeVerisi;
+            
             po.BoyutuGuncelle();
-            po.SetPreviewMode(true);
+            
+            // --- GÖRSEL ANİMASYON ---
+            // Bu fonksiyon objeyi yarı saydam yapar veya "Hayalet" moduna sokar.
+            po.SetPreviewMode(true); 
         }
     }
 
@@ -183,24 +188,17 @@ public class PlacementManager : MonoBehaviour
         {
             if (yerdenMiAldik)
             {
+                // --- TAŞIMA İŞLEMİ (Burada sorun yok) ---
                 yerdekiGercekObje.gameObject.SetActive(true);
                 
-                // --- POZİSYON HESAPLAMA (Null Check Eklendi) ---
                 if (previewObject != null)
-                {
                     yerdekiGercekObje.transform.position = previewObject.transform.position;
-                }
                 else
-                {
-                    // Preview yoksa (Tutorial modu) direkt hücre merkezine koy
                     yerdekiGercekObje.transform.position = grid.GetCellCenterWorld(selectedCell.cellPosition) + Vector3.up * yerdekiGercekObje.heightOffset;
-                }
-                // -----------------------------------------------
 
                 yerdekiGercekObje.currentCell = selectedCell;
                 selectedCell.currentObject = yerdekiGercekObje;
                 
-                // Tutorial modundaysak hareket hakkını yeme (tekrar taşıyabilsin)
                 if (!tutorialModuAktif) yerdekiGercekObje.hareketHakki = 0; 
 
                 yerdekiGercekObje.BoyutuGuncelle();
@@ -209,13 +207,18 @@ public class PlacementManager : MonoBehaviour
                 if(previewObject != null) Destroy(previewObject);
                 IslemTamamlandi(false); 
                 
-                // Tutorial kontrolü
                 if (SimpleTutorialManager.Instance != null) SimpleTutorialManager.Instance.CheckTutorialStatus();
                 else GameManager.Instance.HamleBittiKontrolu();
             }
             else
             {
-                // Normal oyun (Spawn)
+                // --- TUTORIAL KONTROLÜ (Spawn Engeli) ---
+                if (tutorialModuAktif || previewObject == null) 
+                {
+                    return; // Tutorial'da yeni spawn yasak
+                }
+                
+                // Normal Oyun Spawn Kodu
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, currentPrefab.transform.rotation);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
@@ -242,7 +245,7 @@ public class PlacementManager : MonoBehaviour
                 GameManager.Instance.HamleBittiKontrolu();
             }
         }
-        // B. DOLU YERE KOYMA
+        // B. DOLU YERE KOYMA (MERGE)
         else
         {
             if (!yerdenMiAldik) 
@@ -255,7 +258,18 @@ public class PlacementManager : MonoBehaviour
             PlaceableObject yerdekiObje = selectedCell.currentObject; 
             PlaceableObject elimizdekiObje = yerdekiGercekObje;       
 
-            bool birlestiMi = birlestirmeYoneticisi.ManuelBirlestirme(elimizdekiObje, yerdekiObje);
+            // GÜVENLİK: Manager Referans Kontrolü
+            BirlestirmeYoneticisi manager = birlestirmeYoneticisi;
+            if (manager == null) manager = BirlestirmeYoneticisi.Instance;
+            if (manager == null) manager = FindObjectOfType<BirlestirmeYoneticisi>();
+            
+            if (manager == null) 
+            {
+                IptalEt(); 
+                return;
+            }
+
+            bool birlestiMi = manager.ManuelBirlestirme(elimizdekiObje, yerdekiObje);
 
             if (birlestiMi)
             {
@@ -264,7 +278,6 @@ public class PlacementManager : MonoBehaviour
                 
                 IslemTamamlandi(true);
                 
-                // Tutorial kontrolü
                 if (SimpleTutorialManager.Instance != null) SimpleTutorialManager.Instance.CheckTutorialStatus();
                 else GameManager.Instance.HamleBittiKontrolu();
             }
@@ -290,7 +303,7 @@ public class PlacementManager : MonoBehaviour
     {
         yield return new WaitForSeconds(spawnGecikmesi);
 
-        // Tutorial modundaysak yeni taş verme döngüsünü kır
+        // Tutorial modundaysak yeni taş verme döngüsüne girme.
         if (tutorialModuAktif) yield break; 
 
         if (yeniSpawnGerekli)
@@ -348,11 +361,7 @@ public class PlacementManager : MonoBehaviour
 
     void HandleInput()
     {
-        // --- GÜVENLİK KONTROLLERİ ---
-        if (Camera.main == null) return; 
-        if (grid == null) return;
-        if (gridManager == null) return;
-        // ----------------------------
+        if (Camera.main == null || grid == null || gridManager == null) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -382,43 +391,31 @@ public class PlacementManager : MonoBehaviour
                 }
                 else if (!pressedOnPreview && cell != null && !cell.IsEmpty())
                 {
-                    // Hücre dolu görünüyor ama obje yoksa çık
                     if (cell.currentObject == null) return; 
 
-                    // Tutorial'da hareket hakkı kontrolü (genelde 1 olur)
                     if (cell.currentObject.hareketHakki > 0)
                     {
                         if (previewObject != null) Destroy(previewObject);
 
-                        yerdenMiAldik = true;
+                        // --- TAŞIMA BAŞLANGICI ---
+                        yerdenMiAldik = true; // 1. Bayrağı kaldır
                         kaynakHucre = cell;
                         yerdekiGercekObje = cell.currentObject;
                         currentPrefab = yerdekiGercekObje.verisi.objePrefab;
                         
                         kaynakHucre.currentObject = null;
                         
-                        // --- TUTORIAL GÖRÜNÜRLÜK AYARI ---
-                        // Eğer tutorial modundaysak ve preview oluşturmuyorsak, gerçek objeyi gizleme!
-                        // Yoksa elimizdeki obje kaybolur.
-                        if (!tutorialModuAktif)
-                        {
-                            yerdekiGercekObje.gameObject.SetActive(false);
-                            CreatePreview(); // Normal modda preview oluştur
-                        }
-                        else
-                        {
-                            // Tutorial modunda preview oluşturmuyoruz ve objeyi açık bırakıyoruz
-                            // ki nereye gittiğini görelim (sürükleme efekti yoksa bile)
-                        }
-                        // ----------------------------------
+                        // --- PREVIEW AKTİVASYONU ---
+                        yerdekiGercekObje.gameObject.SetActive(false); // Gerçeği gizle
+                        CreatePreview(); // Hayaleti çağır! (yerdenMiAldik=true olduğu için artık çalışacak)
 
-                        // Preview varsa onun verilerini ayarla
                         if (previewObject != null)
                         {
                             var po = previewObject.GetComponent<PlaceableObject>();
                             po.verisi = yerdekiGercekObje.verisi;
                             po.icindekiMalzemeler = new List<ObjeVerisi>(yerdekiGercekObje.icindekiMalzemeler);
                             po.BoyutuGuncelle();
+                            po.SetPreviewMode(true); // Görsel efekti aç
                         }
 
                         SelectCell(cell);
@@ -494,26 +491,18 @@ public class PlacementManager : MonoBehaviour
                 {
                     var yerdeki = targetCell.currentObject;
                     var elimizdeki = previewObject.GetComponent<PlaceableObject>();
-                    if (yerdeki != null && elimizdeki != null)
+                    
+                    BirlestirmeYoneticisi manager = birlestirmeYoneticisi;
+                    if (manager == null) manager = BirlestirmeYoneticisi.Instance;
+                    if (manager == null) manager = FindObjectOfType<BirlestirmeYoneticisi>();
+
+                    if (yerdeki != null && elimizdeki != null && manager != null)
                     {
-                        if (BirlestirmeYoneticisi.Instance.CanMerge(elimizdeki, yerdeki)) secilebilir = true;
+                        if (manager.CanMerge(elimizdeki, yerdeki)) secilebilir = true;
                         else secilebilir = false; 
                     }
                 }
                 else secilebilir = false;
-            }
-            // Tutorial modunda preview yoksa sadece boş yerleri veya birleşmeleri mantıken kontrol et
-            else if (tutorialModuAktif && yerdenMiAldik)
-            {
-                 if (targetCell.IsEmpty()) secilebilir = true;
-                 else if (targetCell.currentObject != null && yerdekiGercekObje != null)
-                 {
-                     // Preview yok ama gerçek objeler üzerinden kontrol
-                     if (BirlestirmeYoneticisi.Instance.CanMerge(yerdekiGercekObje, targetCell.currentObject))
-                        secilebilir = true;
-                     else
-                        secilebilir = false;
-                 }
             }
 
             if (secilebilir) SelectCell(targetCell);
@@ -524,7 +513,6 @@ public class PlacementManager : MonoBehaviour
     {
         selectedCell = cell;
         
-        // Preview varsa onu taşı, yoksa sadece selectedCell'i güncelle
         if (previewObject != null)
         {
             previewObject.SetActive(true);

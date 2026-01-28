@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     public Text loseBaslikText;
     public Text populasyonText; 
 
+    [Header("Tutorial Ayarı")]
+    public bool isTutorialScene = false; // <-- BU KUTUCUK İŞARETLENİNCE SAVE SİSTEMİ DURACAK
+
     [Header("Bölüm Listesi")]
     public List<LevelData> tumLeveller;
     
@@ -46,6 +49,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (isTutorialScene) return;
+
         int gelenLevel = DataTransfer.secilenLevelIndex;
         if (gelenLevel >= tumLeveller.Count) gelenLevel = 0;
 
@@ -127,6 +132,8 @@ public class GameManager : MonoBehaviour
 
     public void OyunuKaydet()
     {
+        if (isTutorialScene) return;
+
         if (oyunBittiMi) return;
 
         SaveData data = new SaveData();
@@ -308,6 +315,8 @@ public class GameManager : MonoBehaviour
 
     public void HamleBittiKontrolu()
     {
+        if (isTutorialScene) return;
+
         if (oyunBittiMi) return;
         
         OyunuKaydet();
@@ -327,6 +336,8 @@ public class GameManager : MonoBehaviour
 
     public void OyunBittiKararVer(bool kazandiMi)
     {
+        if (isTutorialScene) return;
+        
         if (oyunBittiMi) return;
         oyunBittiMi = true;
 
