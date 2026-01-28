@@ -2154,7 +2154,7 @@ MonoBehaviour:
   gridHeight: 4
   zeminPrefabi: {fileID: 8255895135655642265, guid: 1891a6b3b1aef4741b7a8ed2c89a086b, type: 3}
   kolonVerisi: {fileID: 11400000, guid: ffabf0023c5bc4546a3bc6c1fa4c2809, type: 2}
-  insaatAlaniVerisi: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
+  insaatAlaniVerisi: {fileID: 11400000, guid: b9dce7825bb173a44a2dafbec13fb912, type: 2}
   evVerisi: {fileID: 11400000, guid: cbcb555f7f651fe44bd8a88b9daefc04, type: 2}
   baslangicObjeleri:
   - obje: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
