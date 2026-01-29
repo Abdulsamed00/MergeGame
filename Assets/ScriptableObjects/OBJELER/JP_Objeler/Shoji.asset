@@ -16,7 +16,7 @@ MonoBehaviour:
   objeAdi: Shoji
   objePrefab: {fileID: 8460789655194331417, guid: 5399804a4e794174aa3cb1ad51879b37, type: 3}
   uiIkonu: {fileID: 1251611683, guid: 3a5b5389fbee3384f9a3eaa301905fc7, type: 3}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0

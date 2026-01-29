@@ -13,6 +13,8 @@ public class MainMenuManager : MonoBehaviour
     // 1'den 10'a kadar olan butonlardaki scriptleri buraya sürükleyeceğiz
     public List<LevelSelectButton> levelButonlari;
 
+    public GameObject BilgiPaneli, TR, BR, JP, MSR, TarifP;
+
     private void Start()
     {
   
@@ -49,5 +51,11 @@ public class MainMenuManager : MonoBehaviour
         PlayerPrefs.DeleteAll();
         Debug.Log("VERİLER SİLİNDİ, SAHNE YENİLENİYOR...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void BilgiPaneliAc()
+    {
+        BilgiPaneli.SetActive(true);
+        
     }
 }

@@ -28,9 +28,13 @@ MonoBehaviour:
   izinVerilenEnUstObje: {fileID: 11400000, guid: ba0aba9dbd8641847be273035652bfcb, type: 2}
   levelObjeleri:
   - obje: {fileID: 11400000, guid: 884135fce758a344e8765d96b8826287, type: 2}
-    spawnYuzdesi: 50
+    spawnYuzdesi: 30
   - obje: {fileID: 11400000, guid: 21108182f0217c145a1f198f4a0922db, type: 2}
-    spawnYuzdesi: 50
+    spawnYuzdesi: 30
+  - obje: {fileID: 11400000, guid: b9dce7825bb173a44a2dafbec13fb912, type: 2}
+    spawnYuzdesi: 20
+  - obje: {fileID: 11400000, guid: ffabf0023c5bc4546a3bc6c1fa4c2809, type: 2}
+    spawnYuzdesi: 20
   yildiz1Puani: 125
   yildiz2Puani: 250
   yildiz3Puani: 500

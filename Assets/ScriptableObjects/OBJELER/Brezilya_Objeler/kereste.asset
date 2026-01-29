@@ -16,7 +16,7 @@ MonoBehaviour:
   objeAdi: Kereste
   objePrefab: {fileID: 8977370756115442955, guid: 76b07af443bd3784082ed573e978dee8, type: 3}
   uiIkonu: {fileID: -371679649, guid: a099193d8fa11f14782c0e89f71f0479, type: 3}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0

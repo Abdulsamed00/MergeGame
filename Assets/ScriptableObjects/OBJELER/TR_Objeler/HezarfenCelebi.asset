@@ -16,7 +16,7 @@ MonoBehaviour:
   objeAdi: "Hezarfen \xC7elebi"
   objePrefab: {fileID: 4605367841180616138, guid: f47e7c0c6d435ef4c9caf2b367802a68, type: 3}
   uiIkonu: {fileID: 190979036, guid: b6b3679080e783843ad7d36a92f26eb6, type: 3}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0

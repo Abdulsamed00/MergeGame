@@ -14,6 +14,8 @@ public class MenuManager : MonoBehaviour
     public Image fadeImage;
     public float fadeDuration = 0.5f;
 
+    public GameObject BilgiPaneli, TR, BR, JP, MSR, TarifP;
+    public Button BilgiPaneliB, TrbButton, BrButton, JpButton, MsrButton, TarifGeriButton;
     void Start()
     {
         Time.timeScale = 1f;
@@ -21,7 +23,11 @@ public class MenuManager : MonoBehaviour
         mainMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
         levelsPanel.SetActive(false);
-
+        TR.SetActive(false);
+        BR.SetActive(false);
+        JP.SetActive(false);
+        MSR.SetActive(false);
+        
         if (fadeImage != null)
         {
             fadeImage.raycastTarget = false;
@@ -75,6 +81,73 @@ public class MenuManager : MonoBehaviour
         BasarimPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
+    
+    public void BilgiPaneliAc()
+    {
+        mainMenuPanel.SetActive(false);
+        BilgiPaneli.SetActive(true);
+    }
+
+    public void BilgiPaneliKapat()
+    {
+        BilgiPaneli.SetActive(false);
+        mainMenuPanel.SetActive(true);
+    }
+    
+    public void TRAC()
+    {
+        BilgiPaneli.SetActive(false);
+        TR.SetActive(true);
+    }
+    public void BRAC()
+    {
+        BilgiPaneli.SetActive(false);
+        BR.SetActive(true);
+    }
+    public void JPAC()
+    {
+        BilgiPaneli.SetActive(false);
+        JP.SetActive(true);
+    }
+    public void MSRAC()
+    {
+        BilgiPaneli.SetActive(false);
+        MSR.SetActive(true);
+    }
+    
+    public void TRKAPA()
+    {
+        TR.SetActive(false);
+        BilgiPaneli.SetActive(true);
+    }
+    public void BRKAPA()
+    {
+        BR.SetActive(false);
+        BilgiPaneli.SetActive(true);
+    }
+    public void JPKAPA()
+    {
+        JP.SetActive(false);
+        BilgiPaneli.SetActive(true);
+    }
+    public void MSRKAPA()
+    {
+        MSR.SetActive(false);
+        BilgiPaneli.SetActive(true);
+    }
+
+    public void TarifPAcma()
+    {
+        BilgiPaneli.SetActive(false);
+        TarifP.SetActive(true);
+    }
+    
+    public void TarifPKapama()
+    {
+        BilgiPaneli.SetActive(true);
+        TarifP.SetActive(false);
+    }
+    
     
     // ======================
     // LEVELS
@@ -154,6 +227,8 @@ public class MenuManager : MonoBehaviour
         }
     }
 }
+
+
 
 public enum Scenes
 {

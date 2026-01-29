@@ -16,7 +16,7 @@ MonoBehaviour:
   objeAdi: "K\xFCt\xFCk"
   objePrefab: {fileID: 4845062764563967478, guid: f909981265d31ee4e8f606c84e7ea200, type: 3}
   uiIkonu: {fileID: 1280486248, guid: e1756c332ab6f7f4f83c929924dfdbf0, type: 3}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0
