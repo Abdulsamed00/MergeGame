@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: cc421da483ed06c49933077a621bff25, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.060060825, g: 0.08828687, b: 0.2824745, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 19238769}
-  cellPrefab: {fileID: 582348012461025155, guid: 9828a1b4f48258047a1c1f71262e0bd7, type: 3}
+  cellPrefab: {fileID: 4644411018722687616, guid: 649d2fbff1328f846a90bbf10382203a, type: 3}
   width: 4
   height: 4
   cameraController: {fileID: 0}
@@ -861,6 +861,7 @@ MonoBehaviour:
   winParticlePrefab: {fileID: 6208859485802548772, guid: 0f871c0bf570e7f45996b9236031412a, type: 3}
   loseParticlePrefab: {fileID: 5635589874609990320, guid: 466d26d9aff684d4394d5cca0b992516, type: 3}
   oyunSonuBeklemeSuresi: 2
+  isTutorialScene: 0
   tumLeveller:
   - {fileID: 11400000, guid: b3c5330e5c907d542b6faec723e05c38, type: 2}
   - {fileID: 11400000, guid: 093055578af022345ada58e19e1e15df, type: 2}
@@ -1277,7 +1278,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &669007832
 RectTransform:
   m_ObjectHideFlags: 0
