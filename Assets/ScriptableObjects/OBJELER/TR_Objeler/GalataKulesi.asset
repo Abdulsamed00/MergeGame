@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 10
   objeAdi: Galata Kulesi
   objePrefab: {fileID: 2448456012579947929, guid: 40b1206ce80e9ab4e8fd799b44cbe40d, type: 3}
-  uiIkonu: {fileID: 21300000, guid: 849072621b55b1444aa2c8c22bc4a764, type: 3}
+  uiIkonu: {fileID: 33530889, guid: b6b3679080e783843ad7d36a92f26eb6, type: 3}
   tur: 1
   minPopulasyon: 20
   maxPopulasyon: 30

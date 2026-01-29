@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: 3a5b5389fbee3384f9a3eaa301905fc7
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Japonya_2
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 1173
+        width: 78
+        height: 237
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c2cc2c3377628e42a3a4b033f3d65bd
+      internalID: 1743026232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_3
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 1173
+        width: 216
+        height: 237
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9fa4fd739b19d748bf795aa15d2efe5
+      internalID: -1504340192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_7
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 1176
+        width: 254
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1861279c8a18d6428c6238c81c4cab7
+      internalID: -1798258737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_11
+      rect:
+        serializedVersion: 2
+        x: 972
+        y: 1170
+        width: 264
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d73c193392449746abba9c6b7d9a438
+      internalID: 1251611683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_20
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 793
+        width: 283
+        height: 257
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e11b62d09a312045a6335ed2e4e17a3
+      internalID: 355260372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_26
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 786
+        width: 280
+        height: 246
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a24f6a4502987db41aa1030e949dce56
+      internalID: -214344778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_29
+      rect:
+        serializedVersion: 2
+        x: 978
+        y: 772
+        width: 315
+        height: 246
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25f81c273af42a84bab24436f1876344
+      internalID: 1073761881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_31
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 792
+        width: 291
+        height: 174
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 140d2be0ec7873e4e8795094728843bc
+      internalID: 554963890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_48
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 450
+        width: 264
+        height: 282
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 056e804ef82ba8c4a9db4508085c9a1f
+      internalID: 1769816437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_50
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 450
+        width: 300
+        height: 269
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d9f92cfc9bc84c4199bdd4abe4f473b
+      internalID: -671164152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Japonya_54
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 441
+        width: 304
+        height: 261
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88151ec1cf7060d42bdaa8b9f776280b
+      internalID: -262653119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: d177eebc0302623448af0de150416e80
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Japonya_0: 1395419068
+      Japonya_1: 1754738744
+      Japonya_10: 724592937
+      Japonya_11: 1251611683
+      Japonya_12: -1432692987
+      Japonya_13: -2112801643
+      Japonya_14: -1424430694
+      Japonya_15: -1662822549
+      Japonya_16: 695028016
+      Japonya_17: 1504127770
+      Japonya_18: 1470539274
+      Japonya_19: 9015595
+      Japonya_2: 1743026232
+      Japonya_20: 355260372
+      Japonya_21: 387044199
+      Japonya_22: -732260168
+      Japonya_23: -1606266710
+      Japonya_24: 1844310219
+      Japonya_25: -948702860
+      Japonya_26: -214344778
+      Japonya_27: 1241179685
+      Japonya_28: 1202743515
+      Japonya_29: 1073761881
+      Japonya_3: -1504340192
+      Japonya_30: -1238285071
+      Japonya_31: 554963890
+      Japonya_32: -2018680370
+      Japonya_33: 1159763374
+      Japonya_34: -473103333
+      Japonya_35: 1521410262
+      Japonya_36: 1739754418
+      Japonya_37: 1077547234
+      Japonya_38: -1687236188
+      Japonya_39: 50472476
+      Japonya_4: 648751238
+      Japonya_40: -1897374843
+      Japonya_41: 1866385694
+      Japonya_42: 818447164
+      Japonya_43: 957752163
+      Japonya_44: 1504030427
+      Japonya_45: 1008676802
+      Japonya_46: -2037995462
+      Japonya_47: -444061475
+      Japonya_48: 1769816437
+      Japonya_49: -1237850220
+      Japonya_5: 1139731150
+      Japonya_50: -671164152
+      Japonya_51: 19774724
+      Japonya_52: 1540568455
+      Japonya_53: -1643072151
+      Japonya_54: -262653119
+      Japonya_55: 1488437135
+      Japonya_56: -1257842633
+      Japonya_57: 1275620604
+      Japonya_58: 998814556
+      Japonya_59: 593389487
+      Japonya_6: 204165779
+      Japonya_60: 1581136141
+      Japonya_61: -788754597
+      Japonya_62: 2087144408
+      Japonya_63: -1975615626
+      Japonya_64: -566875816
+      Japonya_65: 556876559
+      Japonya_66: -172878023
+      Japonya_67: -691236125
+      Japonya_68: 234266755
+      Japonya_69: 2044917523
+      Japonya_7: -1798258737
+      Japonya_70: 865925131
+      Japonya_71: 910741777
+      Japonya_72: 852421918
+      Japonya_73: -1607944180
+      Japonya_74: 1538047604
+      Japonya_75: 1003216791
+      Japonya_76: -287625592
+      Japonya_8: -848120961
+      Japonya_9: 1226883952
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

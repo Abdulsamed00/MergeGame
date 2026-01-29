@@ -1,0 +1,449 @@
+fileFormatVersion: 2
+guid: a099193d8fa11f14782c0e89f71f0479
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Brezilya_0
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 1188
+        width: 298
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d69234d224add8643ab5980a174c9933
+      internalID: 1286791309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_4
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 1194
+        width: 263
+        height: 264
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b79fede1e6211ab48afac90d02bd42b1
+      internalID: -1061538415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_5
+      rect:
+        serializedVersion: 2
+        x: 714
+        y: 1189
+        width: 246
+        height: 269
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a12a5537e293a17469ab685546dd9964
+      internalID: 1069493878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_7
+      rect:
+        serializedVersion: 2
+        x: 1038
+        y: 1158
+        width: 299
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e60547f7059d4ff4baf2965bebe8ba17
+      internalID: -371679649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_16
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 811
+        width: 246
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 915bcf8228cf7f546a37943ad065409f
+      internalID: -1132008172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_19
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 816
+        width: 238
+        height: 294
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d4d18991b1f7ab4cb779c2f2bef78e3
+      internalID: 1497164065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_22
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 831
+        width: 306
+        height: 219
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 432a4315a4e3a8b41883c382a3325007
+      internalID: 2048593937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_24
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 822
+        width: 267
+        height: 228
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e808f66b2336b74590adc9d4693ddc6
+      internalID: -1700722166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_35
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 464
+        width: 235
+        height: 292
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 035de5f18e6c40649a2be4206af03a27
+      internalID: 1596241915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_37
+      rect:
+        serializedVersion: 2
+        x: 865
+        y: 412
+        width: 221
+        height: 277
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17ee86334edaeef45b4287c565eec411
+      internalID: -1822935002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_40
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 498
+        width: 296
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9b3722b4fb0bea4f9b90adb50c394f4
+      internalID: 1844183505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brezilya_41
+      rect:
+        serializedVersion: 2
+        x: 1189
+        y: 402
+        width: 218
+        height: 276
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34598b5aa35608f4d87383df36077f87
+      internalID: -750249785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 812d50507e148654599c954822ee42ee
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Brezilya_0: 1286791309
+      Brezilya_1: 1951056055
+      Brezilya_10: 1804809659
+      Brezilya_11: 588826319
+      Brezilya_12: 914652596
+      Brezilya_13: -1436622536
+      Brezilya_14: 1678368975
+      Brezilya_15: 1516029347
+      Brezilya_16: -1132008172
+      Brezilya_17: -81623230
+      Brezilya_18: 1510452734
+      Brezilya_19: 1497164065
+      Brezilya_2: 807208263
+      Brezilya_20: 1329903127
+      Brezilya_21: -2033404486
+      Brezilya_22: 2048593937
+      Brezilya_23: 336248261
+      Brezilya_24: -1700722166
+      Brezilya_25: -1164780855
+      Brezilya_26: -277201636
+      Brezilya_27: -1579342921
+      Brezilya_28: -1111155146
+      Brezilya_29: 445479155
+      Brezilya_3: 1982671169
+      Brezilya_30: 686383703
+      Brezilya_31: 1170629378
+      Brezilya_32: 1656781303
+      Brezilya_33: -1421982269
+      Brezilya_34: -216323758
+      Brezilya_35: 1596241915
+      Brezilya_36: -616861168
+      Brezilya_37: -1822935002
+      Brezilya_38: -1668272950
+      Brezilya_39: -56456506
+      Brezilya_4: -1061538415
+      Brezilya_40: 1844183505
+      Brezilya_41: -750249785
+      Brezilya_42: 1496638333
+      Brezilya_43: 1452234737
+      Brezilya_44: 1060768145
+      Brezilya_45: -1536134058
+      Brezilya_46: 1116864069
+      Brezilya_47: 140561757
+      Brezilya_48: 40615897
+      Brezilya_49: 702826826
+      Brezilya_5: 1069493878
+      Brezilya_6: -605283352
+      Brezilya_7: -371679649
+      Brezilya_8: -592917150
+      Brezilya_9: 1964955347
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

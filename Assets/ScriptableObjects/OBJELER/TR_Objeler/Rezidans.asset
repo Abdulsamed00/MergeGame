@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 7
   objeAdi: Rezidans
   objePrefab: {fileID: 35610914491754110, guid: 6b5e1fe82631f1e4985057c92e9cc267, type: 3}
-  uiIkonu: {fileID: 21300000, guid: 849072621b55b1444aa2c8c22bc4a764, type: 3}
+  uiIkonu: {fileID: 1007767027, guid: b6b3679080e783843ad7d36a92f26eb6, type: 3}
   tur: 1
   minPopulasyon: 50
   maxPopulasyon: 60
