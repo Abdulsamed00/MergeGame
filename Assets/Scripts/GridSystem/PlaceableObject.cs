@@ -21,7 +21,6 @@ public class PlaceableObject : MonoBehaviour
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-        // Eğer inspector'da unutulursa default değerleri ata
         if(normalScale == Vector3.zero) normalScale = new Vector3(0.6f, 0.6f, 0.6f);
         if(buyukScale == Vector3.zero) buyukScale = new Vector3(0.7f, 0.7f, 0.7f);
     }
@@ -32,13 +31,11 @@ public class PlaceableObject : MonoBehaviour
         {
             icindekiMalzemeler.Add(verisi);
         }
-        
-        // Başlangıçta stackli mi değil mi kontrol et
-        // Eğer birden fazla malzeme varsa Stack modundadır
+
         if (icindekiMalzemeler.Count > 1) 
         {
             transform.localScale = buyukScale;
-            SetStackedMode(true); // Animator'a söyle
+            SetStackedMode(true);
         }
         else 
         {
@@ -60,15 +57,12 @@ public class PlaceableObject : MonoBehaviour
             SetStackedMode(false);
         }
     }
-
-    // --- ANİMASYON FONKSİYONLARI ---
-
+    
     public void SetPreviewMode(bool isPreview)
     {
         if (animator != null) animator.SetBool("IsPreview", isPreview);
     }
 
-    // YENİ: Animator'a objenin stack halinde olduğunu bildirir
     public void SetStackedMode(bool isStacked)
     {
         if (animator != null) animator.SetBool("IsStacked", isStacked);
@@ -78,7 +72,7 @@ public class PlaceableObject : MonoBehaviour
     {
         if (animator != null)
         {
-            SetStackedMode(false); // Merge olunca stack bozulur, normale döner
+            SetStackedMode(false);
             animator.SetTrigger("Merge");
         }
     }
@@ -92,7 +86,7 @@ public class PlaceableObject : MonoBehaviour
     {
         if (animator != null)
         {
-            SetStackedMode(true); // Stack animasyonu çalarken durumu da kilitle
+            SetStackedMode(true);
             animator.SetTrigger("Stack");
         }
     }

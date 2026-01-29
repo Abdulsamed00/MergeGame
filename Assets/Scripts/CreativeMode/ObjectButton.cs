@@ -5,13 +5,12 @@ public class ObjectButton : MonoBehaviour
 {
     [Header("UI Bileşenleri")]
     public Image icon;
-    public Button buttonComponent; // Tıklamayı kapatmak için
-    public GameObject lockOverlay; // Kilit simgesi (Panel içinde bir Image)
+    public Button buttonComponent;
+    public GameObject lockOverlay;
 
     private ObjeVerisi objeVerisi;
     private bool isUnlocked = false;
 
-    // Setup fonksiyonunu güncelledik, artık kilit durumunu da alıyor
     public void Setup(ObjeVerisi veri, bool acikMi)
     {
         objeVerisi = veri;
@@ -21,17 +20,22 @@ public class ObjectButton : MonoBehaviour
 
         if (isUnlocked)
         {
-            // AÇIKSA
-            if (lockOverlay != null) lockOverlay.SetActive(false); // Kilit resmini gizle
-            buttonComponent.interactable = true; // Tıklanabilir yap
-            icon.color = Color.white; // Rengi normal yap
+
+            if (lockOverlay != null)
+            {
+                lockOverlay.SetActive(false);
+            }
+            buttonComponent.interactable = true;
+            icon.color = Color.white;
         }
         else
         {
-            // KAPALIYSA
-            if (lockOverlay != null) lockOverlay.SetActive(true); // Kilit resmini aç
-            buttonComponent.interactable = false; // Tıklamayı kapat
-            icon.color = new Color(0.3f, 0.3f, 0.3f, 1f); // Hafif karart
+            if (lockOverlay != null)
+            {
+                lockOverlay.SetActive(true);
+            }
+            buttonComponent.interactable = false;
+            icon.color = new Color(0.3f, 0.3f, 0.3f, 1f);
         }
     }
 

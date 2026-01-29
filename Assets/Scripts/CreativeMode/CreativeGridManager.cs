@@ -35,9 +35,7 @@ public class CreativeGridManager : MonoBehaviour
             }
         }
     }
-
-    // ---------- CREATIVE API ----------
-
+    
     public CreativeGridCell GetCell(Vector3Int pos)
     {
         cells.TryGetValue(pos, out CreativeGridCell cell);
@@ -65,11 +63,14 @@ public class CreativeGridManager : MonoBehaviour
         CreativeGridCell cell = GetCell(pos);
 
         if (cell == null || !cell.IsEmpty())
+        {
             return false;
+        }
 
-        // Buradaki PlaceObject fonksiyonu CreativeGridCell içindekidir
-        cell.PlaceObject(obj, veri); 
-        return true;
+        cell.PlaceObject(obj, veri);
+        {
+            return true;
+        }
     }
 
     public bool RemoveObject(Vector3Int pos)
@@ -77,7 +78,9 @@ public class CreativeGridManager : MonoBehaviour
         CreativeGridCell cell = GetCell(pos);
 
         if (cell == null || cell.IsEmpty())
+        {
             return false;
+        }
 
         cell.Clear();
         return true;
@@ -94,10 +97,8 @@ public class CreativeGridManager : MonoBehaviour
     {
         List<CreativeGridCell> doluHucreler = new List<CreativeGridCell>();
         
-        // Dictionary içindeki tüm hücreleri tek tek kontrol ediyoruz
         foreach (var cell in cells.Values)
         {
-            // Eğer hücre boş değilse listeye ekle
             if (!cell.IsEmpty())
             {
                 doluHucreler.Add(cell);

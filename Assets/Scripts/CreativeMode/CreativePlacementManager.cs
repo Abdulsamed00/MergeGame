@@ -47,7 +47,10 @@ public class CreativePlacementManager : MonoBehaviour
     {
         isEraserActive = true;
         seciliObje = null;
-        if(preview != null) Destroy(preview);
+        if (preview != null)
+        {
+            Destroy(preview);
+        }
     }
 
     public void ObjeSec(ObjeVerisi veri)
@@ -56,10 +59,14 @@ public class CreativePlacementManager : MonoBehaviour
         seciliObje = veri;
 
         if(preview != null) Destroy(preview);
-        preview = Instantiate(veri.objePrefab);
-        
+        {
+            preview = Instantiate(veri.objePrefab);
+        }
+
         foreach (var col in preview.GetComponentsInChildren<Collider>())
+        {
             col.enabled = false;
+        }
     }
 
     public void OnClearAllButtonClicked()
@@ -81,10 +88,8 @@ public class CreativePlacementManager : MonoBehaviour
 
             if (!isEraserActive && preview != null && currentCell != null)
             {
-                // --- DÜZELTME: PREVIEW POZİSYONU ---
                 Vector3 targetPos = currentCell.transform.position;
                 
-                // Yüksekliği ayarla
                 PlaceableObject po = preview.GetComponent<PlaceableObject>();
                 float offset = (po != null) ? po.heightOffset : 0.5f;
                 targetPos.y += offset;
@@ -101,9 +106,7 @@ public class CreativePlacementManager : MonoBehaviour
     void Koy()
     {
         if (currentCell == null || !currentCell.IsEmpty()) return;
-
-        // --- DÜZELTME ---
-        // Quaternion.Euler(90, 0, 0) yerine prefabın orjinal duruşunu kullan:
+        
         Quaternion rot = seciliObje.objePrefab.transform.rotation; 
 
         GameObject obj = Instantiate(seciliObje.objePrefab, currentCell.transform.position, rot);

@@ -50,31 +50,22 @@ public class GridManager : MonoBehaviour
                 );
                 cell.cellPosition = cellPos;
                 cells.Add(cellPos, cell);
-
-                // --- DEĞİŞİKLİK BURADA ---
-                // "SetTrigger" satırını SİLDİK.
-                // Çünkü Animator'da "Entry -> CellAnim" bağlı olduğu için 
-                // obje oluşur oluşmaz animasyon OTOMATİK başlayacak.
                 
                 yield return new WaitForSeconds(hucreAnimasyonSuresi);
             }
         }
         
-        // Animasyonların bitmesini bekle (Örn: 0.5sn)
         yield return new WaitForSeconds(1f);
-
-        // --- OPTİMİZASYON VE KİLİTLEME ---
-        // Grid oluştu, animasyonlar bitti. Artık Animatörleri kapatalım.
-        // Böylece hem tekrar oynamazlar hem de performans artar.
         foreach (var cell in cells.Values)
         {
             Animator anim = cell.GetComponent<Animator>();
-            if (anim == null) anim = cell.GetComponentInChildren<Animator>();
+            if (anim == null)
+            {
+                anim = cell.GetComponentInChildren<Animator>();
+            }
             
             if (anim != null)
             {
-                // Animasyonun son karesinde durması için enabled false yapıyoruz.
-                // Eğer animasyonun "Loop Time"ı açıksa kapatmayı unutma!
                 anim.enabled = false; 
             }
         }

@@ -145,20 +145,34 @@ public class GameManager : MonoBehaviour
 
     public void OyunuKaydet()
     {
-        if (isTutorialScene) return;
-        if (oyunBittiMi) return;
+        if (isTutorialScene)
+        {
+            return;
+        }
+
+        if (oyunBittiMi)
+        {
+            return;
+        }
 
         SaveData data = new SaveData();
         data.levelIndex = suankiLevelIndex;
         data.currentPopulation = suankiPopulasyon;
 
-        if (undoManager != null) data.undoRights = undoManager.KalanHak;
+        if (undoManager != null)
+        {
+            data.undoRights = undoManager.KalanHak;
+        }
 
         if (placementManager.siradakiObjeVerisi != null)
+        {
             data.currentSpawnObjectID = placementManager.siradakiObjeVerisi.saveID;
-            
+        }
+
         if (placementManager.sonrakiObjeVerisi != null)
+        {
             data.nextSpawnObjectID = placementManager.sonrakiObjeVerisi.saveID;
+        }
 
         List<GridCell> allCells = gridManager.GetAllCells();
         foreach (var cell in allCells)
@@ -179,7 +193,10 @@ public class GameManager : MonoBehaviour
 
                     foreach(var icMalzeme in objScript.icindekiMalzemeler)
                     {
-                        if(icMalzeme != null) objData.stackedItemIDs.Add(icMalzeme.saveID);
+                        if (icMalzeme != null)
+                        {
+                            objData.stackedItemIDs.Add(icMalzeme.saveID);
+                        }
                     }
 
                     data.placedObjects.Add(objData);
@@ -192,7 +209,10 @@ public class GameManager : MonoBehaviour
     void LoadGameIslemi()
     {
         SaveData data = SaveManager.Load(suankiLevelIndex);
-        if (data == null) return;
+        if (data == null)
+        {
+            return;
+        }
 
         suankiPopulasyon = data.currentPopulation;
         UpdatePopulasyonUI();
@@ -246,17 +266,25 @@ public class GameManager : MonoBehaviour
         ObjeVerisi siradaki = null;
         ObjeVerisi sonraki = null;
 
-        if (!string.IsNullOrEmpty(data.currentSpawnObjectID)) 
+        if (!string.IsNullOrEmpty(data.currentSpawnObjectID))
+        {
             objeSozlugu.TryGetValue(data.currentSpawnObjectID, out siradaki);
-            
-        if (!string.IsNullOrEmpty(data.nextSpawnObjectID)) 
-            objeSozlugu.TryGetValue(data.nextSpawnObjectID, out sonraki);
+        }
 
-        if(siradaki == null && suankiLevelData.levelObjeleri.Count > 0) 
-            siradaki = suankiLevelData.levelObjeleri[0].obje; 
-            
-        if(sonraki == null && suankiLevelData.levelObjeleri.Count > 0) 
+        if (!string.IsNullOrEmpty(data.nextSpawnObjectID))
+        {
+            objeSozlugu.TryGetValue(data.nextSpawnObjectID, out sonraki);
+        }
+
+        if (siradaki == null && suankiLevelData.levelObjeleri.Count > 0)
+        {
+            siradaki = suankiLevelData.levelObjeleri[0].obje;
+        }
+
+        if (sonraki == null && suankiLevelData.levelObjeleri.Count > 0)
+        {
             sonraki = suankiLevelData.levelObjeleri[0].obje;
+        }
 
         placementManager.LoadSpawnState(siradaki, sonraki);
     }
@@ -288,7 +316,10 @@ public class GameManager : MonoBehaviour
 
     private void UpdatePopulasyonUI()
     {
-        if(populasyonText != null) populasyonText.text = "" + suankiPopulasyon;
+        if (populasyonText != null)
+        {
+            populasyonText.text = "" + suankiPopulasyon;
+        }
     }
 
     private void ShowFloatingText(Vector3 pos, string text)
@@ -362,7 +393,6 @@ public class GameManager : MonoBehaviour
             Debug.Log("KAZANDIN!");
             if (winParticlePrefab != null) Instantiate(winParticlePrefab, particleCenter, Quaternion.identity);
             
-            // Kazanılınca kaydı sil
             SaveManager.DeleteSave(suankiLevelIndex);
 
             int kazanilanYildiz = YildizHesapla();
@@ -389,15 +419,13 @@ public class GameManager : MonoBehaviour
 
             StartCoroutine(PanelAcmaSayaci(true)); 
         }
-        else // KAYBETME
+        else
         {
             if (loseParticlePrefab != null) Instantiate(loseParticlePrefab, particleCenter, Quaternion.identity);
             
             if(loseBaslikText) loseBaslikText.text = "Başarısız!";
 
-            // --- DEĞİŞİKLİK BURADA: KAYBETME DURUMUNDA DA KAYDI SİL ---
             SaveManager.DeleteSave(suankiLevelIndex);
-            // --------------------------------------------------------
 
             StartCoroutine(PanelAcmaSayaci(false));
         }

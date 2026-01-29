@@ -15,7 +15,6 @@ public class PlacementManager : MonoBehaviour
     [Header("Spawn Sistemi")]
     public List<LevelSpawnVerisi> mevcutLevelObjeleri;
 
-    // Kuyruk
     public ObjeVerisi siradakiObjeVerisi;
     public ObjeVerisi sonrakiObjeVerisi;
 
@@ -55,7 +54,6 @@ public class PlacementManager : MonoBehaviour
             return;
         }
         
-        // Tutorialdaysak preview olmasa bile (elimiz boş olsa bile) tıklayabilelim
         if (!tutorialModuAktif && previewObject == null) 
         {
             return;
@@ -64,7 +62,6 @@ public class PlacementManager : MonoBehaviour
         HandleInput();
     }
 
-    // --- SETUP VE BAŞLANGIÇ ---
     public void SetupSpawnList(List<LevelSpawnVerisi> gelenListe)
     {
         mevcutLevelObjeleri = gelenListe;
@@ -145,9 +142,6 @@ public class PlacementManager : MonoBehaviour
 
     void CreatePreview()
     {
-        // --- İŞTE SİHİRLİ DOKUNUŞ BURADA ---
-        // Tutorial aktifse ve "Henüz yerden bir şey almadıysak" -> DUR (Yeni taş gelmesin).
-        // AMA "Yerden bir şey aldıysak" (yerdenMiAldik=true) -> DEVAM ET (Preview oluşsun).
         if (tutorialModuAktif && !yerdenMiAldik) return; 
 
         if (previewObject != null) Destroy(previewObject);
@@ -159,13 +153,9 @@ public class PlacementManager : MonoBehaviour
         var po = previewObject.GetComponent<PlaceableObject>();
         if (po != null)
         {
-            // Eğer yeni spawn ise sıradakini, taşıma ise HandleInput içinde ayarlanacak
             if (!yerdenMiAldik) po.verisi = siradakiObjeVerisi;
             
             po.BoyutuGuncelle();
-            
-            // --- GÖRSEL ANİMASYON ---
-            // Bu fonksiyon objeyi yarı saydam yapar veya "Hayalet" moduna sokar.
             po.SetPreviewMode(true); 
         }
     }
@@ -184,12 +174,10 @@ public class PlacementManager : MonoBehaviour
         
         if (yerdenMiAldik && kaynakHucre != null) kaynakHucre.currentObject = null;
 
-        // A. BOŞ YERE KOYMA
         if (selectedCell.IsEmpty())
         {
             if (yerdenMiAldik)
             {
-                // --- TAŞIMA İŞLEMİ (Burada sorun yok) ---
                 yerdekiGercekObje.gameObject.SetActive(true);
                 
                 if (previewObject != null)
@@ -213,13 +201,11 @@ public class PlacementManager : MonoBehaviour
             }
             else
             {
-                // --- TUTORIAL KONTROLÜ (Spawn Engeli) ---
                 if (tutorialModuAktif || previewObject == null) 
                 {
-                    return; // Tutorial'da yeni spawn yasak
+                    return;
                 }
                 
-                // Normal Oyun Spawn Kodu
                 GameObject obj = Instantiate(currentPrefab, previewObject.transform.position, currentPrefab.transform.rotation);
                 PlaceableObject po = obj.GetComponent<PlaceableObject>();
 
@@ -246,7 +232,6 @@ public class PlacementManager : MonoBehaviour
                 GameManager.Instance.HamleBittiKontrolu();
             }
         }
-        // B. DOLU YERE KOYMA (MERGE)
         else
         {
             if (!yerdenMiAldik) 
@@ -259,7 +244,6 @@ public class PlacementManager : MonoBehaviour
             PlaceableObject yerdekiObje = selectedCell.currentObject; 
             PlaceableObject elimizdekiObje = yerdekiGercekObje;       
 
-            // GÜVENLİK: Manager Referans Kontrolü
             BirlestirmeYoneticisi manager = birlestirmeYoneticisi;
             if (manager == null) manager = BirlestirmeYoneticisi.Instance;
             if (manager == null) manager = FindObjectOfType<BirlestirmeYoneticisi>();
@@ -304,7 +288,6 @@ public class PlacementManager : MonoBehaviour
     {
         yield return new WaitForSeconds(spawnGecikmesi);
 
-        // Tutorial modundaysak yeni taş verme döngüsüne girme.
         if (tutorialModuAktif) yield break; 
 
         if (yeniSpawnGerekli)
@@ -398,17 +381,15 @@ public class PlacementManager : MonoBehaviour
                     {
                         if (previewObject != null) Destroy(previewObject);
 
-                        // --- TAŞIMA BAŞLANGICI ---
-                        yerdenMiAldik = true; // 1. Bayrağı kaldır
+                        yerdenMiAldik = true;
                         kaynakHucre = cell;
                         yerdekiGercekObje = cell.currentObject;
                         currentPrefab = yerdekiGercekObje.verisi.objePrefab;
                         
                         kaynakHucre.currentObject = null;
                         
-                        // --- PREVIEW AKTİVASYONU ---
-                        yerdekiGercekObje.gameObject.SetActive(false); // Gerçeği gizle
-                        CreatePreview(); // Hayaleti çağır! (yerdenMiAldik=true olduğu için artık çalışacak)
+                        yerdekiGercekObje.gameObject.SetActive(false);
+                        CreatePreview();
 
                         if (previewObject != null)
                         {
@@ -416,7 +397,7 @@ public class PlacementManager : MonoBehaviour
                             po.verisi = yerdekiGercekObje.verisi;
                             po.icindekiMalzemeler = new List<ObjeVerisi>(yerdekiGercekObje.icindekiMalzemeler);
                             po.BoyutuGuncelle();
-                            po.SetPreviewMode(true); // Görsel efekti aç
+                            po.SetPreviewMode(true);
                         }
 
                         SelectCell(cell);

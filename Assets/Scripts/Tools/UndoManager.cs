@@ -45,12 +45,10 @@ public class UndoManager : MonoBehaviour
         UpdateUI();
     }
 
-    // --- DEĞİŞİKLİK 1: SaveState artık hangi hücrede işlem yapıldığını alıyor ---
     public void SaveState(GridCell targetCell = null)
     {
         GameState state = new GameState();
         
-        // İşlem yapılan hücreyi kaydet (Particle için)
         if (targetCell != null)
         {
             state.lastActionPos = targetCell.cellPosition;
@@ -73,9 +71,13 @@ public class UndoManager : MonoBehaviour
                 objState.hareketHakki = cell.currentObject.hareketHakki;
 
                 if (cell.currentObject.icindekiMalzemeler != null)
+                {
                     objState.materials = new List<ObjeVerisi>(cell.currentObject.icindekiMalzemeler);
+                }
                 else
+                {
                     objState.materials = new List<ObjeVerisi>();
+                }
 
                 state.gridObjects.Add(objState);
             }
@@ -90,10 +92,8 @@ public class UndoManager : MonoBehaviour
 
         GameState lastState = history.Pop();
 
-        // 1. Sahneyi temizle
         gridManager.TemizleVeYokEtPublic();
 
-        // 2. Objeleri geri yükle
         foreach (var objState in lastState.gridObjects)
         {
             GridCell cell = gridManager.GetCell(objState.position);
@@ -120,16 +120,13 @@ public class UndoManager : MonoBehaviour
             cell.currentObject = po;
         }
 
-        // --- DEĞİŞİKLİK 2: Particle artık kayıtlı pozisyonda çıkıyor ---
         if (undoParticlePrefab != null && lastState.hasActionPos)
         {
             Vector3 targetWorldPos = gridManager.grid.GetCellCenterWorld(lastState.lastActionPos);
-            Vector3 particlePos = targetWorldPos + Vector3.up * 0.6f; // Biraz yukarıda çıksın
+            Vector3 particlePos = targetWorldPos + Vector3.up * 0.6f;
             Instantiate(undoParticlePrefab, particlePos, Quaternion.identity);
         }
-        // -------------------------------------------------------------
 
-        // 4. Eldeki objeleri geri yükle
         placementManager.LoadSpawnState(
             lastState.siradakiVeri,
             lastState.sonrakiVeri
@@ -152,17 +149,12 @@ public class UndoManager : MonoBehaviour
     }
 }
 
-// ======================
-// YARDIMCI SINIFLAR
-// ======================
 
 [System.Serializable]
 public class GameState
 {
-    // --- YENİ EKLENENLER ---
-    public Vector3Int lastActionPos; // İşlemin yapıldığı yer
+    public Vector3Int lastActionPos;
     public bool hasActionPos = false;
-    // -----------------------
 
     public ObjeVerisi siradakiVeri;
     public ObjeVerisi sonrakiVeri;

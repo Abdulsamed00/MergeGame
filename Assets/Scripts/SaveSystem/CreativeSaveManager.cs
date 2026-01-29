@@ -8,7 +8,7 @@ public class CreativeSaveManager : MonoBehaviour
 
     [Header("Referanslar")]
     public CreativeGridManager gridManager;
-    public CollectionDatabase tumObjelerDB; // ID'den objeyi bulmak için gerekli
+    public CollectionDatabase tumObjelerDB;
 
     private string saveFileName = "creative_save.json";
 
@@ -19,17 +19,14 @@ public class CreativeSaveManager : MonoBehaviour
 
     private void Start()
     {
-        // Oyun açılınca otomatik yükle
         LoadCreativeMap();
     }
 
     private void OnApplicationQuit()
     {
-        // Oyun kapanırken otomatik kaydet
         SaveCreativeMap();
     }
 
-    // Manuel kaydetmek istersen bu fonksiyonu butona bağla
     public void SaveCreativeMap()
     {
         Debug.Log("--- KAYIT BAŞLADI ---");
@@ -74,14 +71,17 @@ public class CreativeSaveManager : MonoBehaviour
     {
         string path = Path.Combine(Application.persistentDataPath, saveFileName);
 
-        if (!File.Exists(path)) return;
+        if (!File.Exists(path))
+        {
+            return;
+        }
 
         string json = File.ReadAllText(path);
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
         gridManager.ClearAllGrid();
 
-        Debug.Log("Yüklenecek Obje Sayısı: " + data.placedObjects.Count); // <--- KONTROL 1
+        Debug.Log("Yüklenecek Obje Sayısı: " + data.placedObjects.Count);
 
         foreach (var objData in data.placedObjects)
         {
@@ -91,7 +91,6 @@ public class CreativeSaveManager : MonoBehaviour
             {
                 Vector3Int pos = new Vector3Int(objData.x, 0, objData.z);
                 
-                // Hücre var mı kontrol et
                 if(gridManager.GetCell(pos) == null) 
                 {
                     Debug.LogError("HATA: Grid hücresi bulunamadı! Grid oluşmamış olabilir. Pos: " + pos);
@@ -100,13 +99,16 @@ public class CreativeSaveManager : MonoBehaviour
 
                 GameObject go = Instantiate(veri.objePrefab);
                 
-                // PlaceObject sonucunu kontrol et
                 bool basarili = gridManager.PlaceObject(pos, go, veri);
-                
-                if(basarili)
+
+                if (basarili)
+                {
                     Debug.Log("Başarıyla Yerleştirildi: " + veri.objeAdi);
+                }
                 else
+                {
                     Debug.LogError("Yerleştirme Başarısız! Hücre dolu olabilir.");
+                }
             }
             else
             {
@@ -115,13 +117,14 @@ public class CreativeSaveManager : MonoBehaviour
         }
     }
 
-    // ID string'inden (örn: "ev_lv1") gerçek ScriptableObject dosyasını bulur
     private ObjeVerisi FindObjectByID(string id)
     {
         foreach (var obje in tumObjelerDB.tumObjelerSorted)
         {
             if (obje.saveID == id)
+            {
                 return obje;
+            }
         }
         Debug.LogWarning("Bulunamayan ID: " + id);
         return null;
