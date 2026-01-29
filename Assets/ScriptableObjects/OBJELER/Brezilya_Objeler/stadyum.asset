@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 30
   objeAdi: Stadyum
   objePrefab: {fileID: 3459924335658080890, guid: be6305de8f837434eb5dac9b4e37acd7, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: 1844183505, guid: a099193d8fa11f14782c0e89f71f0479, type: 3}
   tur: 1
   minPopulasyon: 50
   maxPopulasyon: 70

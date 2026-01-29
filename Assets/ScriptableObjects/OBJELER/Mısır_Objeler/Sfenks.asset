@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 39
   objeAdi: Sfenks
   objePrefab: {fileID: 6886401347830652855, guid: 6edab595617fef0478f83fcf6ca130c1, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -1535592719, guid: e1756c332ab6f7f4f83c929924dfdbf0, type: 3}
   tur: 1
   minPopulasyon: 30
   maxPopulasyon: 40

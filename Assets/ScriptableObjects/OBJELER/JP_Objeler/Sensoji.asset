@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 19
   objeAdi: "Sensoji Tap\u0131na\u011F\u0131"
   objePrefab: {fileID: 5825883154949374066, guid: 3757144907699dd4ea922f36c324ec38, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -262653119, guid: 3a5b5389fbee3384f9a3eaa301905fc7, type: 3}
   tur: 1
   minPopulasyon: 50
   maxPopulasyon: 70

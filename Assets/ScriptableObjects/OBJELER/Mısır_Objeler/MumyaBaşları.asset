@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 42
   objeAdi: "Mumya Ba\u015Flar\u0131"
   objePrefab: {fileID: 5841626558024086774, guid: 053004724f66d804589ca20a5eba53fe, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -697613145, guid: e1756c332ab6f7f4f83c929924dfdbf0, type: 3}
   tur: 0
   minPopulasyon: 0
   maxPopulasyon: 0

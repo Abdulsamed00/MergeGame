@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 33
   objeAdi: "Kum Ta\u015F\u0131"
   objePrefab: {fileID: 987754044943618922, guid: 186723556f27a194dbf6b2b96c40a666, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -629205357, guid: e1756c332ab6f7f4f83c929924dfdbf0, type: 3}
   tur: 0
   minPopulasyon: 0
   maxPopulasyon: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 40
   objeAdi: "K\xFC\xE7\xFCk Piramit"
   objePrefab: {fileID: 590954172826722979, guid: 389e3e1c6d4646f46ac531d30f0cf738, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -374084171, guid: e1756c332ab6f7f4f83c929924dfdbf0, type: 3}
   tur: 1
   minPopulasyon: 50
   maxPopulasyon: 60

@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 26
   objeAdi: Brezilya Evi
   objePrefab: {fileID: 2242370849101195955, guid: 980424a3e286bed478c9e3d4ec832b23, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: 2048593937, guid: a099193d8fa11f14782c0e89f71f0479, type: 3}
   tur: 1
   minPopulasyon: 20
   maxPopulasyon: 25

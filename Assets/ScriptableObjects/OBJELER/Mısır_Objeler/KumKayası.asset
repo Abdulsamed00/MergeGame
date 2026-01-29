@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 35
   objeAdi: "Kum Kayas\u0131"
   objePrefab: {fileID: 8475776828060789171, guid: 6c20fd7063df908429146addb8b66d97, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: 224138542, guid: e1756c332ab6f7f4f83c929924dfdbf0, type: 3}
   tur: 0
   minPopulasyon: 0
   maxPopulasyon: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 11
   objeAdi: Sakura
   objePrefab: {fileID: 768854635408175748, guid: 6fceed573d2c40441a0c0e6b081023ab, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -1504340192, guid: 3a5b5389fbee3384f9a3eaa301905fc7, type: 3}
   tur: 0
   minPopulasyon: 0
   maxPopulasyon: 0

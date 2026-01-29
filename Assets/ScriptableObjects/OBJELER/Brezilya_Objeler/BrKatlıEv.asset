@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 28
   objeAdi: "Katl\u0131 Brezilya Evi"
   objePrefab: {fileID: 5762098315908791071, guid: fb52fa10fe0897745b1409f8c095d6b8, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -1700722166, guid: a099193d8fa11f14782c0e89f71f0479, type: 3}
   tur: 1
   minPopulasyon: 30
   maxPopulasyon: 40
