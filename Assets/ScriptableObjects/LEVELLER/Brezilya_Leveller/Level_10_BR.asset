@@ -43,6 +43,8 @@ MonoBehaviour:
     spawnYuzdesi: 20
   - obje: {fileID: 11400000, guid: 186e101796660d64bba0610a51d5ec67, type: 2}
     spawnYuzdesi: 20
+  - obje: {fileID: 11400000, guid: 68e98d1342af2a2488f2ced7eabe0dbe, type: 2}
+    spawnYuzdesi: 100
   yildiz1Puani: 430
   yildiz2Puani: 860
   yildiz3Puani: 1720
