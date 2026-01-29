@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Hedefleri tutmak için kutu
 [System.Serializable]
 public struct LevelHedef
 {
-    public ObjeVerisi istenenObje; 
-    public int adet;               
+    public ObjeVerisi istenenObje;
+    public int adet;
 }
 
 [System.Serializable]
@@ -19,14 +20,20 @@ public class LevelSpawnVerisi
 [CreateAssetMenu(fileName = "YeniLevelData", menuName = "Oyun/Level Data")]
 public class LevelData : ScriptableObject
 {
+    [Header("Genel")]
     public int levelID;
     public string ulkeAdi;
     public string levelAdi;
 
+    [Header("Grid")]
     public int gridGenislik;
     public int gridYukseklik;
-    
+
+    [Header("Audio")]
+    public AudioClip levelMusic;   // 🔥 LEVEL'E ÖZEL MÜZİK
+
     [Header("Görsel Ayarlar")]
+    [Tooltip("Bu levelda zemin nasıl görünecek? Boş bırakılırsa varsayılan kullanılır.")]
     public GridCell zeminPrefabi;
     
     [Header("Başlangıç Durumu")] 
@@ -41,6 +48,7 @@ public class LevelData : ScriptableObject
     [Header("Kısıtlamalar")]
     public ObjeVerisi izinVerilenEnUstObje; 
 
+    [Header("Spawn Edilecek Objeler")]
     public List<LevelSpawnVerisi> levelObjeleri;
    
     [Header("Yıldız Sistemi")]
