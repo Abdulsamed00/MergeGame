@@ -16,5 +16,4 @@ MonoBehaviour:
   gerekenMalzemeler:
   - {fileID: 11400000, guid: 57ee10437de85cf4d86ef1d191081db7, type: 2}
   - {fileID: 11400000, guid: 57ee10437de85cf4d86ef1d191081db7, type: 2}
-  - {fileID: 11400000, guid: 57ee10437de85cf4d86ef1d191081db7, type: 2}
   sonucObjesi: {fileID: 11400000, guid: 5528c859e683c804f81dce3cff9d8373, type: 2}

@@ -15,6 +15,5 @@ MonoBehaviour:
   tarifAdi: "B\xFCy\xFCk Piramit"
   gerekenMalzemeler:
   - {fileID: 11400000, guid: b276ac119cd4ba54b8a62b9bdf96c62b, type: 2}
-  - {fileID: 11400000, guid: b276ac119cd4ba54b8a62b9bdf96c62b, type: 2}
   - {fileID: 11400000, guid: 421aba0018f9e794a9be58e4f000ced4, type: 2}
   sonucObjesi: {fileID: 11400000, guid: b5ef3d27adcc5a7408ffc33993714b11, type: 2}

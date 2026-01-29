@@ -15,6 +15,5 @@ MonoBehaviour:
   tarifAdi: "\u0130sa Heykeli"
   gerekenMalzemeler:
   - {fileID: 11400000, guid: e91499df9467d47469629bf39724e667, type: 2}
-  - {fileID: 11400000, guid: e91499df9467d47469629bf39724e667, type: 2}
   - {fileID: 11400000, guid: 68e98d1342af2a2488f2ced7eabe0dbe, type: 2}
   sonucObjesi: {fileID: 11400000, guid: 5a877b14252c4a9469bb8691b755a957, type: 2}

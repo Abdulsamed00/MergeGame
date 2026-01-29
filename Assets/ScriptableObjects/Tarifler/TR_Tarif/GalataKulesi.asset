@@ -15,6 +15,5 @@ MonoBehaviour:
   tarifAdi: Galata Kulesi
   gerekenMalzemeler:
   - {fileID: 11400000, guid: 27ad82a120794d047abacb89488b248c, type: 2}
-  - {fileID: 11400000, guid: 27ad82a120794d047abacb89488b248c, type: 2}
   - {fileID: 11400000, guid: 1b106ac255bb42642b8e6662c967931f, type: 2}
   sonucObjesi: {fileID: 11400000, guid: a4dee32a7f168324ba006376f4b78475, type: 2}

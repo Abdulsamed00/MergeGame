@@ -861,6 +861,7 @@ MonoBehaviour:
   winParticlePrefab: {fileID: 6208859485802548772, guid: 0f871c0bf570e7f45996b9236031412a, type: 3}
   loseParticlePrefab: {fileID: 5635589874609990320, guid: 466d26d9aff684d4394d5cca0b992516, type: 3}
   oyunSonuBeklemeSuresi: 2
+  isTutorialScene: 0
   tumLeveller:
   - {fileID: 11400000, guid: b3c5330e5c907d542b6faec723e05c38, type: 2}
   - {fileID: 11400000, guid: 093055578af022345ada58e19e1e15df, type: 2}
@@ -1230,7 +1231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.61698115, g: 0.78663915, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1238,7 +1239,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: da6cfd43e163aad468b09e0ef012d50f, type: 3}
     m_FontSize: 118
     m_FontStyle: 1
     m_BestFit: 0
