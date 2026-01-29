@@ -687,7 +687,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 401510834}
   mapCenter: {fileID: 1451301760}
-  rotationSpeed: 0.05
+  rotationSpeed: 0.02
   smoothSpeed: 8
   zoomSpeed: 0.02
   minDistance: 8

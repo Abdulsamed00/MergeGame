@@ -17,8 +17,7 @@ public class AudioSettingsUI : MonoBehaviour
         float musicVol = PlayerPrefs.GetFloat(MUSIC_VOL, 1f);
         float sfxVol   = PlayerPrefs.GetFloat(SFX_VOL, 1f);
 
-        // 🔥 Mixer zaten AudioManager tarafından ayarlandı
-        // SADECE slider görselini senkronla
+      
         musicSlider.SetValueWithoutNotify(musicVol);
         sfxSlider.SetValueWithoutNotify(sfxVol);
 

@@ -30,7 +30,7 @@ public class LevelData : ScriptableObject
     public int gridYukseklik;
 
     [Header("Audio")]
-    public AudioClip levelMusic;   // 🔥 LEVEL'E ÖZEL MÜZİK
+    public AudioClip levelMusic;   
 
     [Header("Görsel Ayarlar")]
     [Tooltip("Bu levelda zemin nasıl görünecek? Boş bırakılırsa varsayılan kullanılır.")]
