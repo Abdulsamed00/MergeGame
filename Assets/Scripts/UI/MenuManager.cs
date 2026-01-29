@@ -15,7 +15,7 @@ public class MenuManager : MonoBehaviour
     public float fadeDuration = 0.5f;
 
     public GameObject BilgiPaneli, TR, BR, JP, MSR, TarifP;
-    public Button BilgiPaneliB, TrbButton, BrButton, JpButton, MsrButton, TarifButton, TarifGeriButton;
+    public Button BilgiPaneliB, TrbButton, BrButton, JpButton, MsrButton, TarifGeriButton;
     void Start()
     {
         Time.timeScale = 1f;

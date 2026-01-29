@@ -16,7 +16,7 @@ MonoBehaviour:
   objeAdi: Demir Kolon
   objePrefab: {fileID: 1432004794084772879, guid: 599110e70e94094449abaa7e528baf21, type: 3}
   uiIkonu: {fileID: 1099373914, guid: b6b3679080e783843ad7d36a92f26eb6, type: 3}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0

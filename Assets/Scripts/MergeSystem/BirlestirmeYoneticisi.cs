@@ -183,6 +183,7 @@ public class BirlestirmeYoneticisi : MonoBehaviour
 
         StartCoroutine(MergeVeSpawnSirasi(po));
         
+        
         GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
     }
 

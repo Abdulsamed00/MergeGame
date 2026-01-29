@@ -16,7 +16,7 @@ MonoBehaviour:
   objeAdi: "\u0130n\u015Fa Alan\u0131"
   objePrefab: {fileID: 7063297309061776637, guid: 348b0e6501a9d3e4a9d1852c9a2ae1df, type: 3}
   uiIkonu: {fileID: -398292428, guid: b6b3679080e783843ad7d36a92f26eb6, type: 3}
-  tur: 0
+  tur: 1
   minPopulasyon: 0
   maxPopulasyon: 0
   objeSeviyesi: 0
