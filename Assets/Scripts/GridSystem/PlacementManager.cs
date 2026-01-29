@@ -64,7 +64,21 @@ public class PlacementManager : MonoBehaviour
 
     public void SetupSpawnList(List<LevelSpawnVerisi> gelenListe)
     {
-        mevcutLevelObjeleri = gelenListe;
+        mevcutLevelObjeleri = new List<LevelSpawnVerisi>();
+        
+        foreach(var item in gelenListe)
+        {
+            if(item.spawnYuzdesi < 100)
+            {
+                mevcutLevelObjeleri.Add(item);
+            }
+        }
+        if (mevcutLevelObjeleri.Count == 0)
+        {
+            Debug.LogWarning("PlacementManager: Tüm objeler %100 ayarlanmış! Filtre devre dışı bırakıldı.");
+            mevcutLevelObjeleri = new List<LevelSpawnVerisi>(gelenListe);
+        }
+
         if (siradakiObjeVerisi == null)
         {
             siradakiObjeVerisi = GetWeightedRandomObject();

@@ -9,7 +9,6 @@ public class InitialSpawnManager : MonoBehaviour
     public GridManager gridManager;
     public PlacementManager placementManager;
 
-    // Şans oranlarını hesaplamak için gereken liste
     private List<LevelSpawnVerisi> spawnDataListesi;
     private int spawnAdedi;
 
@@ -38,27 +37,62 @@ public class InitialSpawnManager : MonoBehaviour
         }
 
         List<GridCell> emptyCells = new List<GridCell>(gridManager.GetAllCells());
-
         int count = Mathf.Min(spawnAdedi, emptyCells.Count);
 
+        // --- YENİ MANTIK: Ayrıştırma ---
+        List<ObjeVerisi> spawnlanacakObjeler = new List<ObjeVerisi>();
+        
+        List<LevelSpawnVerisi> tekSeferlikler = new List<LevelSpawnVerisi>(); // %100 ve üzeri
+        List<LevelSpawnVerisi> standartlar = new List<LevelSpawnVerisi>();    // %100 altı
+
+        foreach (var item in spawnDataListesi)
+        {
+            if (item.spawnYuzdesi >= 100) tekSeferlikler.Add(item);
+            else standartlar.Add(item);
+        }
+
+        // 1. Önce "Zorunlu" (Unique) olanları 1'er tane ekle
+        foreach (var item in tekSeferlikler)
+        {
+            if (spawnlanacakObjeler.Count < count)
+            {
+                spawnlanacakObjeler.Add(item.obje);
+            }
+        }
+
+        // 2. Kalan boşlukları "Standart" listeden rastgele doldur
+        // (Böylece %100 olanlar tekrar seçilmez)
+        int kalanBosluk = count - spawnlanacakObjeler.Count;
+
+        if (standartlar.Count > 0 && kalanBosluk > 0)
+        {
+            for (int i = 0; i < kalanBosluk; i++)
+            {
+                ObjeVerisi sansli = GetWeightedRandomFromList(standartlar);
+                spawnlanacakObjeler.Add(sansli);
+            }
+        }
+
+        // 3. Listeyi karıştır ve Spawn et
+        Shuffle(spawnlanacakObjeler);
         Shuffle(emptyCells);
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < spawnlanacakObjeler.Count; i++)
         {
-            ObjeVerisi secilenObje = GetWeightedRandomObject();
-            SpawnObjectToCell(secilenObje, emptyCells[i]);
+            SpawnObjectToCell(spawnlanacakObjeler[i], emptyCells[i]);
         }
     }
 
-    ObjeVerisi GetWeightedRandomObject()
+    // Özel liste için yardımcı rastgele fonksiyonu
+    ObjeVerisi GetWeightedRandomFromList(List<LevelSpawnVerisi> targetList)
     {
         float toplamSans = 0;
-        foreach (var item in spawnDataListesi) toplamSans += item.spawnYuzdesi;
+        foreach (var item in targetList) toplamSans += item.spawnYuzdesi;
 
         float rastgeleDeger = Random.Range(0, toplamSans);
         float suankiToplam = 0;
 
-        foreach (var item in spawnDataListesi)
+        foreach (var item in targetList)
         {
             suankiToplam += item.spawnYuzdesi;
             if (rastgeleDeger <= suankiToplam) 
@@ -66,7 +100,7 @@ public class InitialSpawnManager : MonoBehaviour
                 return item.obje;
             }
         }
-        return spawnDataListesi[0].obje;
+        return targetList[0].obje;
     }
 
     void SpawnObjectToCell(ObjeVerisi veri, GridCell cell)
@@ -79,11 +113,7 @@ public class InitialSpawnManager : MonoBehaviour
 
         Vector3 spawnPos = grid.GetCellCenterWorld(cell.cellPosition) + Vector3.up * offset;
 
-        // --- DÜZELTME BURADA ---
-        // Quaternion.identity yerine "veri.objePrefab.transform.rotation" kullandık.
-        // Böylece prefabın Inspector'daki rotasyonu neyse aynen o şekilde doğar.
         GameObject obj = Instantiate(veri.objePrefab, spawnPos, veri.objePrefab.transform.rotation);
-        // -----------------------
 
         PlaceableObject po = obj.GetComponent<PlaceableObject>();
         po.verisi = veri;
@@ -93,13 +123,6 @@ public class InitialSpawnManager : MonoBehaviour
         po.PlaySpawnAnimation(); 
 
         cell.currentObject = po;
-        
-        // --- İSTEĞE BAĞLI DÜZELTME ---
-        // Eğer başlangıç objelerinin de puana/nüfusa etki etmesini istiyorsan
-        // aşağıdaki yorum satırını açabilirsin:
-        
-        // if (GameManager.Instance != null)
-        //    GameManager.Instance.UretimYapildi(po.verisi, spawnPos);
     }
 
     void Shuffle<T>(List<T> list)
