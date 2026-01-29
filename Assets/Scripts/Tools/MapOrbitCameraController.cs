@@ -89,7 +89,7 @@ public class MapOrbitCameraController : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
         {
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Grid"))
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("GameArea"))
                 return true;
         }
 

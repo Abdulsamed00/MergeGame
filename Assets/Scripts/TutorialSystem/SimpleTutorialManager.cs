@@ -131,11 +131,11 @@ public class SimpleTutorialManager : MonoBehaviour
 
         if (!kolonTamam)
         {
-            UpdateText($"Demirleri birleştir ve {1 - kolonSayisi} tane daha Kolon yap.");
+            UpdateText($"Demirleri birlestir\n ve {1 - kolonSayisi} tane \nKolon yap.");
         }
         else if (!insaatTamam)
         {
-            UpdateText($"Tuğlaları birleştir ve {2 - insaatAlaniSayisi} adet İnşaat Alanı oluştur.");
+            UpdateText($"Tuğlaları birlestir \nve {2 - insaatAlaniSayisi} adet daha \nİnşaat Alanı oluştur.");
         }
         else
         {
@@ -152,7 +152,7 @@ public class SimpleTutorialManager : MonoBehaviour
     IEnumerator FinalSequence()
     {
         tutorialBitti = true;
-        UpdateText("Tebrikler! Öğretici tamamlandı.\nAna menüye dönülüyor...");
+        UpdateText("Tebrikler! Öğretici\n tamamlandı.Ana \nmenüye dönülüyor...");
 
         yield return new WaitForSeconds(1.0f);
 
