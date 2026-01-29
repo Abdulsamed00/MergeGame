@@ -12,6 +12,9 @@ public class InitialSpawnManager : MonoBehaviour
     private List<LevelSpawnVerisi> spawnDataListesi;
     private int spawnAdedi;
 
+    // Hangi objelerin kilitleneceğini tutan liste
+    private HashSet<ObjeVerisi> kilitlenecekObjeler = new HashSet<ObjeVerisi>();
+
     public void SpawnBaslat(List<LevelSpawnVerisi> levelObjeleri, int adet)
     {
         spawnDataListesi = levelObjeleri;
@@ -36,10 +39,11 @@ public class InitialSpawnManager : MonoBehaviour
             return;
         }
 
+        kilitlenecekObjeler.Clear(); // Listeyi temizle
+
         List<GridCell> emptyCells = new List<GridCell>(gridManager.GetAllCells());
         int count = Mathf.Min(spawnAdedi, emptyCells.Count);
 
-        // --- YENİ MANTIK: Ayrıştırma ---
         List<ObjeVerisi> spawnlanacakObjeler = new List<ObjeVerisi>();
         
         List<LevelSpawnVerisi> tekSeferlikler = new List<LevelSpawnVerisi>(); // %100 ve üzeri
@@ -47,8 +51,16 @@ public class InitialSpawnManager : MonoBehaviour
 
         foreach (var item in spawnDataListesi)
         {
-            if (item.spawnYuzdesi >= 100) tekSeferlikler.Add(item);
-            else standartlar.Add(item);
+            if (item.spawnYuzdesi >= 100) 
+            {
+                tekSeferlikler.Add(item);
+                // %100 olan bu objeyi "Kilitliler Listesi"ne ekle
+                kilitlenecekObjeler.Add(item.obje);
+            }
+            else 
+            {
+                standartlar.Add(item);
+            }
         }
 
         // 1. Önce "Zorunlu" (Unique) olanları 1'er tane ekle
@@ -61,7 +73,6 @@ public class InitialSpawnManager : MonoBehaviour
         }
 
         // 2. Kalan boşlukları "Standart" listeden rastgele doldur
-        // (Böylece %100 olanlar tekrar seçilmez)
         int kalanBosluk = count - spawnlanacakObjeler.Count;
 
         if (standartlar.Count > 0 && kalanBosluk > 0)
@@ -83,7 +94,6 @@ public class InitialSpawnManager : MonoBehaviour
         }
     }
 
-    // Özel liste için yardımcı rastgele fonksiyonu
     ObjeVerisi GetWeightedRandomFromList(List<LevelSpawnVerisi> targetList)
     {
         float toplamSans = 0;
@@ -117,6 +127,26 @@ public class InitialSpawnManager : MonoBehaviour
 
         PlaceableObject po = obj.GetComponent<PlaceableObject>();
         po.verisi = veri;
+        
+        // Temizlik (Önceki sorundan emin olmak için)
+        if (po.icindekiMalzemeler == null) po.icindekiMalzemeler = new List<ObjeVerisi>();
+        po.icindekiMalzemeler.Clear();
+        po.icindekiMalzemeler.Add(veri);
+
+        // --- HAREKET KİLİDİ (YENİ KISIM) ---
+        // Eğer bu obje %100 listesindeyse, hareket hakkını 0 yap.
+        if (kilitlenecekObjeler.Contains(veri))
+        {
+            po.hareketHakki = 0;
+            po.kilitliMi = true; // Görsel olarak kilit simgesi varsa açar
+        }
+        else
+        {
+            po.hareketHakki = 1; // Diğerleri hareket edebilir
+            po.kilitliMi = false;
+        }
+        // -----------------------------------
+
         po.currentCell = cell;
         
         po.SetPreviewMode(false);
