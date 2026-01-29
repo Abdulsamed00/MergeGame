@@ -69,6 +69,7 @@ public class MenuManager : MonoBehaviour
     {
         SceneManager.LoadScene("CreativeMode");
     }
+    
 
     public void BasarimPanelAc()
     {

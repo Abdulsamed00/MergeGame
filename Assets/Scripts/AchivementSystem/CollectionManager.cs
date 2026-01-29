@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CollectionManager : MonoBehaviour
 {
@@ -161,5 +162,10 @@ public class CollectionManager : MonoBehaviour
             if (null == child) continue;
             SetLayerRecursively(child.gameObject, newLayer);
         }
+    }
+    
+    public void TutorialScene()
+    {
+        SceneManager.LoadScene("TutorialScene");
     }
 }
