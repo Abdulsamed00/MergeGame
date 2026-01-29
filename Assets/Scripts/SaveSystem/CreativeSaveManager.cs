@@ -64,6 +64,11 @@ public class CreativeSaveManager : MonoBehaviour
         Debug.Log("JSON Dosyası Yazıldı: " + path);
         Debug.Log("--- KAYIT BİTTİ ---");
     }
+    
+    private void OnDisable()
+    {
+        SaveCreativeMap();
+    }
 
     public void LoadCreativeMap()
     {

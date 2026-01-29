@@ -285,7 +285,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdatePopulasyonUI()
     {
-        if(populasyonText != null) populasyonText.text = "Nüfus: " + suankiPopulasyon;
+        if(populasyonText != null) populasyonText.text = "" + suankiPopulasyon;
     }
 
     private void ShowFloatingText(Vector3 pos, string text)

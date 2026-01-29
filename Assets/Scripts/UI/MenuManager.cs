@@ -58,6 +58,11 @@ public class MenuManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Oyun kapatıldı");
     }
+    
+    public void CreativeScene()
+    {
+        SceneManager.LoadScene("CreativeMode");
+    }
 
     public void BasarimPanelAc()
     {
