@@ -1,21 +1,17 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
     [Header("Audio Sources")]
-    public AudioSource musicSource; // Mixer: Musics
-    public AudioSource sfxSource;   // Mixer: SFX
+    public AudioSource musicSource;
+    public AudioSource sfxSource;
 
-    // ================= MUSIC (LOOP) =================
-    [Header("Region Musics (Loop)")]
-    public AudioClip turkeySes;
-    public AudioClip brazilyaSes;
-    public AudioClip japaneseMapSong;
-    public AudioClip egyptSes;
+    [Header("Audio Mixer")]
+    public AudioMixer mixer;
 
-    // ================= SFX (ONE SHOT) =================
     [Header("UI / Game SFX")]
     public AudioClip buttonClick;
     public AudioClip mergeSes;
@@ -23,62 +19,47 @@ public class AudioManager : MonoBehaviour
     public AudioClip spawnSesi;
     public AudioClip kazanmaSesi;
     public AudioClip kaybetmeSesi;
-    public AudioClip openLevelStageSound;
-    public AudioClip yapiBitirmeSesi;
-    public AudioClip yapiYikilma;
-    public AudioClip demirMetalObjeBirlestirme;
-    public AudioClip odunAgacBirlestirme;
 
-    const string MUSIC_KEY = "MusicOn";
-    const string SFX_KEY   = "SfxOn";
+    const string MUSIC_VOL = "MusicVolume";
+    const string SFX_VOL   = "SfxVolume";
 
-    bool musicOn;
-    bool sfxOn;
-
-    // ================= INIT =================
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
-        musicOn = PlayerPrefs.GetInt(MUSIC_KEY, 1) == 1;
-        sfxOn   = PlayerPrefs.GetInt(SFX_KEY, 1) == 1;
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
 
-        // SFX Source
-        sfxSource.playOnAwake = false;
-        sfxSource.loop = false;
-        sfxSource.spatialBlend = 0f;
-
-        // Music Source (🔁 LOOP GARANTİ)
-        musicSource.playOnAwake = false;
+        // 🔁 MUSIC LOOP
         musicSource.loop = true;
-        musicSource.spatialBlend = 0f;
+        musicSource.playOnAwake = false;
 
-        ApplySettings();
+        sfxSource.loop = false;
+        sfxSource.playOnAwake = false;
+
+        // 🔥 Kaydedilmiş volume değerleri
+        float musicVol = PlayerPrefs.GetFloat(MUSIC_VOL, 1f);
+        float sfxVol   = PlayerPrefs.GetFloat(SFX_VOL, 1f);
+
+        SetMixerVolume("MusicVol", musicVol);
+        SetMixerVolume("SFXVol", sfxVol);
     }
 
-    // ================= MUSIC PLAY =================
-    public void PlayTurkeyMusic()   => PlayMusicLoop(turkeySes);
-    public void PlayBrazilMusic()   => PlayMusicLoop(brazilyaSes);
-    public void PlayJapanMusic()    => PlayMusicLoop(japaneseMapSong);
-    public void PlayEgyptMusic()    => PlayMusicLoop(egyptSes);
-
-    void PlayMusicLoop(AudioClip clip)
+    // ================= MUSIC =================
+    public void PlayLevelMusic(AudioClip clip)
     {
-        if (!musicOn || clip == null) return;
+        if (clip == null) return;
+
+        if (musicSource.clip == clip && musicSource.isPlaying)
+            return;
 
         musicSource.Stop();
         musicSource.clip = clip;
-        musicSource.loop = true;   // 🔁 burada da garanti
-        musicSource.Play();
+        musicSource.Play(); // 🔁 loop açık
     }
 
     public void StopMusic()
@@ -87,45 +68,37 @@ public class AudioManager : MonoBehaviour
     }
 
     // ================= SFX =================
-    public void PlayButtonClick()   => PlaySFX(buttonClick);
-    public void PlayMerge()         => PlaySFX(mergeSes);
-    public void PlayMergeError()    => PlaySFX(mergeErrorSesi);
-    public void PlaySpawn()         => PlaySFX(spawnSesi);
-    public void PlayWin()           => PlaySFX(kazanmaSesi);
-    public void PlayLose()          => PlaySFX(kaybetmeSesi);
-    public void PlayOpenLevel()     => PlaySFX(openLevelStageSound);
-    public void PlayYapiBitirme()   => PlaySFX(yapiBitirmeSesi);
-    public void PlayYapiYikilma()   => PlaySFX(yapiYikilma);
-    public void PlayMetalMerge()    => PlaySFX(demirMetalObjeBirlestirme);
-    public void PlayWoodMerge()     => PlaySFX(odunAgacBirlestirme);
+    public void PlayButtonClick() => PlaySFX(buttonClick);
+    public void PlayMerge()       => PlaySFX(mergeSes);
+    public void PlayMergeError()  => PlaySFX(mergeErrorSesi);
+    public void PlaySpawn()       => PlaySFX(spawnSesi);
+    public void PlayWin()         => PlaySFX(kazanmaSesi);
+    public void PlayLose()        => PlaySFX(kaybetmeSesi);
 
-    void PlaySFX(AudioClip clip)
+    public void PlaySFX(AudioClip clip)
     {
-        if (!sfxOn || clip == null) return;
+        if (clip == null) return;
         sfxSource.PlayOneShot(clip);
     }
 
-    // ================= SETTINGS =================
-    public void ToggleMusic(bool on)
+    // ================= VOLUME =================
+    public void SetMusicVolume(float value)
     {
-        musicOn = on;
-        PlayerPrefs.SetInt(MUSIC_KEY, on ? 1 : 0);
-
-        if (on && musicSource.clip != null)
-            musicSource.Play();
-        else
-            musicSource.Stop();
+        PlayerPrefs.SetFloat(MUSIC_VOL, value);
+        SetMixerVolume("MusicVol", value);
     }
 
-    public void ToggleSFX(bool on)
+    public void SetSFXVolume(float value)
     {
-        sfxOn = on;
-        PlayerPrefs.SetInt(SFX_KEY, on ? 1 : 0);
+        PlayerPrefs.SetFloat(SFX_VOL, value);
+        SetMixerVolume("SFXVol", value);
     }
 
-    void ApplySettings()
+    void SetMixerVolume(string param, float value)
     {
-        if (!musicOn)
-            musicSource.Stop();
+        mixer.SetFloat(
+            param,
+            Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20f
+        );
     }
 }

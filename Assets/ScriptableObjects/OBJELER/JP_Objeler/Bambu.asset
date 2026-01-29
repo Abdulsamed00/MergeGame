@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 12
   objeAdi: Bambu
   objePrefab: {fileID: 5026105060972685150, guid: 2749a2ee6dce78c4d891cd28332f9a8b, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: 1743026232, guid: 3a5b5389fbee3384f9a3eaa301905fc7, type: 3}
   tur: 0
   minPopulasyon: 0
   maxPopulasyon: 0

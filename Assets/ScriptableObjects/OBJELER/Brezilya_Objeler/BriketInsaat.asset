@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 25
   objeAdi: "Briketten \u0130n\u015Faat"
   objePrefab: {fileID: 6135313777061951370, guid: 7704283b8907eeb438892da13e5d52bc, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -1132008172, guid: a099193d8fa11f14782c0e89f71f0479, type: 3}
   tur: 0
   minPopulasyon: 0
   maxPopulasyon: 0

@@ -17,6 +17,7 @@ MonoBehaviour:
   levelAdi: Level 9
   gridGenislik: 6
   gridYukseklik: 6
+  levelMusic: {fileID: 8300000, guid: 7cfd5af6378fca249a4f2982ac4a0de0, type: 3}
   zeminPrefabi: {fileID: 8255895135655642265, guid: 1891a6b3b1aef4741b7a8ed2c89a086b, type: 3}
   baslangicObjeSayisi: 3
   hedefler:

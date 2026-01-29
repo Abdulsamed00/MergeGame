@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 6
   objeAdi: "G\xF6kdelen"
   objePrefab: {fileID: 1327831999354397550, guid: d38dbb0bd94692b449b95b4648d8202f, type: 3}
-  uiIkonu: {fileID: 1380489017, guid: b6b3679080e783843ad7d36a92f26eb6, type: 3}
+  uiIkonu: {fileID: 1007767027, guid: b6b3679080e783843ad7d36a92f26eb6, type: 3}
   tur: 1
   minPopulasyon: 30
   maxPopulasyon: 40

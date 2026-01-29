@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -45,6 +46,17 @@ public class UIManager : MonoBehaviour
             btn.Setup(obje, isUnlocked);
         }
     }
+
+    public void MainMenu()
+    {
+        if (CreativeSaveManager.Instance != null)
+        {
+            CreativeSaveManager.Instance.SaveCreativeMap();
+        }
+
+        SceneManager.LoadScene("UI");
+    }
+
     
     // Geliştirici Testi İçin: Bütün kilitleri açan hile kodu
     public void UnlockAllCheat()

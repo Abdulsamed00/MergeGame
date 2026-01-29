@@ -17,7 +17,8 @@ MonoBehaviour:
   levelAdi: Level 6
   gridGenislik: 5
   gridYukseklik: 5
-  zeminPrefabi: {fileID: 0}
+  levelMusic: {fileID: 8300000, guid: f639db90b519da449aa686c4994a7fb5, type: 3}
+  zeminPrefabi: {fileID: -3380444673534767410, guid: f26a63ebdbfe6314aaf4b6e6f7090786, type: 3}
   baslangicObjeSayisi: 3
   hedefler:
   - istenenObje: {fileID: 11400000, guid: 7fab760cd0749e44faea07dfce8eab35, type: 2}

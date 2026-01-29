@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 38
   objeAdi: "B\xFCy\xFCk M\u0131s\u0131r Evi"
   objePrefab: {fileID: 2809891348309099512, guid: 0d7f827412553a245b099f1db413282f, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: 1796387743, guid: e1756c332ab6f7f4f83c929924dfdbf0, type: 3}
   tur: 1
   minPopulasyon: 25
   maxPopulasyon: 30

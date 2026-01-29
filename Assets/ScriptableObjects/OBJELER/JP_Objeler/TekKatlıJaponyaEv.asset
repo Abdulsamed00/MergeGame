@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 15
   objeAdi: "Tek Katl\u0131 Japonya evi"
   objePrefab: {fileID: 6582033422496387036, guid: dd396313a77a2204091db19673c633b3, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -214344778, guid: 3a5b5389fbee3384f9a3eaa301905fc7, type: 3}
   tur: 1
   minPopulasyon: 20
   maxPopulasyon: 25

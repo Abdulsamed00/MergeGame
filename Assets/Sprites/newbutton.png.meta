@@ -135,7 +135,7 @@ TextureImporter:
         x: 16
         y: 1582
         width: 119
-        height: 122
+        height: 120
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -216,10 +216,10 @@ TextureImporter:
       name: "U\u0130.8-04_4"
       rect:
         serializedVersion: 2
-        x: 630
-        y: 1581
-        width: 122
-        height: 123
+        x: 632
+        y: 1580
+        width: 121
+        height: 121
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -237,9 +237,9 @@ TextureImporter:
       name: "U\u0130.8-04_5"
       rect:
         serializedVersion: 2
-        x: 756
+        x: 758
         y: 1579
-        width: 123
+        width: 121
         height: 120
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -300,9 +300,9 @@ TextureImporter:
       name: "U\u0130.8-04_8"
       rect:
         serializedVersion: 2
-        x: 125
+        x: 155
         y: 1436
-        width: 163
+        width: 132
         height: 127
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -322,9 +322,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 304
-        y: 1430
+        y: 1435
         width: 141
-        height: 132
+        height: 127
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -345,7 +345,7 @@ TextureImporter:
         x: 460
         y: 1441
         width: 130
-        height: 131
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -363,10 +363,10 @@ TextureImporter:
       name: "U\u0130.8-04_11"
       rect:
         serializedVersion: 2
-        x: 713
-        y: 1438
-        width: 175
-        height: 134
+        x: 738
+        y: 1444
+        width: 131
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -384,10 +384,10 @@ TextureImporter:
       name: "U\u0130.8-04_12"
       rect:
         serializedVersion: 2
-        x: 892
-        y: 1397
-        width: 134
-        height: 159
+        x: 897
+        y: 1427
+        width: 129
+        height: 129
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -426,9 +426,9 @@ TextureImporter:
       name: "U\u0130.8-04_14"
       rect:
         serializedVersion: 2
-        x: 312
+        x: 314
         y: 1212
-        width: 90
+        width: 88
         height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -447,10 +447,10 @@ TextureImporter:
       name: "U\u0130.8-04_15"
       rect:
         serializedVersion: 2
-        x: 419
-        y: 1186
-        width: 122
-        height: 176
+        x: 421
+        y: 1212
+        width: 91
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -617,7 +617,7 @@ TextureImporter:
         serializedVersion: 2
         x: 42
         y: 454
-        width: 373
+        width: 344
         height: 99
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -636,10 +636,10 @@ TextureImporter:
       name: "U\u0130.8-04_24"
       rect:
         serializedVersion: 2
-        x: 437
-        y: 419
-        width: 398
-        height: 129
+        x: 460
+        y: 433
+        width: 348
+        height: 108
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -699,10 +699,10 @@ TextureImporter:
       name: "U\u0130.8-04_27"
       rect:
         serializedVersion: 2
-        x: 437
-        y: 269
-        width: 375
-        height: 140
+        x: 464
+        y: 296
+        width: 342
+        height: 104
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

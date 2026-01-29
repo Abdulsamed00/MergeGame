@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 34
   objeAdi: Palmiye
   objePrefab: {fileID: 7274938332860988965, guid: 2f96c39b5e24a91408c28abe8d2cb766, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: 1473232910, guid: e1756c332ab6f7f4f83c929924dfdbf0, type: 3}
   tur: 0
   minPopulasyon: 0
   maxPopulasyon: 0

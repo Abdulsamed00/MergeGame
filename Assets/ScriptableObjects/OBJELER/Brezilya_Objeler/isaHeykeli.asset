@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 32
   objeAdi: "\u0130sa Heykeli"
   objePrefab: {fileID: 3910972817940435325, guid: 76e69a94f9b463b47b1a2b32b2026b65, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -750249785, guid: a099193d8fa11f14782c0e89f71f0479, type: 3}
   tur: 1
   minPopulasyon: 20
   maxPopulasyon: 30

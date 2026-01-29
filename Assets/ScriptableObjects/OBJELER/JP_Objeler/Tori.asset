@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 20
   objeAdi: Torii
   objePrefab: {fileID: 542754894498359074, guid: d59201c4aa856864ea00b73b85221fe9, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: 1769816437, guid: 3a5b5389fbee3384f9a3eaa301905fc7, type: 3}
   tur: 0
   minPopulasyon: 0
   maxPopulasyon: 0

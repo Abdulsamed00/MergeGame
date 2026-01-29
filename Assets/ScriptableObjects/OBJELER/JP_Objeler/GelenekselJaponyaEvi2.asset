@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 18
   objeAdi: Geleneksel Japonya Evi 2
   objePrefab: {fileID: 1913855998982295866, guid: 238ae5c8e4908c648af6a646f1ac19b2, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: 1073761881, guid: 3a5b5389fbee3384f9a3eaa301905fc7, type: 3}
   tur: 1
   minPopulasyon: 50
   maxPopulasyon: 60

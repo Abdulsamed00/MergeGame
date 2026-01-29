@@ -15,7 +15,7 @@ MonoBehaviour:
   saveID: 21
   objeAdi: Inari Shrine
   objePrefab: {fileID: 9091748268197979939, guid: 4e1804eb0c690114dafa740f53fca16c, type: 3}
-  uiIkonu: {fileID: 0}
+  uiIkonu: {fileID: -671164152, guid: 3a5b5389fbee3384f9a3eaa301905fc7, type: 3}
   tur: 1
   minPopulasyon: 20
   maxPopulasyon: 30
