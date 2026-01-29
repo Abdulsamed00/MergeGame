@@ -1,47 +1,46 @@
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class AudioSettingsUI : MonoBehaviour
 {
-    [Header("Mixer")]
-    public AudioMixer audioMixer;
+    public AudioMixer mixer;
 
-    [Header("Sliders")]
     public Slider musicSlider;
     public Slider sfxSlider;
 
     const string MUSIC_VOL = "MusicVolume";
-    const string SFX_VOL   = "SFXVolume";
+    const string SFX_VOL   = "SfxVolume";
 
     void Start()
     {
-        // Kaydedilmiş değerleri yükle
-        float musicValue = PlayerPrefs.GetFloat(MUSIC_VOL, 1f);
-        float sfxValue   = PlayerPrefs.GetFloat(SFX_VOL, 1f);
+        float musicVol = PlayerPrefs.GetFloat(MUSIC_VOL, 1f);
+        float sfxVol   = PlayerPrefs.GetFloat(SFX_VOL, 1f);
 
-        musicSlider.value = musicValue;
-        sfxSlider.value   = sfxValue;
+        // 🔥 Mixer zaten AudioManager tarafından ayarlandı
+        // SADECE slider görselini senkronla
+        musicSlider.SetValueWithoutNotify(musicVol);
+        sfxSlider.SetValueWithoutNotify(sfxVol);
 
-        SetMusicVolume(musicValue);
-        SetSFXVolume(sfxValue);
-
-        // Slider event bağla
-        musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+        musicSlider.onValueChanged.AddListener(ApplyMusic);
+        sfxSlider.onValueChanged.AddListener(ApplySFX);
     }
 
-    public void SetMusicVolume(float value)
+    void ApplyMusic(float value)
     {
-        value = Mathf.Clamp(value, 0.0001f, 1f);
-        audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20f);
         PlayerPrefs.SetFloat(MUSIC_VOL, value);
+        mixer.SetFloat(
+            "MusicVol",
+            Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20
+        );
     }
 
-    public void SetSFXVolume(float value)
+    void ApplySFX(float value)
     {
-        value = Mathf.Clamp(value, 0.0001f, 1f);
-        audioMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20f);
         PlayerPrefs.SetFloat(SFX_VOL, value);
+        mixer.SetFloat(
+            "SFXVol",
+            Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20
+        );
     }
 }

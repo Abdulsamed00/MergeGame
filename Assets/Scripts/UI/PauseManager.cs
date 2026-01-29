@@ -13,32 +13,25 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-
-
     public void PauseGame()
     {
         if (isPaused) return;
 
         isPaused = true;
-        pausePanel.SetActive(true);
         Time.timeScale = 0f;
+        pausePanel.SetActive(true);
     }
 
     public void ResumeGame()
     {
         isPaused = false;
-        pausePanel.SetActive(false);
         Time.timeScale = 1f;
+        pausePanel.SetActive(false);
     }
-
-   
 
     public void ExitToMenu()
     {
-        isPaused = false;
-        pausePanel.SetActive(false);
         Time.timeScale = 1f;
-
         SceneManager.LoadScene("UI");
     }
 }

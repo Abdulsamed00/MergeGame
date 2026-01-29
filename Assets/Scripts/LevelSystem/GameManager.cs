@@ -51,18 +51,23 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // DataTransfer'den gelen level indexini al (Yoksa 0 başla)
         int gelenLevel = DataTransfer.secilenLevelIndex;
-        if (gelenLevel >= tumLeveller.Count) gelenLevel = 0;
+        if (gelenLevel >= tumLeveller.Count)
+            gelenLevel = 0;
 
         suankiLevelIndex = gelenLevel;
         suankiLevelData = tumLeveller[suankiLevelIndex];
 
-        // Sözlüğü doldur (Load işlemi için gerekli)
-        SozlukOlustur(suankiLevelData);
+        // 🔥 LEVEL MÜZİĞİ BURADA ÇALIYOR
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayLevelMusic(suankiLevelData.levelMusic);
+        }
 
+        SozlukOlustur(suankiLevelData);
         StartCoroutine(LevelAkisi());
     }
+
 
     // --- SÖZLÜK OLUŞTURMA ---
     // Levelde kullanılabilecek tüm objeleri hafızaya alıyoruz
