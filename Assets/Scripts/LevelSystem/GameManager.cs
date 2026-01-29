@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
         suankiLevelIndex = gelenLevel;
         suankiLevelData = tumLeveller[suankiLevelIndex];
 
-        // 🔥 LEVEL MÜZİĞİ BURADA ÇALIYOR
+        
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayLevelMusic(suankiLevelData.levelMusic);
