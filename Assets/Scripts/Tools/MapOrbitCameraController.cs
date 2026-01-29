@@ -35,7 +35,7 @@ public class MapOrbitCameraController : MonoBehaviour
 
     void Update()
     {
-        // 📱 MOBİL
+        //  MOBİL
         if (Input.touchCount == 1)
         {
             Touch t = Input.GetTouch(0);
@@ -53,7 +53,7 @@ public class MapOrbitCameraController : MonoBehaviour
         }
 
 #if UNITY_EDITOR
-        // 🖱️ MOUSE
+        // MOUSE
         if (!IsTouchOnGrid(Input.mousePosition))
         {
             RotateMouse();
