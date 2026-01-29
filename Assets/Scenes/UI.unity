@@ -2078,6 +2078,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &98951479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3241,6 +3253,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -10818,6 +10842,7 @@ GameObject:
   - component: {fileID: 718195381}
   - component: {fileID: 718195383}
   - component: {fileID: 718195382}
+  - component: {fileID: 718195384}
   m_Layer: 5
   m_Name: Text (Legacy) (1)
   m_TagString: Untagged
@@ -10920,6 +10945,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 718195380}
   m_CullTransparentMesh: 1
+--- !u!114 &718195384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718195380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 594747b502623e44ba341925c4cc1bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turkish: "T\xFCrkiye\n1. B\xF6l\xFCm: 1 Bina\n2. B\xF6l\xFCm: 2 Bina\n3. B\xF6l\xFCm:
+    3 Bina\n4. B\xF6l\xFCm: 3 Bina, 1 B\xFCy\xFCk Bina\n5. B\xF6l\xFCm: 4 Bina, 2
+    B\xFCy\xFCk Bina\n6. B\xF6l\xFCm: 3 Bina, 3 B\xFCy\xFCk Bina, 1 G\xF6kdelen\n7.
+    B\xF6l\xFCm: 3 B\xFCy\xFCk Bina, 2 G\xF6kdelen\n8. B\xF6l\xFCm: 3 G\xF6kdelen,
+    2 Rezidans\n9. B\xF6l\xFCm: 3 G\xF6kdelen, 2 Rezidans, 1 B\xFCy\xFCk Rezidans\n10.
+    B\xF6l\xFCm: 1 Bina, B\xFCy\xFCk Bina, 2 G\xF6kdelen, 1 Rezidans, 1 B\xFCy\xFCk
+    Rezidans, 1 Galata Kulesi\n\nJaponya\n1. B\xF6l\xFCm: 1 Tek katl\u0131 Japonya
+    Evi\n2. B\xF6l\xFCm: 2 Tek katl\u0131 Japonya Evi\n3. B\xF6l\xFCm: 3 Tek katl\u0131
+    Japonya Evi\n4. B\xF6l\xFCm: 3 Tek katl\u0131 Japonya Evi, 1 Tek katl\u0131 Japonya
+    Evi 2\n5. B\xF6l\xFCm: 4 Tek katl\u0131 Japonya Evi, 2 Tek katl\u0131 Japonya
+    Evi 2\n6. B\xF6l\xFCm: 3 Tek katl\u0131 Japonya Evi, 3 Tek katl\u0131 Japonya
+    Evi 2, 1 Geleneksel Japonya Evi\n7. B\xF6l\xFCm: 3 Tek katl\u0131 Japonya Evi
+    2, 2 Geleneksel Japonya Evi\n8. B\xF6l\xFCm: 3 Geleneksel Japonya Evi, 2 Geleneksel
+    Japonya Evi 2\n9. B\xF6l\xFCm: 3 Geleneksel Japonya Evi, Geleneksel Japonya Evi
+    2, 1 Sensoji Tap\u0131na\u011F\u0131\n10. B\xF6l\xFCm: 1 Tek katl\u0131 Japonya
+    Evi, Tek katl\u0131 Japonya Evi 2, 2 Geleneksel Japonya Evi, 1 Geleneksel Japonya
+    Evi 2, 1 Sensoji Tap\u0131na\u011F\u0131, 1 Inari Shrine\n\nBrezilya\n1. B\xF6l\xFCm:
+    1 Brezilya Evi\n2. B\xF6l\xFCm: 2 Brezilya Evi\n3. B\xF6l\xFCm: 3 Brezilya Evi\n4.
+    B\xF6l\xFCm: 3 Brezilya Evi, 1 B\xFCy\xFCk Brezilya Evi\n5. B\xF6l\xFCm: 4 Brezilya
+    Evi, 2 B\xFCy\xFCk Brezilya Evi\n6. B\xF6l\xFCm: 3 Brezilya Evi, 3 B\xFCy\xFCk
+    Brezilya Evi, 1 Brezilya Katl\u0131 Ev\n7. B\xF6l\xFCm: 3 B\xFCy\xFCk Brezilya
+    Evi, 2 Brezilya Katl\u0131 Ev\n8. B\xF6l\xFCm: 3 Brezilya Katl\u0131 Ev, 2 Brezilya
+    B\xFCy\xFCk Katl\u0131 Ev\n9. B\xF6l\xFCm: 3 2 Brezilya Katl\u0131 Ev, 2 2 Brezilya
+    B\xFCy\xFCk Katl\u0131 Ev, 1 B\xFCy\xFCk Rezidans\n10. B\xF6l\xFCm: 1 Brezilya
+    Evi, B\xFCy\xFCk Brezilya Evi, 2 G\xF6kdelen, 1 Rezidans, \n1 Stadyum, 1 Isa
+    Heykeli\n\nM\u0131s\u0131r\n1. B\xF6l\xFCm: 1 M\u0131s\u0131r Evi\n2. B\xF6l\xFCm:
+    2 M\u0131s\u0131r Evi\n3. B\xF6l\xFCm: 3 M\u0131s\u0131r Evi\n4. B\xF6l\xFCm:
+    3 M\u0131s\u0131r Evi, 1 B\xFCy\xFCk M\u0131s\u0131r Evi\n5. B\xF6l\xFCm: 4 M\u0131s\u0131r
+    Evi, 2 B\xFCy\xFCk M\u0131s\u0131r Evi\n6. B\xF6l\xFCm: 3 M\u0131s\u0131r Evi,
+    3 B\xFCy\xFCk M\u0131s\u0131r Evi, 1 Sfenks\n7. B\xF6l\xFCm: 3 B\xFCy\xFCk M\u0131s\u0131r
+    Evi, 2 Sfenks\n8. B\xF6l\xFCm: 3 Sfenks, 2 Rezidans\n9. B\xF6l\xFCm: 3 Sfenks,
+    2 K\xFC\xE7\xFCk Piramit, 1 Orta Piramit\n10. B\xF6l\xFCm: 1 M\u0131s\u0131r
+    Evi, B\xFCy\xFCk M\u0131s\u0131r Evi, 2 Sfenks, 1 K\xFC\xE7\xFCk Piramit, 1 Orta
+    Piramit, 1 B\xFCy\xFCk Piramit"
+  english: "Turkey\nSection 1: 1 Building\nSection 2: 2 Buildings\nSection 3: 3 Buildings\nSection
+    4: 3 Buildings, 1 Large Building\nSection 5: 4 Buildings, 2 Large Buildings\nSection
+    6: 3 Buildings, 3 Large Buildings, 1 Skyscraper\nSection 7: 3 Large Buildings,
+    2 Skyscrapers\nSection 8: 3 Skyscrapers, 2 Residences\nSection 9: 3 Skyscrapers,
+    2 Residences, 1 Large Residence\nSection 10: 1 Building, Large Building, 2 Skyscrapers,
+    1 Residence, 1 Large Residence, 1 Galata Tower\n\nJapan\nSection 1: 1 Single-story
+    Japanese House\nSection 2: 2 Single-story Japanese Houses\nSection 3: 3 Single-story
+    Japanese Houses\nSection 4: 3 Single-story Japanese House, 1 Single-story Japanese
+    House 2\nSection 5: 4 Single-story Japanese House, 2 Single-story Japanese House
+    2\nSection 6: 3 Single-story Japanese House, 3 Single-story Japanese House 2,
+    1 Traditional Japanese House\n7. Section: 3 Single-story Japanese House 2, 2
+    Traditional Japanese House\n8. Section: 3 Traditional Japanese House, 2 Traditional
+    Japanese House 2\n9. Section: 3 Traditional Japanese House, Traditional Japanese
+    House 2, 1 Sensoji Temple\nChapter 10: 1 Single-story Japanese House, Single-story
+    Japanese House 2, 2 Traditional Japanese House, 1 Traditional Japanese House
+    2, 1 Sensoji Temple, 1 Inari Shrine\n\nBrazil\nChapter 1: 1 Brazilian House\nChapter
+    2: 2 Brazilian House\nSection 3: 3 Brazilian House\nSection 4: 3 Brazilian House,
+    1 Large Brazilian House\nSection 5: 4 Brazilian House, 2 Large Brazilian House\nSection
+    6: 3 Brazilian House, 3 Large Brazilian House, 1 Brazilian Multi-story House\nSection
+    7: 3 Large Brazilian Houses, 2 Brazilian Multi-Story Houses\nSection 8: 3 Brazilian
+    Multi-Story Houses, 2 Large Brazilian Multi-Story Houses\nSection 9: 3 2 Brazilian
+    Multi-Story Houses, 2 2 Large Brazilian Multi-Story Houses, 1 Large Residence\nChapter
+    10: 1 Brazilian House, Large Brazilian House, 2 Skyscrapers, 1 Residence, \n1
+    Stadium, 1 Statue of Jesus\n\nEgypt\nChapter 1: 1 Egyptian House\nChapter 2:
+    2 Egyptian Houses\nChapter 3: 3 Egyptian Houses\nSection 4: 3 Egyptian House,
+    1 Large Egyptian House\nSection 5: 4 Egyptian House, 2 Large Egyptian House\nSection
+    6: 3 Egyptian House, 3 Large Egyptian House, 1 Sphinx\nSection 7: 3 Large Egyptian
+    House, 2 Sphinx\n8. Section: 3 Sphinxes, 2 Residences\n9. Section: 3 Sphinxes,
+    2 Small Pyramids, 1 Medium Pyramid\n10. Section: 1 Egyptian House, Large Egyptian
+    House, 2 Sphinxes, 1 Small Pyramid, 1 Medium Pyramid, 1 Large Pyramid"
 --- !u!1 &723346244
 GameObject:
   m_ObjectHideFlags: 0
@@ -11695,6 +11796,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -14053,6 +14166,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1015113407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16104,6 +16229,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -20292,6 +20429,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1508154210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22509,6 +22658,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1642005429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22864,6 +23025,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1652350037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22993,6 +23166,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -29919,6 +30104,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2126406359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30048,6 +30245,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 594736708}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 15039d8ceabf20144a91c7d189146cd9, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
