@@ -23,9 +23,6 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         Instance = this;
     }
 
-    // =======================
-    // MERGE OLABİLİR Mİ?
-    // =======================
     public bool CanMerge(PlaceableObject elimizdeki, PlaceableObject yerdeki)
     {
         if (elimizdeki == null || yerdeki == null) return false;
@@ -44,9 +41,6 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         return elimizdeki.verisi == yerdeki.verisi;
     }
 
-    // =======================
-    // GERÇEK MERGE
-    // =======================
     public bool ManuelBirlestirme(PlaceableObject elimizdeki, PlaceableObject yerdeki)
     {
         GridCell hedefHucre = yerdeki.currentCell;
@@ -59,9 +53,6 @@ public class BirlestirmeYoneticisi : MonoBehaviour
 
         BirlestirmeVerisi tarif = TarifAra(toplam);
 
-        // =======================
-        // A) TARİFLİ BİRLEŞME
-        // =======================
         if (tarif != null)
         {
             if (SeviyeSiniriAsiliyorMu(tarif.sonucObjesi)) return false;
@@ -73,9 +64,6 @@ public class BirlestirmeYoneticisi : MonoBehaviour
             return true;
         }
 
-        // =======================
-        // B) STACK (AYNI OBJE)
-        // =======================
         if (elimizdeki.verisi == yerdeki.verisi)
         {
             yerdeki.icindekiMalzemeler.AddRange(elimizdeki.icindekiMalzemeler);
@@ -83,6 +71,13 @@ public class BirlestirmeYoneticisi : MonoBehaviour
             yerdeki.hareketHakki = 1;
 
             yerdeki.PlayStackAnimation();
+            
+            // --- EKLEME: Aynı tür objeler yığınlandığında da koleksiyonu tetikle ---
+            if (CollectionManager.Instance != null)
+            {
+                CollectionManager.Instance.ObjeAcildi(yerdeki.verisi.collectionID);
+            }
+            // ---------------------------------------------------------------------
 
             return true;
         }
@@ -90,18 +85,12 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         return false;
     }
 
-    // =======================
-    // PARTICLE
-    // =======================
     void PlayMergeParticle(Vector3 pos)
     {
         if (mergeParticlePrefab == null) return;
         Instantiate(mergeParticlePrefab, pos, Quaternion.identity);
     }
 
-    // =======================
-    // TARİF BUL
-    // =======================
     BirlestirmeVerisi TarifAra(List<ObjeVerisi> malzemeler)
     {
         foreach (var tarif in tumTarifler)
@@ -124,47 +113,22 @@ public class BirlestirmeYoneticisi : MonoBehaviour
 
             if (uygun) return tarif;
         }
-
         return null;
     }
 
-    // =======================
-    // SEVİYE SINIRI
-    // =======================
     public bool SeviyeSiniriAsiliyorMu(ObjeVerisi sonuc)
     {
-        // 1. KORUMA: Gelen sonuç verisi yoksa işlemi durdur (false dön)
         if (sonuc == null) return false;
+        if (GameManager.Instance == null) return false;
+        if (GameManager.Instance.SuankiLevelData == null) return false;
 
-        // 2. KORUMA: GameManager yoksa (Tutorial sahnesi veya yanlış başlangıç)
-        if (GameManager.Instance == null)
-        {
-            // Eğer GameManager yoksa seviye sınırı da yoktur, izin ver.
-            return false;
-        }
-
-        // 3. KORUMA: Level Data yüklenmemişse
-        if (GameManager.Instance.SuankiLevelData == null)
-        {
-            // Level verisi yoksa sınır yoktur.
-            return false;
-        }
-
-        // --- ASIL KOD ---
         var sinir = GameManager.Instance.SuankiLevelData.izinVerilenEnUstObje;
-
-        // Sınır yoksa (null ise) her şeye izin ver, varsa karşılaştır.
         return sinir != null && sonuc.objeSeviyesi > sinir.objeSeviyesi;
     }
 
-    // =======================
-    // BİNA OLUŞTUR
-    // =======================
     void BinaOlustur(GridCell hucre, ObjeVerisi bina)
     {
         Vector3 pos = gridManager.grid.GetCellCenterWorld(hucre.cellPosition);
-
-        // 🔥 SADECE YENİ OBJE OLUŞURKEN PARTICLE
         PlayMergeParticle(pos + Vector3.up * 0.6f);
 
         GameObject go = Instantiate(bina.objePrefab, pos, bina.objePrefab.transform.rotation);
@@ -181,11 +145,16 @@ public class BirlestirmeYoneticisi : MonoBehaviour
         po.icindekiMalzemeler.Clear();
         po.SetPreviewMode(false);
 
+        // --- KRİTİK EKLEME: Türü ne olursa olsun koleksiyonu aç ---
+        if (CollectionManager.Instance != null)
+        {
+            CollectionManager.Instance.ObjeAcildi(bina.collectionID);
+        }
+        // ---------------------------------------------------------
+
         StartCoroutine(MergeVeSpawnSirasi(po));
-        
         GameManager.Instance.UretimYapildi(po.verisi, po.transform.position);
     }
-
 
     IEnumerator MergeVeSpawnSirasi(PlaceableObject po)
     {
