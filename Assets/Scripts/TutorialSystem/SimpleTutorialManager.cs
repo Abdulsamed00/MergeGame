@@ -135,7 +135,7 @@ public class SimpleTutorialManager : MonoBehaviour
         }
         else if (!insaatTamam)
         {
-            UpdateText($"Tuğlaları birlestir \nve {2 - insaatAlaniSayisi} adet daha \nİnşaat Alanı oluştur.");
+            UpdateText($"Tuğlaları birlestir \nve {2 - insaatAlaniSayisi} adet daha \nInsaat Alani olustur.");
         }
         else
         {
