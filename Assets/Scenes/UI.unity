@@ -4269,6 +4269,7 @@ GameObject:
   - component: {fileID: 203653803}
   - component: {fileID: 203653802}
   - component: {fileID: 203653806}
+  - component: {fileID: 203653807}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4399,6 +4400,20 @@ MonoBehaviour:
   JpButton: {fileID: 1652350036}
   MsrButton: {fileID: 1642005428}
   TarifGeriButton: {fileID: 1015113406}
+--- !u!114 &203653807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203653801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 609f3115fbf0c434ab8179f0a4232526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicSlider: {fileID: 2098500037}
+  sfxSlider: {fileID: 640985923}
 --- !u!1 &210290823
 GameObject:
   m_ObjectHideFlags: 0
@@ -10167,7 +10182,7 @@ GameObject:
   - component: {fileID: 640985922}
   - component: {fileID: 640985923}
   m_Layer: 5
-  m_Name: SFX
+  m_Name: SFXSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10240,10 +10255,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1387601596}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.8
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -13586,8 +13601,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594747b502623e44ba341925c4cc1bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turkish: MSR
-  english: EG
+  turkish: MISIRF
+  english: EGYPT
 --- !u!114 &938885707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24784,7 +24799,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1787206333
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29633,7 +29648,7 @@ GameObject:
   - component: {fileID: 2098500036}
   - component: {fileID: 2098500037}
   m_Layer: 5
-  m_Name: Musics
+  m_Name: MusicsSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29706,7 +29721,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 905736707}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 1
