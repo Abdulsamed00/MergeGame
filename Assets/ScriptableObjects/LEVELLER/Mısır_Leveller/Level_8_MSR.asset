@@ -15,6 +15,7 @@ MonoBehaviour:
   levelID: 37
   ulkeAdi: "M\u0131s\u0131r"
   levelAdi: Level 8
+  bagliOlduguUlke: {fileID: 11400000, guid: fde7ca6577af8f84ebf3da4830595b2e, type: 2}
   gridGenislik: 6
   gridYukseklik: 6
   levelMusic: {fileID: 8300000, guid: 16a868b1a24a61b4eb4e7911a0245bce, type: 3}

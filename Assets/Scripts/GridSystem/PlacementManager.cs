@@ -43,7 +43,6 @@ public class PlacementManager : MonoBehaviour
     
     private bool isInputLocked = false;
     
-
     private void Awake() { Instance = this; }
     public void SetInputLock(bool locked) { isInputLocked = locked; if (previewObject != null) previewObject.SetActive(!locked); }
 
@@ -208,6 +207,9 @@ public class PlacementManager : MonoBehaviour
                 yerdekiGercekObje.SetPreviewMode(false);
                 
                 if(previewObject != null) Destroy(previewObject);
+
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayPlace();
+
                 IslemTamamlandi(false); 
                 
                 if (SimpleTutorialManager.Instance != null) SimpleTutorialManager.Instance.CheckTutorialStatus();
@@ -242,6 +244,9 @@ public class PlacementManager : MonoBehaviour
                 }
 
                 Destroy(previewObject);
+
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayPlace();
+
                 IslemTamamlandi(true); 
                 GameManager.Instance.HamleBittiKontrolu();
             }
@@ -275,6 +280,9 @@ public class PlacementManager : MonoBehaviour
                 Destroy(yerdekiGercekObje.gameObject);
                 if(previewObject != null) Destroy(previewObject);
                 
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayMerge();
+                // -------------------------------------
+
                 IslemTamamlandi(true);
                 
                 if (SimpleTutorialManager.Instance != null) SimpleTutorialManager.Instance.CheckTutorialStatus();
@@ -336,7 +344,9 @@ public class PlacementManager : MonoBehaviour
             yerdenMiAldik = false;
             yerdekiGercekObje = null;
             kaynakHucre = null;
-            
+
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayPlace();
+
             if (!tutorialModuAktif) ForceUpdatePreview();
         }
         else IptalEt();
@@ -352,6 +362,9 @@ public class PlacementManager : MonoBehaviour
             yerdenMiAldik = false;
             yerdekiGercekObje = null;
             kaynakHucre = null;
+
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayPlace();
+
             if (!tutorialModuAktif) ForceUpdatePreview(); 
         }
         else if (spawnOriginCell != null) SelectCell(spawnOriginCell);
@@ -416,6 +429,8 @@ public class PlacementManager : MonoBehaviour
 
                         SelectCell(cell);
                         pressedOnPreview = true; 
+                        
+                        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick(); 
                     }
                 }
             }

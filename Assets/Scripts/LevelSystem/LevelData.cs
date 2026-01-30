@@ -24,6 +24,9 @@ public class LevelData : ScriptableObject
     public int levelID;
     public string ulkeAdi;
     public string levelAdi;
+    
+    [Header("Ülke ve Müzik")]
+    public CountryData bagliOlduguUlke;
 
     [Header("Grid")]
     public int gridGenislik;

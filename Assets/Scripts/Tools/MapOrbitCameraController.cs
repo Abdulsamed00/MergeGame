@@ -18,19 +18,29 @@ public class MapOrbitCameraController : MonoBehaviour
     float currentAngle;
     float targetAngle;
     float currentDistance;
+    float initialHeight; // Yüksekliği sabitlemek için ekledik
 
     Vector2 lastTouchPos;
     Vector3 lastMousePos;
 
     void Start()
     {
+        // Kameranın merkeze olan farkını al
         Vector3 offset = cam.transform.position - mapCenter.position;
 
-        currentDistance = offset.magnitude;
+        // DÜZELTME 1: Sadece X ve Z düzlemindeki mesafeyi alıyoruz (Yatay Uzaklık)
+        // Böylece Inspector'daki açın bozulmaz.
+        currentDistance = new Vector2(offset.x, offset.z).magnitude;
+
+        // Başlangıç yüksekliğini kaydediyoruz
+        initialHeight = cam.transform.position.y - mapCenter.position.y;
+
+        // Başlangıç açısını hesapla
         currentAngle = Mathf.Atan2(offset.x, offset.z) * Mathf.Rad2Deg;
         targetAngle = currentAngle;
-
-        cam.transform.LookAt(mapCenter);
+        
+        // LookAt fonksiyonunu Start'ta çağırmaya gerek yok, LateUpdate zaten yapacak.
+        // Hatta Start'ta çağırmak ani sıçramaya sebep olabilir.
     }
 
     void Update()
@@ -70,12 +80,15 @@ public class MapOrbitCameraController : MonoBehaviour
             Time.deltaTime * smoothSpeed
         );
 
+        // Yatayda dönüş yönünü hesapla
         Vector3 dir = Quaternion.Euler(0f, currentAngle, 0f) * Vector3.back;
 
+        // DÜZELTME 2: Yüksekliği başlangıçtaki "initialHeight" değerinden alıyoruz.
+        // Böylece kamera aşağı yukarı kaymaz.
         Vector3 newPos =
             mapCenter.position +
-            dir * currentDistance +
-            Vector3.up * (cam.transform.position.y - mapCenter.position.y);
+            (dir * currentDistance) + 
+            (Vector3.up * initialHeight);
 
         cam.transform.position = newPos;
         cam.transform.LookAt(mapCenter);
@@ -89,7 +102,9 @@ public class MapOrbitCameraController : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
         {
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("GameArea"))
+            // Eğer layer ismi yanlışsa veya obje yoksa hata vermemesi için kontrol
+            int layerIndex = LayerMask.NameToLayer("GameArea");
+            if(layerIndex != -1 && hit.collider.gameObject.layer == layerIndex)
                 return true;
         }
 

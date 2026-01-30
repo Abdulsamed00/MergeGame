@@ -15,6 +15,7 @@ MonoBehaviour:
   levelID: 15
   ulkeAdi: Japonya
   levelAdi: Level 6
+  bagliOlduguUlke: {fileID: 11400000, guid: bf628be4c1c4e65428a9dcd1ee237bb1, type: 2}
   gridGenislik: 5
   gridYukseklik: 5
   levelMusic: {fileID: 8300000, guid: ae10761c355b0b9448eb9b726d137824, type: 3}

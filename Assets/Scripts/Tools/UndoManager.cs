@@ -87,8 +87,17 @@ public class UndoManager : MonoBehaviour
 
     public void Undo()
     {
+        // 1. Kontrol: Geri alınacak işlem yoksa veya hak kalmadıysa ses çalma
         if (history.Count == 0 || KalanHak <= 0)
             return;
+
+        // --- SES EKLEMESİ ---
+        // İşlem başladı, geri alma sesini çal (Wooosh sesi vb.)
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayUndo();
+        }
+        // --------------------
 
         GameState lastState = history.Pop();
 

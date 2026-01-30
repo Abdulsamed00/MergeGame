@@ -64,10 +64,10 @@ public class GameManager : MonoBehaviour
 
         suankiLevelIndex = gelenLevel;
         suankiLevelData = tumLeveller[suankiLevelIndex];
-
-        if (AudioManager.Instance != null)
+        
+        if (AudioManager.Instance != null && suankiLevelData.bagliOlduguUlke != null)
         {
-            AudioManager.Instance.PlayLevelMusic(suankiLevelData.levelMusic);
+            AudioManager.Instance.PlayCountryMusic(suankiLevelData.bagliOlduguUlke);
         }
 
         SozlukOlustur(suankiLevelData);
@@ -292,6 +292,8 @@ public class GameManager : MonoBehaviour
     public void UretimYapildi(ObjeVerisi uretilenObjeVerisi, Vector3 worldPos)
     {
         if (oyunBittiMi) return;
+        
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayMerge();
 
         if (uretilenObjeVerisi.tur == ObjeTuru.Bina)
         {
@@ -390,6 +392,8 @@ public class GameManager : MonoBehaviour
 
         if (kazandiMi)
         {
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayWin();
+            
             Debug.Log("KAZANDIN!");
             if (winParticlePrefab != null) Instantiate(winParticlePrefab, particleCenter, Quaternion.identity);
             
@@ -421,6 +425,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayLose();
+            
             if (loseParticlePrefab != null) Instantiate(loseParticlePrefab, particleCenter, Quaternion.identity);
             
             if(loseBaslikText) loseBaslikText.text = "Başarısız!";

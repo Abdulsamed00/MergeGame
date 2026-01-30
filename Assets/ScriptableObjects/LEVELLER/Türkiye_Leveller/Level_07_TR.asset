@@ -15,6 +15,7 @@ MonoBehaviour:
   levelID: 6
   ulkeAdi: "T\xFCrkiye"
   levelAdi: Level 7
+  bagliOlduguUlke: {fileID: 11400000, guid: 8fa8dc10adcf5e64b90be15a646e15a2, type: 2}
   gridGenislik: 6
   gridYukseklik: 6
   levelMusic: {fileID: 8300000, guid: 7cfd5af6378fca249a4f2982ac4a0de0, type: 3}

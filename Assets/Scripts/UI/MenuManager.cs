@@ -16,9 +16,15 @@ public class MenuManager : MonoBehaviour
 
     public GameObject BilgiPaneli, TR, BR, JP, MSR, TarifP;
     public Button BilgiPaneliB, TrbButton, BrButton, JpButton, MsrButton, TarifGeriButton;
+
     void Start()
     {
         Time.timeScale = 1f;
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayUIMusic();
+        }
 
         mainMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
@@ -41,21 +47,27 @@ public class MenuManager : MonoBehaviour
 
     public void OpenLevels()
     {
+        // Buton sesi
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         StartCoroutine(SwitchPanel(mainMenuPanel, levelsPanel));
     }
 
     public void PlayGame()
     {
+        // Buton sesi
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         StartCoroutine(FadeToScene(Scenes.SampleScene));
     }
 
     public void OpenSettings()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         StartCoroutine(SwitchPanel(mainMenuPanel, settingsPanel));
     }
 
     public void CloseSettings()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         StartCoroutine(SwitchPanel(settingsPanel, mainMenuPanel));
     }
 
@@ -67,39 +79,49 @@ public class MenuManager : MonoBehaviour
     
     public void CreativeScene()
     {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayCreativeMusic();
+        }
+
         SceneManager.LoadScene("CreativeMode");
     }
     
-
     public void BasarimPanelAc()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         mainMenuPanel.SetActive(false);
         BasarimPanel.SetActive(true);
     }
     
     public void BasarimPanelKapat()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         BasarimPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
     
     public void BilgiPaneliAc()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         mainMenuPanel.SetActive(false);
         BilgiPaneli.SetActive(true);
     }
 
     public void BilgiPaneliKapat()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         BilgiPaneli.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
     
     public void TRAC()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         BilgiPaneli.SetActive(false);
         TR.SetActive(true);
     }
+    // ... (Diğer fonksiyonlar aynı mantıkla devam eder) ...
     public void BRAC()
     {
         BilgiPaneli.SetActive(false);
@@ -139,12 +161,14 @@ public class MenuManager : MonoBehaviour
 
     public void TarifPAcma()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         BilgiPaneli.SetActive(false);
         TarifP.SetActive(true);
     }
     
     public void TarifPKapama()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         BilgiPaneli.SetActive(true);
         TarifP.SetActive(false);
     }
@@ -156,6 +180,7 @@ public class MenuManager : MonoBehaviour
 
     public void CloseLevels()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         StartCoroutine(SwitchPanel(levelsPanel, mainMenuPanel));
     }
 
@@ -209,12 +234,14 @@ public class MenuManager : MonoBehaviour
 
     public void SetLanguageTurkish()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         LanguageData.CurrentLanguage = Language.Turkish;
         RefreshAllTexts();
     }
 
     public void SetLanguageEnglish()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayClick();
         LanguageData.CurrentLanguage = Language.English;
         RefreshAllTexts();
     }
@@ -228,8 +255,6 @@ public class MenuManager : MonoBehaviour
         }
     }
 }
-
-
 
 public enum Scenes
 {

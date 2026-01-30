@@ -15,6 +15,7 @@ MonoBehaviour:
   levelID: 27
   ulkeAdi: Brezilya
   levelAdi: Level 8
+  bagliOlduguUlke: {fileID: 11400000, guid: 70fa2ab9e54c8964e9a09907466a15cd, type: 2}
   gridGenislik: 6
   gridYukseklik: 6
   levelMusic: {fileID: 8300000, guid: f639db90b519da449aa686c4994a7fb5, type: 3}
