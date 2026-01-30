@@ -18,52 +18,58 @@ public class MapOrbitCameraController : MonoBehaviour
     float currentAngle;
     float targetAngle;
     float currentDistance;
-    float initialHeight; // Yüksekliği sabitlemek için ekledik
+    float initialHeight;
 
-    Vector2 lastTouchPos;
+    Vector2 lastMidPoint; // İki parmağın ortasının son konumu
     Vector3 lastMousePos;
 
     void Start()
     {
-        // Kameranın merkeze olan farkını al
         Vector3 offset = cam.transform.position - mapCenter.position;
-
-        // DÜZELTME 1: Sadece X ve Z düzlemindeki mesafeyi alıyoruz (Yatay Uzaklık)
-        // Böylece Inspector'daki açın bozulmaz.
         currentDistance = new Vector2(offset.x, offset.z).magnitude;
-
-        // Başlangıç yüksekliğini kaydediyoruz
         initialHeight = cam.transform.position.y - mapCenter.position.y;
-
-        // Başlangıç açısını hesapla
         currentAngle = Mathf.Atan2(offset.x, offset.z) * Mathf.Rad2Deg;
         targetAngle = currentAngle;
-        
-        // LookAt fonksiyonunu Start'ta çağırmaya gerek yok, LateUpdate zaten yapacak.
-        // Hatta Start'ta çağırmak ani sıçramaya sebep olabilir.
     }
 
     void Update()
     {
-        //  MOBİL
-        if (Input.touchCount == 1)
+        // ================== MOBİL KONTROL (SADECE 2 PARMAK) ==================
+        if (Input.touchCount == 2)
         {
-            Touch t = Input.GetTouch(0);
+            Touch t0 = Input.GetTouch(0);
+            Touch t1 = Input.GetTouch(1);
 
-            if (!IsTouchOnGrid(t.position))
-                RotateTouch(t);
-        }
-        else if (Input.touchCount == 2)
-        {
-            Vector2 mid =
-                (Input.GetTouch(0).position + Input.GetTouch(1).position) * 0.5f;
+            // İki parmağın arasındaki orta noktayı bul
+            Vector2 currentMidPoint = (t0.position + t1.position) / 2f;
 
-            if (!IsTouchOnGrid(mid))
-                ZoomTouch();
+            // Eğer parmaklardan biri yeni dokunduysa, referans noktasını sıfırla
+            // Bu, kameranın aniden sıçramasını engeller.
+            if (t0.phase == TouchPhase.Began || t1.phase == TouchPhase.Began)
+            {
+                lastMidPoint = currentMidPoint;
+            }
+            else
+            {
+                // Grid üzerinde değilse (UI veya oyun alanı kontrolü)
+                if (!IsTouchOnGrid(currentMidPoint))
+                {
+                    // 1. ROTASYON (Dönme)
+                    // Orta noktanın ne kadar kaydığına bakarak döndürüyoruz
+                    float deltaX = currentMidPoint.x - lastMidPoint.x;
+                    targetAngle += deltaX * rotationSpeed;
+
+                    // 2. ZOOM (Yakınlaşma)
+                    ZoomTouch(t0, t1);
+                }
+
+                // Son pozisyonu güncelle
+                lastMidPoint = currentMidPoint;
+            }
         }
 
 #if UNITY_EDITOR
-        // MOUSE
+        // MOUSE KONTROLLERİ (Test için aynı kalabilir)
         if (!IsTouchOnGrid(Input.mousePosition))
         {
             RotateMouse();
@@ -80,11 +86,8 @@ public class MapOrbitCameraController : MonoBehaviour
             Time.deltaTime * smoothSpeed
         );
 
-        // Yatayda dönüş yönünü hesapla
         Vector3 dir = Quaternion.Euler(0f, currentAngle, 0f) * Vector3.back;
 
-        // DÜZELTME 2: Yüksekliği başlangıçtaki "initialHeight" değerinden alıyoruz.
-        // Böylece kamera aşağı yukarı kaymaz.
         Vector3 newPos =
             mapCenter.position +
             (dir * currentDistance) + 
@@ -95,57 +98,42 @@ public class MapOrbitCameraController : MonoBehaviour
     }
 
     // ================== GRID KONTROL ==================
-
     bool IsTouchOnGrid(Vector2 screenPos)
     {
         Ray ray = cam.ScreenPointToRay(screenPos);
-
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
         {
-            // Eğer layer ismi yanlışsa veya obje yoksa hata vermemesi için kontrol
             int layerIndex = LayerMask.NameToLayer("GameArea");
             if(layerIndex != -1 && hit.collider.gameObject.layer == layerIndex)
                 return true;
         }
-
         return false;
     }
 
-    // ================== TOUCH ==================
+    // ================== TOUCH FONKSİYONLARI ==================
 
-    void RotateTouch(Touch t)
+    // Zoom fonksiyonunu Update içinden parametre alacak şekilde güncelledik
+    void ZoomTouch(Touch t0, Touch t1)
     {
-        if (t.phase == TouchPhase.Began)
-            lastTouchPos = t.position;
+        // Önceki pozisyonları hesapla (Delta kullanarak)
+        Vector2 t0Prev = t0.position - t0.deltaPosition;
+        Vector2 t1Prev = t1.position - t1.deltaPosition;
 
-        if (t.phase == TouchPhase.Moved)
-        {
-            float deltaX = t.position.x - lastTouchPos.x;
-            targetAngle += deltaX * rotationSpeed;
-            lastTouchPos = t.position;
-        }
-    }
+        // Önceki karedeki parmak arası mesafe
+        float prevDist = Vector2.Distance(t0Prev, t1Prev);
 
-    void ZoomTouch()
-    {
-        Touch t0 = Input.GetTouch(0);
-        Touch t1 = Input.GetTouch(1);
-
-        float prevDist = Vector2.Distance(
-            t0.position - t0.deltaPosition,
-            t1.position - t1.deltaPosition
-        );
-
+        // Şu anki parmak arası mesafe
         float currDist = Vector2.Distance(t0.position, t1.position);
 
+        // Farkı al
         float diff = currDist - prevDist;
 
+        // Mesafeyi uygula
         currentDistance -= diff * zoomSpeed;
         currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
     }
 
-    // ================== MOUSE ==================
-
+    // ================== MOUSE FONKSİYONLARI ==================
     void RotateMouse()
     {
         if (Input.GetMouseButtonDown(0))
