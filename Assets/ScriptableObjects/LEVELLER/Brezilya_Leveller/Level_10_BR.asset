@@ -21,17 +21,7 @@ MonoBehaviour:
   zeminPrefabi: {fileID: -3380444673534767410, guid: f26a63ebdbfe6314aaf4b6e6f7090786, type: 3}
   baslangicObjeSayisi: 3
   hedefler:
-  - istenenObje: {fileID: 11400000, guid: 7fab760cd0749e44faea07dfce8eab35, type: 2}
-    adet: 1
-  - istenenObje: {fileID: 11400000, guid: ce4bef2b1ef279446990b4d48c9811fb, type: 2}
-    adet: 1
-  - istenenObje: {fileID: 11400000, guid: 57ee10437de85cf4d86ef1d191081db7, type: 2}
-    adet: 2
-  - istenenObje: {fileID: 11400000, guid: 5528c859e683c804f81dce3cff9d8373, type: 2}
-    adet: 2
-  - istenenObje: {fileID: 11400000, guid: e91499df9467d47469629bf39724e667, type: 2}
-    adet: 1
-  - istenenObje: {fileID: 11400000, guid: 5a877b14252c4a9469bb8691b755a957, type: 2}
+  - istenenObje: {fileID: 11400000, guid: 69d9ad3b5860b3b42b6f35face0aa29c, type: 2}
     adet: 1
   izinVerilenEnUstObje: {fileID: 11400000, guid: 5a877b14252c4a9469bb8691b755a957, type: 2}
   levelObjeleri:

@@ -21,22 +21,14 @@ MonoBehaviour:
   zeminPrefabi: {fileID: -562397327319875813, guid: df5295ed8f1935f439afa95a17e0e8c0, type: 3}
   baslangicObjeSayisi: 3
   hedefler:
-  - istenenObje: {fileID: 11400000, guid: 0ae8698239eb29f419a0a2cb16c93164, type: 2}
-    adet: 3
-  - istenenObje: {fileID: 11400000, guid: 8bf7ee14bb336f84c98b42106c2ca61f, type: 2}
-    adet: 3
-  - istenenObje: {fileID: 11400000, guid: da919b41c6c91da449791a37657141b6, type: 2}
+  - istenenObje: {fileID: 11400000, guid: 90f47787b74e007469dc70f8f93a92f9, type: 2}
     adet: 1
   izinVerilenEnUstObje: {fileID: 11400000, guid: da919b41c6c91da449791a37657141b6, type: 2}
   levelObjeleri:
   - obje: {fileID: 11400000, guid: 90f47787b74e007469dc70f8f93a92f9, type: 2}
-    spawnYuzdesi: 30
+    spawnYuzdesi: 50
   - obje: {fileID: 11400000, guid: 4ce45653e14766e419b0349b761686aa, type: 2}
-    spawnYuzdesi: 30
-  - obje: {fileID: 11400000, guid: a962e13863899c247b11fed15335863f, type: 2}
-    spawnYuzdesi: 20
-  - obje: {fileID: 11400000, guid: 16beec79615c28e4bbc7ba8089a0dcaa, type: 2}
-    spawnYuzdesi: 20
+    spawnYuzdesi: 50
   yildiz1Puani: 100
   yildiz2Puani: 225
   yildiz3Puani: 450
